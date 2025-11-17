@@ -6,11 +6,12 @@ import { BadgeDisplay } from '../components/Gamification/BadgeDisplay';
 import { Header } from '../components/Header/Header';
 import { Footer } from '../components/Footer/Footer';
 import { useNavigate } from 'react-router-dom';
+import { useTheme } from '../contexts/ThemeContext';
 
 export const HomePage = () => {
+  const { theme } = useTheme();
   const [view, setView] = useState<'milestones' | 'badges'>('milestones');
   const [language, setLanguage] = useState<'it' | 'en'>('it');
-  const [isDarkMode, setIsDarkMode] = useState(true);
   const navigate = useNavigate();
 
   const handleLanguageChange = (lang: 'it' | 'en') => {
@@ -19,20 +20,12 @@ export const HomePage = () => {
     console.log('Language changed to:', lang);
   };
 
-  const handleThemeChange = () => {
-    setIsDarkMode(!isDarkMode);
-    // TODO: Implementare dark/light mode
-    console.log('Theme changed to:', !isDarkMode ? 'dark' : 'light');
-  };
-
   return (
-    <div className="min-h-screen bg-[#111827]">
+    <div className="min-h-screen bg-[var(--bg-primary)]">
       {/* Compact Header */}
       <Header
         currentLanguage={language}
-        isDarkMode={isDarkMode}
         onLanguageChange={handleLanguageChange}
-        onThemeChange={handleThemeChange}
       />
 
       {/* Main Content */}
@@ -44,25 +37,55 @@ export const HomePage = () => {
             <ProgressTracker />
 
             {/* View Toggle */}
-            <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-lg p-4">
+            <div
+              className="backdrop-blur-sm border rounded-lg p-4"
+              style={{
+                backgroundColor: theme === 'dark' ? 'rgba(255, 255, 255, 0.05)' : 'rgba(15, 23, 42, 0.03)',
+                borderColor: 'var(--border-color)'
+              }}
+            >
               <div className="flex gap-2">
                 <button
                   onClick={() => setView('milestones')}
-                  className={`flex-1 py-2 px-4 rounded-lg font-medium text-sm transition-colors ${
-                    view === 'milestones'
-                      ? 'bg-blue-600 hover:bg-blue-500 text-white'
-                      : 'bg-white/10 text-white/60 hover:bg-white/20 hover:text-white'
-                  }`}
+                  className="flex-1 py-2 px-4 rounded-lg font-medium text-sm transition-colors"
+                  style={{
+                    backgroundColor: view === 'milestones' ? '#3b82f6' : (theme === 'dark' ? 'rgba(255, 255, 255, 0.1)' : 'rgba(15, 23, 42, 0.05)'),
+                    color: view === 'milestones' ? '#ffffff' : 'var(--text-secondary)'
+                  }}
+                  onMouseEnter={(e) => {
+                    if (view !== 'milestones') {
+                      e.currentTarget.style.backgroundColor = theme === 'dark' ? 'rgba(255, 255, 255, 0.15)' : 'rgba(15, 23, 42, 0.08)';
+                      e.currentTarget.style.color = 'var(--text-primary)';
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (view !== 'milestones') {
+                      e.currentTarget.style.backgroundColor = theme === 'dark' ? 'rgba(255, 255, 255, 0.1)' : 'rgba(15, 23, 42, 0.05)';
+                      e.currentTarget.style.color = 'var(--text-secondary)';
+                    }
+                  }}
                 >
                   Milestone
                 </button>
                 <button
                   onClick={() => setView('badges')}
-                  className={`flex-1 py-2 px-4 rounded-lg font-medium text-sm transition-colors ${
-                    view === 'badges'
-                      ? 'bg-blue-600 hover:bg-blue-500 text-white'
-                      : 'bg-white/10 text-white/60 hover:bg-white/20 hover:text-white'
-                  }`}
+                  className="flex-1 py-2 px-4 rounded-lg font-medium text-sm transition-colors"
+                  style={{
+                    backgroundColor: view === 'badges' ? '#3b82f6' : (theme === 'dark' ? 'rgba(255, 255, 255, 0.1)' : 'rgba(15, 23, 42, 0.05)'),
+                    color: view === 'badges' ? '#ffffff' : 'var(--text-secondary)'
+                  }}
+                  onMouseEnter={(e) => {
+                    if (view !== 'badges') {
+                      e.currentTarget.style.backgroundColor = theme === 'dark' ? 'rgba(255, 255, 255, 0.15)' : 'rgba(15, 23, 42, 0.08)';
+                      e.currentTarget.style.color = 'var(--text-primary)';
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (view !== 'badges') {
+                      e.currentTarget.style.backgroundColor = theme === 'dark' ? 'rgba(255, 255, 255, 0.1)' : 'rgba(15, 23, 42, 0.05)';
+                      e.currentTarget.style.color = 'var(--text-secondary)';
+                    }
+                  }}
                 >
                   Badge
                 </button>
@@ -74,7 +97,7 @@ export const HomePage = () => {
           <div className="lg:col-span-2">
             {view === 'milestones' ? (
               <div className="space-y-4">
-                <h2 className="text-3xl md:text-4xl font-bold mb-6 text-white">
+                <h2 className="text-3xl md:text-4xl font-bold mb-6" style={{ color: 'var(--text-primary)' }}>
                   Le 12 Milestone del Percorso
                 </h2>
                 {milestones.map((milestone, index) => (

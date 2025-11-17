@@ -2,30 +2,30 @@
 
 ## ➕ Adding a New Milestone
 
-1. **Open the milestones file**:
-   ```bash
-   # File location (absolute path):
-   /Users/alekdob/Desktop/Dev/Personal/claudecodeninja/src/data/milestones.ts
+### Method 1: Using Content Enricher Agent (RECOMMENDED)
+
+**Best for**: Creating content-rich milestones from external sources (Kindle, PDFs, books)
+
+1. **Prepare source material**:
+   - Kindle highlights export
+   - PDF content
+   - Raw text notes
+
+2. **Invoke content-enricher agent**:
+   ```
+   Use Task tool with subagent_type: "content-enricher"
    ```
 
-2. **Add milestone object**:
-   ```typescript
-   export const milestones: Milestone[] = [
-     // ... existing milestones 1-4
-     {
-       id: 5,
-       title: "Your Title",
-       subtitle: "Your subtitle",
-       description: `Your Markdown content with \`escaped backticks\``,
-       xp: 200,
-       badge: "⚡",
-       estimatedTime: "1 ora",
-       topics: ["Topic1", "Topic2"],
-     },
-   ];
-   ```
+3. **Provide to agent**:
+   - Milestone number (5-12)
+   - Source content
+   - Specific focus areas (optional)
 
-3. **Test in dev server**:
+4. **Agent outputs**:
+   - Complete milestone file: `/src/data/milestones/milestone-{XX}-{slug}.ts`
+   - Updated aggregator: `/src/data/milestones/index.ts`
+
+5. **Test in dev server**:
    ```bash
    npm run dev
    # Check http://localhost:3000/
@@ -33,11 +33,63 @@
    # Test unlock logic
    ```
 
-4. **Verify progress tracking**:
-   - Complete previous milestone
-   - Check if new milestone unlocks
-   - Verify XP calculation
-   - Check badge unlock conditions
+### Method 2: Manual Creation
+
+**Best for**: Quick additions or updates to existing milestones
+
+1. **Create milestone file**:
+   ```bash
+   # File location:
+   /Users/alekdob/Desktop/Dev/Personal/claudecodeninja/src/data/milestones/milestone-05-custom-commands.ts
+   ```
+
+2. **Write milestone object**:
+   ```typescript
+   import { Milestone } from '../../types';
+
+   export const milestone05: Milestone = {
+     id: 5,
+     title: "Your Title",
+     subtitle: "Your subtitle",
+     description: `Your Markdown content with \`escaped backticks\``,
+     xp: 200,
+     badge: "⚡",
+     estimatedTime: "1 ora",
+     topics: ["Topic1", "Topic2"],
+   };
+   ```
+
+3. **Update aggregator**:
+   ```typescript
+   // File: /src/data/milestones/index.ts
+   export { milestone05 } from './milestone-05-custom-commands';
+
+   import { milestone05 } from './milestone-05-custom-commands';
+
+   export const milestones: Milestone[] = [
+     milestone01,
+     milestone02,
+     milestone03,
+     milestone04,
+     milestone05,  // Add here
+   ];
+   ```
+
+4. **Test in dev server**:
+   ```bash
+   npm run dev
+   # Verify milestone appears and unlocks correctly
+   ```
+
+### Verification Checklist
+After adding any milestone:
+- [ ] Milestone appears in list on HomePage
+- [ ] Unlock logic works (sequential progression)
+- [ ] XP calculation correct
+- [ ] Badge unlocks at right threshold
+- [ ] Quiz questions display (if present)
+- [ ] Code examples render properly
+- [ ] All backticks escaped in code blocks
 
 ## 🔧 Modifying Progress Tracking
 

@@ -2,6 +2,7 @@ import { Milestone } from '../../types';
 import { getMilestoneStatus } from '../../utils/progressTracking';
 import { Lock, CheckCircle2, PlayCircle } from 'lucide-react';
 import { motion } from 'motion/react';
+import { useTheme } from '../../contexts/ThemeContext';
 
 interface MilestoneCardProps {
   milestone: Milestone;
@@ -9,6 +10,7 @@ interface MilestoneCardProps {
 }
 
 export const MilestoneCard = ({ milestone, onClick }: MilestoneCardProps) => {
+  const { theme } = useTheme();
   const status = getMilestoneStatus(milestone.id);
 
   const isLocked = status === 'locked';
@@ -19,13 +21,6 @@ export const MilestoneCard = ({ milestone, onClick }: MilestoneCardProps) => {
     if (isLocked) return <Lock className="w-6 h-6" />;
     if (isCompleted) return <CheckCircle2 className="w-6 h-6 text-success" />;
     return <PlayCircle className="w-6 h-6 text-primary" />;
-  };
-
-  const getStatusClass = () => {
-    if (isLocked) return 'milestone-locked';
-    if (isCompleted) return 'milestone-completed';
-    if (isInProgress) return 'milestone-in-progress';
-    return '';
   };
 
   const getBorderColor = () => {
@@ -42,15 +37,32 @@ export const MilestoneCard = ({ milestone, onClick }: MilestoneCardProps) => {
       whileHover={!isLocked ? { scale: 1.01 } : {}}
       whileTap={!isLocked ? { scale: 0.99 } : {}}
       transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
-      className={`bg-white/5 backdrop-blur-sm border ${getBorderColor()} rounded-lg p-6 cursor-pointer hover:bg-white/10 transition-colors ${
+      className={`backdrop-blur-sm border ${getBorderColor()} rounded-lg p-6 cursor-pointer transition-colors ${
         isLocked ? 'opacity-60 cursor-not-allowed' : ''
       }`}
+      style={{
+        backgroundColor: theme === 'dark' ? 'rgba(255, 255, 255, 0.05)' : 'rgba(15, 23, 42, 0.03)',
+      }}
+      onMouseEnter={(e) => {
+        if (!isLocked) {
+          e.currentTarget.style.backgroundColor = theme === 'dark' ? 'rgba(255, 255, 255, 0.1)' : 'rgba(15, 23, 42, 0.05)';
+        }
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.backgroundColor = theme === 'dark' ? 'rgba(255, 255, 255, 0.05)' : 'rgba(15, 23, 42, 0.03)';
+      }}
       onClick={!isLocked ? onClick : undefined}
     >
       <div className="flex items-start gap-4">
         {/* Numero Milestone */}
         <div className="flex-shrink-0">
-          <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500/20 to-purple-500/20 flex items-center justify-center text-white font-bold text-xl border border-white/10">
+          <div
+            className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500/20 to-purple-500/20 flex items-center justify-center font-bold text-xl border"
+            style={{
+              borderColor: 'var(--border-color)',
+              color: 'var(--text-primary)'
+            }}
+          >
             {milestone.id}
           </div>
         </div>
@@ -58,11 +70,11 @@ export const MilestoneCard = ({ milestone, onClick }: MilestoneCardProps) => {
         {/* Contenuto */}
         <div className="flex-1">
           <div className="flex items-center justify-between gap-2 mb-2">
-            <h3 className="text-xl font-bold text-white">{milestone.title}</h3>
+            <h3 className="text-xl font-bold" style={{ color: 'var(--text-primary)' }}>{milestone.title}</h3>
             {getStatusIcon()}
           </div>
 
-          <p className="text-white/60 mb-4">{milestone.subtitle}</p>
+          <p className="mb-4" style={{ color: 'var(--text-secondary)' }}>{milestone.subtitle}</p>
 
           {/* Metadata */}
           <div className="flex flex-wrap items-center gap-3 text-sm">
@@ -72,12 +84,19 @@ export const MilestoneCard = ({ milestone, onClick }: MilestoneCardProps) => {
                 {milestone.xp} XP
               </span>
             </div>
-            <div className="flex items-center gap-1.5 text-white/60">
+            <div className="flex items-center gap-1.5" style={{ color: 'var(--text-secondary)' }}>
               <span className="text-lg">⏱️</span>
               <span>{milestone.estimatedTime}</span>
             </div>
             <div className="flex items-center gap-1.5">
-              <span className="px-2.5 py-1 bg-white/5 text-white/70 border border-white/10 rounded text-xs font-medium">
+              <span
+                className="px-2.5 py-1 border rounded text-xs font-medium"
+                style={{
+                  backgroundColor: theme === 'dark' ? 'rgba(255, 255, 255, 0.05)' : 'rgba(15, 23, 42, 0.05)',
+                  color: 'var(--text-secondary)',
+                  borderColor: 'var(--border-color)'
+                }}
+              >
                 {milestone.badge}
               </span>
             </div>
@@ -88,7 +107,20 @@ export const MilestoneCard = ({ milestone, onClick }: MilestoneCardProps) => {
             {milestone.topics.map((topic, index) => (
               <span
                 key={index}
-                className="px-3 py-1 bg-white/5 border border-white/10 rounded-lg text-xs font-medium text-text-tertiary hover:bg-white/10 hover:text-white transition-colors"
+                className="px-3 py-1 border rounded-lg text-xs font-medium transition-colors"
+                style={{
+                  backgroundColor: theme === 'dark' ? 'rgba(255, 255, 255, 0.05)' : 'rgba(15, 23, 42, 0.05)',
+                  color: 'var(--text-tertiary)',
+                  borderColor: 'var(--border-color)'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = theme === 'dark' ? 'rgba(255, 255, 255, 0.1)' : 'rgba(15, 23, 42, 0.08)';
+                  e.currentTarget.style.color = 'var(--text-primary)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = theme === 'dark' ? 'rgba(255, 255, 255, 0.05)' : 'rgba(15, 23, 42, 0.05)';
+                  e.currentTarget.style.color = 'var(--text-tertiary)';
+                }}
               >
                 {topic}
               </span>

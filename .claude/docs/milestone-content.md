@@ -2,7 +2,7 @@
 
 ## 📝 Required Fields
 
-Every milestone in `/Users/alekdob/Desktop/Dev/Personal/claudecodeninja/src/data/milestones.ts` must include:
+Every milestone in `/Users/alekdob/Desktop/Dev/Personal/claudecodeninja/src/data/milestones/milestone-{XX}-{slug}.ts` must include:
 
 ```typescript
 {
@@ -50,11 +50,15 @@ Usa il comando `npm install` per installare Claude Code.
 
 ## 📋 Content Template
 
-When adding remaining milestones, follow this pattern:
+**NEW (Jan 2025)**: Use separate files for each milestone following 300-line rule.
+
+### File Structure
+Create: `/src/data/milestones/milestone-05-custom-commands.ts`
 
 ```typescript
-// Milestone 5: Custom Commands (200 XP)
-{
+import { Milestone } from '../../types';
+
+export const milestone05: Milestone = {
   id: 5,
   title: "Custom Commands",
   subtitle: "Crea comandi personalizzati per automazioni ripetitive",
@@ -94,7 +98,24 @@ touch .claude/commands/my-command.md
       }
     ]
   }
-}
+};
+```
+
+### Add to Aggregator
+Update `/src/data/milestones/index.ts`:
+
+```typescript
+export { milestone05 } from './milestone-05-custom-commands';
+
+import { milestone05 } from './milestone-05-custom-commands';
+
+export const milestones: Milestone[] = [
+  milestone01,
+  milestone02,
+  milestone03,
+  milestone04,
+  milestone05,  // Add here
+];
 ```
 
 ## 🎯 The 12 Milestones
@@ -114,4 +135,28 @@ touch .claude/commands/my-command.md
 | 11 | Advanced Features | Checkpoints, Sandboxing | 350 | 🚀 |
 | 12 | Production & Scale | Cloud, Networks, Policies | 400 | 💎 |
 
-**Status**: Milestones 1-4 complete with full Italian content. Milestones 5-12 pending.
+**Status**:
+- ✅ Milestones 1-4 complete with full Italian content (refactored into separate files Jan 2025)
+- ⏳ Milestones 5-12 pending (use content-enricher agent)
+
+## 🤖 Using Content Enricher Agent
+
+**NEW (Jan 2025)**: Use the specialized `content-enricher` agent to generate milestone content from Kindle notes, PDFs, or books.
+
+### Workflow:
+1. Prepare source material (Kindle highlights, PDF, raw text)
+2. Invoke content-enricher agent: `Task tool → subagent_type: "content-enricher"`
+3. Provide milestone number and source content
+4. Agent generates complete TypeScript file
+5. Agent adds export to index.ts
+6. Test with `npm run dev`
+
+### What the Agent Does:
+- Reads and structures content into 3-5 chapters
+- Generates 3-5 quiz questions per milestone
+- Creates practical coding challenges
+- Ensures 300-line limit compliance
+- Outputs ready-to-use TypeScript file
+- Updates aggregator automatically
+
+**Location**: `.claude/agents/content-enricher.md`

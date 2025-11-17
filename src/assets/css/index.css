@@ -5,25 +5,34 @@
 @layer base {
   /* CSS Variables for theme support */
   :root {
+    /* Light mode (default) */
     --bg-primary: #ffffff;
     --bg-secondary: #f8fafc;
+    --bg-tertiary: #f1f5f9;
     --text-primary: #0f172a;
     --text-secondary: #64748b;
     --text-tertiary: #94a3b8;
+    --border-color: rgba(15, 23, 42, 0.1);
+    --border-subtle: rgba(15, 23, 42, 0.05);
   }
 
   .dark {
-    --bg-primary: #0f172a;
+    /* Dark mode */
+    --bg-primary: #111827;
     --bg-secondary: #1e293b;
+    --bg-tertiary: #334155;
     --text-primary: #f8fafc;
-    --text-secondary: #94a3b8;
-    --text-tertiary: #64748b;
+    --text-secondary: #cbd5e1;
+    --text-tertiary: #94a3b8;
+    --border-color: rgba(255, 255, 255, 0.1);
+    --border-subtle: rgba(255, 255, 255, 0.05);
   }
 
   body {
     @apply font-sans antialiased;
-    background: #111827;
-    color: #f8fafc;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    transition: background-color 0.3s ease, color 0.3s ease;
   }
 
   h1 {
@@ -210,28 +219,30 @@
   /* Compact Prose Styles (Markdown Content) */
   .prose-compact {
     @apply leading-relaxed;
-    color: rgba(248, 250, 252, 0.9); /* text-light/90 */
+    color: var(--text-secondary);
     max-width: 65ch; /* Optimal line length for readability */
   }
 
   .prose-compact h1 {
     @apply text-2xl font-bold mb-4 mt-6;
-    color: #f8fafc; /* text-light */
+    color: var(--text-primary);
   }
 
   .prose-compact h2 {
-    @apply text-xl font-bold mb-3 mt-6;
-    color: #f8fafc; /* text-light */
+    @apply text-2xl md:text-3xl font-bold mb-6 mt-12 pb-3 border-b-2;
+    color: #FF6B35; /* Primary brand orange for chapter headings */
+    border-color: rgba(255, 107, 53, 0.2);
+    scroll-margin-top: 100px; /* Account for fixed header (64px) + buffer */
   }
 
   .prose-compact h3 {
-    @apply text-lg font-semibold mb-3 mt-4;
-    color: #f8fafc; /* text-light */
+    @apply text-lg md:text-xl font-semibold mb-4 mt-8;
+    color: var(--text-primary);
   }
 
   .prose-compact p {
     @apply text-base mb-4 leading-normal;
-    color: rgba(248, 250, 252, 0.9); /* text-light/90 */
+    color: var(--text-secondary);
   }
 
   .prose-compact ul,
@@ -241,45 +252,54 @@
 
   .prose-compact li {
     @apply text-base leading-normal;
-    color: rgba(248, 250, 252, 0.9); /* text-light/90 */
+    color: var(--text-secondary);
   }
 
   .prose-compact code {
-    @apply font-mono px-1.5 py-0.5 rounded text-xs border border-white/10 bg-white/5 text-cyan-400;
+    @apply font-mono px-1.5 py-0.5 rounded text-xs border;
+    background: var(--bg-tertiary);
+    border-color: var(--border-color);
+    color: #06b6d4;
   }
 
   .prose-compact pre {
-    @apply font-mono p-3 rounded-lg overflow-x-auto border border-white/10 mb-4 text-xs;
-    background: rgba(30, 41, 59, 0.8);
+    @apply font-mono p-3 rounded-lg overflow-x-auto border mb-4 text-xs;
+    background: var(--bg-secondary);
+    border-color: var(--border-color);
     line-height: 1.5;
   }
 
   .prose-compact pre code {
     @apply p-0 border-0 bg-transparent text-xs;
+    color: var(--text-secondary);
   }
 
   .prose-compact strong {
     @apply font-semibold;
-    color: #f8fafc; /* text-light */
+    color: var(--text-primary);
   }
 
   .prose-compact a {
     @apply underline transition-colors;
-    color: #3b82f6; /* text-accent */
+    color: #3b82f6;
   }
 
   .prose-compact a:hover {
-    color: rgba(59, 130, 246, 0.8); /* text-accent/80 */
+    color: #2563eb;
   }
 
   .prose-compact blockquote {
     @apply border-l-4 pl-4 italic my-4;
-    border-color: #1e293b; /* border-primary */
-    color: rgba(248, 250, 252, 0.7); /* text-light/70 */
+    border-color: var(--border-color);
+    color: var(--text-tertiary);
   }
 
   .prose-compact hr {
-    @apply border-t border-white/20 my-6;
+    @apply border-t-2 my-12;
+    border-color: rgba(255, 107, 53, 0.15); /* Subtle orange gradient separator */
+    background: linear-gradient(90deg, rgba(255, 107, 53, 0.1) 0%, rgba(0, 78, 137, 0.1) 100%);
+    height: 2px;
+    border: none;
   }
 
   .prose-compact table {
@@ -288,12 +308,14 @@
 
   .prose-compact th,
   .prose-compact td {
-    @apply border border-white/20 px-3 py-2 text-sm;
+    @apply border px-3 py-2 text-sm;
+    border-color: var(--border-color);
   }
 
   .prose-compact th {
-    @apply bg-white/5 font-semibold;
-    color: #f8fafc; /* text-light */
+    @apply font-semibold;
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
   }
 
   .prose-compact img {
@@ -419,6 +441,11 @@
   border-color: rgba(148, 163, 184, 0.2);
 }
 
+.dark .prose-compact h2 {
+  color: #F7931E; /* Slightly warmer orange for dark mode */
+  border-color: rgba(247, 147, 30, 0.25);
+}
+
 .dark .btn-secondary {
   @apply border-white/20;
   color: #f8fafc;
@@ -447,11 +474,11 @@
   }
 
   .prose-compact h2 {
-    @apply text-lg;
+    @apply text-2xl mt-8 mb-4; /* Larger on mobile too, with reduced spacing */
   }
 
   .prose-compact h3 {
-    @apply text-base;
+    @apply text-lg mt-6; /* Maintain hierarchy */
   }
 
   .prose-compact p,

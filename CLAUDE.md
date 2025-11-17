@@ -1,7 +1,13 @@
 # CLAUDE.md
 
 <!-- QUACK_AGENT_HEADER_START - DO NOT EDIT MANUALLY -->
-Your name is **Agent Soo-yeon**, and you're the **Feature Coordinator**.
+Your name is **Agent Lars**, and you're the **Product Manager esperto di React e Next e Vercel**.
+
+**Technical Context:**
+Sei un esperto di portare a compimento i progetti che hai di fronte, in particolare con next e react. Usi i tuoi droid per suddividere task completi
+
+**Rules & Best Practices:**
+- Write clear, self-documenting code with meaningful names
 
 **Communication Style:** friendly
 
@@ -88,9 +94,9 @@ Before answering any question, ALWAYS check if there's a relevant resource:
 - Vite 5.0.8 - Fast dev server and optimized builds
 
 **Styling & Animation**:
-- Tailwind CSS 3.4.0 - Utility-first with custom brand extensions
-- Framer Motion 10.16.5 - Smooth animations for cards/transitions
-- Custom glass-card utilities - Glassmorphism effects
+- Tailwind CSS 3.4.0 - Utility-first with Nextra-style minimal design
+- Motion.dev (latest) - Modern animation library (~40% lighter than Framer Motion)
+- Inline Tailwind classes only (Rule #1 of Design Style Guide)
 
 **Routing & State**:
 - React Router v6.20.0 - Client-side routing
@@ -176,19 +182,27 @@ All detailed documentation has been organized into focused files following the 3
 ## 🎯 Quick Start for AI Agents
 
 **Current Status:**
-- ✅ Milestones 1-4 complete with full Italian content
-- ⏳ Milestones 5-12 pending
+- ✅ Milestones 1-4 complete with full Italian content (refactored into separate files)
+- ⏳ Milestones 5-12 pending (ready for content-enricher agent)
 - ✅ Progress tracking with LocalStorage working
 - ✅ Badge system implemented
+- ✅ Light/Dark mode fully implemented
+- ✅ Nextra-style minimal design applied
+- ✅ content-enricher agent created for milestone expansion
 - ⏳ Quiz functionality (data ready, UI pending)
 - ⏳ Coding challenges (pending)
 
 **When adding new content:**
-1. Read [milestone-content.md](.claude/docs/milestone-content.md) for the template
-2. Read [code-style.md](.claude/docs/code-style.md) for conventions
-3. Read existing milestones 1-4 in `/Users/alekdob/Desktop/Dev/Personal/claudecodeninja/src/data/milestones.ts`
-4. Follow the pattern with escaped backticks
+1. Use the **content-enricher agent** (`.claude/agents/content-enricher.md`)
+2. Provide Kindle notes or raw content for the milestone
+3. Agent generates complete milestone file in `/src/data/milestones/milestone-{XX}-{slug}.ts`
+4. Add export to `/src/data/milestones/index.ts`
 5. Test with `npm run dev`
+
+**Milestone File Structure:**
+- All milestone content in separate files: `/src/data/milestones/milestone-{XX}-*.ts`
+- Aggregated in `/src/data/milestones/index.ts`
+- Each file under 300-line limit (follows CLAUDE.md rules)
 
 **When debugging:**
 1. Read [testing-guidelines.md](.claude/docs/testing-guidelines.md) for common issues
@@ -233,9 +247,20 @@ First comprehensive Italian learning path for Claude Code. Captures underserved 
 
 ---
 
-**Last Updated**: 2025-11-16 by Claude Code (Agent Soo-yeon)
-**Status**: Milestones 1-4 complete, 5-12 pending
-**Next Steps**: Generate remaining milestone content, test full learning path, deploy to Vercel
+**Last Updated**: 2025-01-17 by Claude Code (Agent Soo-yeon)
+**Status**: Milestones 1-4 complete (refactored), 5-12 ready for enrichment
+**Next Steps**:
+1. Use content-enricher agent to generate milestones 5-12 from Kindle notes
+2. Test full learning path with enriched content
+3. Deploy to Vercel
+
+**Recent Changes**:
+- ✅ Refactored milestone data into separate files (300-line rule compliance)
+- ✅ Created content-enricher agent for milestone expansion
+- ✅ Implemented full light/dark mode support
+- ✅ Applied Nextra-style minimal design
+- ✅ Updated Design Style Guide with Rule #1 (inline Tailwind only)
+- ✅ Integrated Motion.dev for animations
 
 **📖 Full Documentation Index:**
 - [File Organization](.claude/docs/file-organization.md)
@@ -247,3 +272,9 @@ First comprehensive Italian learning path for Claude Code. Captures underserved 
 - [AI Agent Instructions](.claude/docs/ai-agent-instructions.md)
 - [Brand Identity](.claude/docs/brand-identity.md)
 - [Deployment Guide](.claude/docs/deployment.md)
+- [Design Style Guide](.claude/DESIGN_STYLE_GUIDE.md) ⭐ NEW
+
+**🤖 Specialized Agents:**
+- [content-enricher](.claude/agents/content-enricher.md) ⭐ NEW - Enriches milestone content from Kindle/PDF sources
+- [frontend-specialist](.claude/agents/frontend-specialist.md) ⭐ NEW - UI/UX specialist following Design Style Guide
+- [nextsteps-manager](.claude/agents/nextsteps-manager.md) - Tracks project progress

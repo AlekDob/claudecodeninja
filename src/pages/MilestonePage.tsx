@@ -4,16 +4,68 @@ import { milestones } from '../data/milestones';
 import { completeMilestone, getMilestoneStatus, isMilestoneUnlocked } from '../utils/progressTracking';
 import { Header } from '../components/Header/Header';
 import { Footer } from '../components/Footer/Footer';
+import { TableOfContents } from '../components/TableOfContents/TableOfContents';
+import { PromptExample } from '../components/PromptExample/PromptExample';
+import { remarkPromptPlugin } from '../utils/remarkPromptPlugin';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-import { ArrowLeft, Award, CheckCircle2 } from 'lucide-react';
+import rehypeSlug from 'rehype-slug';
+import { ArrowLeft, CheckCircle2 } from 'lucide-react';
 import { motion } from 'framer-motion';
+import type { Components } from 'react-markdown';
 
 export const MilestonePage = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [language, setLanguage] = useState<'it' | 'en'>('it');
-  const [isDarkMode, setIsDarkMode] = useState(true);
+
+  // Custom components for ReactMarkdown
+  const markdownComponents: Components = {
+    code: (props) => {
+      const { node, className, children, ...rest } = props;
+
+      const codeContent = String(children).replace(/\n$/, '');
+
+      // Check if inline (no className means inline code)
+      const inline = !className;
+
+      // Check if this is a prompt example (added by remarkPromptPlugin)
+      const isPromptExample = className?.includes('prompt-example');
+      const isPromptGood = className?.includes('prompt-good');
+      const isPromptBad = className?.includes('prompt-bad');
+
+      // Use PromptExample component for marked prompt examples
+      if (isPromptExample && (isPromptGood || isPromptBad)) {
+        return (
+          <PromptExample
+            type={isPromptGood ? 'good' : 'bad'}
+          >
+            {codeContent}
+          </PromptExample>
+        );
+      }
+
+      // Default code rendering for regular code blocks
+      if (!inline) {
+        return (
+          <div className="relative rounded-lg overflow-hidden" style={{ background: 'var(--bg-secondary)' }}>
+            <pre className="p-4 overflow-x-auto border" style={{ borderColor: 'var(--border-color)', margin: 0 }}>
+              <code className={className} {...rest}>
+                {children}
+              </code>
+            </pre>
+          </div>
+        );
+      }
+
+      // Inline code
+      return (
+        <code className={className} {...rest}>
+          {children}
+        </code>
+      );
+    },
+  };
 
   const milestoneId = parseInt(id || '1');
   const milestone = milestones.find((m) => m.id === milestoneId);
@@ -26,11 +78,11 @@ export const MilestonePage = () => {
 
   if (!isUnlocked) {
     return (
-      <div className="min-h-screen bg-[#111827] flex items-center justify-center">
+      <div className="min-h-screen bg-[var(--bg-primary)] flex items-center justify-center">
         <div className="text-center max-w-md px-6">
           <div className="text-6xl mb-6">🔒</div>
-          <h2 className="text-3xl font-bold text-white mb-3">Milestone Bloccata</h2>
-          <p className="text-white/60 mb-8 text-base">
+          <h2 className="text-3xl font-bold mb-3" style={{ color: 'var(--text-primary)' }}>Milestone Bloccata</h2>
+          <p className="mb-8 text-base" style={{ color: 'var(--text-secondary)' }}>
             Completa la Milestone {milestoneId - 1} per sbloccare questa!
           </p>
           <button
@@ -54,28 +106,24 @@ export const MilestonePage = () => {
     console.log('Language changed to:', lang);
   };
 
-  const handleThemeChange = () => {
-    setIsDarkMode(!isDarkMode);
-    console.log('Theme changed to:', !isDarkMode ? 'dark' : 'light');
-  };
-
   return (
-    <div className="min-h-screen bg-[#111827]">
+    <div className="min-h-screen bg-[var(--bg-primary)]">
       {/* Global Header */}
       <Header
         currentLanguage={language}
-        isDarkMode={isDarkMode}
         onLanguageChange={handleLanguageChange}
-        onThemeChange={handleThemeChange}
       />
 
       {/* Milestone Header - Nextra Style */}
-      <header className="border-b border-white/5">
+      <header className="border-b" style={{ borderColor: 'var(--border-subtle)' }}>
         <div className="container mx-auto px-4 md:px-6 lg:px-8 py-6">
           <div className="flex items-center justify-between mb-6">
             <button
               onClick={() => navigate('/')}
-              className="flex items-center gap-2 text-white/60 hover:text-white transition-colors text-sm"
+              className="flex items-center gap-2 transition-colors text-sm"
+              style={{ color: 'var(--text-secondary)' }}
+              onMouseEnter={(e) => e.currentTarget.style.color = 'var(--text-primary)'}
+              onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-secondary)'}
             >
               <ArrowLeft className="w-4 h-4" />
               Torna alle Milestone
@@ -91,8 +139,8 @@ export const MilestonePage = () => {
               </span>
             </div>
           </div>
-          <h1 className="text-4xl font-bold text-white mb-3">{milestone.title}</h1>
-          <p className="text-lg text-white/70 leading-relaxed">{milestone.subtitle}</p>
+          <h1 className="text-4xl font-bold mb-3" style={{ color: 'var(--text-primary)' }}>{milestone.title}</h1>
+          <p className="text-lg leading-relaxed" style={{ color: 'var(--text-secondary)' }}>{milestone.subtitle}</p>
         </div>
       </header>
 
@@ -102,7 +150,11 @@ export const MilestonePage = () => {
           {/* Main Content - Clean, no card */}
           <div>
             <div className="prose-compact max-w-none">
-              <ReactMarkdown remarkPlugins={[remarkGfm]}>
+              <ReactMarkdown
+                remarkPlugins={[remarkGfm, remarkPromptPlugin]}
+                rehypePlugins={[rehypeSlug]}
+                components={markdownComponents}
+              >
                 {milestone.description}
               </ReactMarkdown>
             </div>
@@ -130,7 +182,7 @@ export const MilestonePage = () => {
                   <CheckCircle2 className="w-5 h-5" />
                   <div>
                     <p className="font-medium text-sm">Milestone Completata! 🎉</p>
-                    <p className="text-xs text-white/60 mt-0.5">
+                    <p className="text-xs mt-0.5" style={{ color: 'var(--text-tertiary)' }}>
                       +{milestone.xp} XP guadagnati
                     </p>
                   </div>
@@ -141,15 +193,24 @@ export const MilestonePage = () => {
 
           {/* Sidebar - Nextra Style */}
           <aside className="hidden lg:block">
-            <div className="sticky top-4 space-y-6">
+            <div className="sticky top-24 space-y-6">
+              {/* Table of Contents */}
+              <TableOfContents content={milestone.description} />
+
+              {/* Divider */}
+              <div className="pt-4 border-t" style={{ borderColor: 'var(--border-subtle)' }} />
+
               {/* Topics */}
               <div>
-                <h3 className="font-semibold text-xs uppercase tracking-wide text-white/40 mb-3">Argomenti Trattati</h3>
+                <h3 className="font-semibold text-xs uppercase tracking-wide mb-3" style={{ color: 'var(--text-tertiary)' }}>Argomenti Trattati</h3>
                 <ul className="space-y-2 text-sm">
                   {milestone.topics.map((topic, index) => (
                     <li
                       key={index}
-                      className="text-white/70 hover:text-white transition-colors leading-snug"
+                      className="transition-colors leading-snug"
+                      style={{ color: 'var(--text-secondary)' }}
+                      onMouseEnter={(e) => e.currentTarget.style.color = 'var(--text-primary)'}
+                      onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-secondary)'}
                     >
                       {topic}
                     </li>
@@ -158,13 +219,16 @@ export const MilestonePage = () => {
               </div>
 
               {/* Navigation */}
-              <div className="pt-4 border-t border-white/5">
-                <h3 className="font-semibold text-xs uppercase tracking-wide text-white/40 mb-3">Navigazione</h3>
+              <div className="pt-4 border-t" style={{ borderColor: 'var(--border-subtle)' }}>
+                <h3 className="font-semibold text-xs uppercase tracking-wide mb-3" style={{ color: 'var(--text-tertiary)' }}>Navigazione</h3>
                 <div className="space-y-2 text-sm">
                   {milestone.id > 1 && (
                     <button
                       onClick={() => navigate(`/milestone/${milestone.id - 1}`)}
-                      className="block text-white/70 hover:text-white transition-colors text-left"
+                      className="block transition-colors text-left"
+                      style={{ color: 'var(--text-secondary)' }}
+                      onMouseEnter={(e) => e.currentTarget.style.color = 'var(--text-primary)'}
+                      onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-secondary)'}
                     >
                       ← Milestone Precedente
                     </button>
@@ -172,7 +236,10 @@ export const MilestonePage = () => {
                   {milestone.id < 12 && (
                     <button
                       onClick={() => navigate(`/milestone/${milestone.id + 1}`)}
-                      className="block text-white/70 hover:text-white transition-colors text-left"
+                      className="block transition-colors text-left"
+                      style={{ color: 'var(--text-secondary)' }}
+                      onMouseEnter={(e) => e.currentTarget.style.color = 'var(--text-primary)'}
+                      onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-secondary)'}
                     >
                       Milestone Successiva →
                     </button>

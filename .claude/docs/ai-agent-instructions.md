@@ -4,19 +4,45 @@
 
 **Scenario**: "Add milestone 5 about Custom Commands"
 
+### Option A: Delegate to Content Enricher Agent (RECOMMENDED)
+
+**When**: User provides external content (Kindle, PDF, book notes)
+
+**Your workflow**:
+1. Use Task tool with `subagent_type: "content-enricher"`
+2. Provide milestone number and source content
+3. Agent creates complete file and updates aggregator
+4. Verify output with `npm run dev`
+
+**Agent handles**:
+- Content structuring (3-5 chapters)
+- Quiz generation (3-5 questions)
+- Challenge creation
+- File creation and export updates
+- 300-line limit compliance
+
+### Option B: Manual Creation
+
+**When**: Quick additions, no external content available
+
 **Your workflow**:
 1. Read existing milestones 1-4 to understand pattern
-2. Create milestone 5 following same structure
-3. Research Claude Code Custom Commands if needed
-4. Write Italian content with escaped backticks
-5. Include quiz questions (3-5 questions)
-6. Add to milestones array
+2. Create new file: `/src/data/milestones/milestone-05-custom-commands.ts`
+3. Write milestone object with Italian content
+4. Escape backticks in code blocks
+5. Export in `/src/data/milestones/index.ts`
+6. Add to milestones array in index.ts
 7. Test in dev server
 8. Verify unlock logic works
 
-**Template for AI**:
+**Template for AI** (Manual creation):
+
+File: `/src/data/milestones/milestone-05-custom-commands.ts`
+
 ```typescript
-{
+import { Milestone } from '../../types';
+
+export const milestone05: Milestone = {
   id: 5,
   title: "[Feature Name]",
   subtitle: "[One-line description in Italian]",
@@ -60,7 +86,22 @@
       }
     ]
   }
-}
+};
+```
+
+Then update `/src/data/milestones/index.ts`:
+```typescript
+export { milestone05 } from './milestone-05-custom-commands';
+
+import { milestone05 } from './milestone-05-custom-commands';
+
+export const milestones: Milestone[] = [
+  milestone01,
+  milestone02,
+  milestone03,
+  milestone04,
+  milestone05,  // Add here
+];
 ```
 
 ## 🐛 When Asked to Debug

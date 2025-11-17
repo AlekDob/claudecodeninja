@@ -551,51 +551,201 @@ gap: 1rem;
 
 ---
 
-## 🌗 Dark Mode
+## 🌗 Light & Dark Mode System
 
-### Color Adjustments
+**Implementation**: Using React Context API + CSS Variables + localStorage persistence
 
+### Theme Architecture
+
+**ThemeContext** (`/src/contexts/ThemeContext.tsx`):
+- Provides `theme` state ('light' | 'dark')
+- `toggleTheme()` function for switching
+- Persists to `localStorage` as `claudecodeninja-theme`
+- Detects system preference via `prefers-color-scheme`
+- Applies `.dark` or `.light` class to `<html>` element
+
+### CSS Variables
+
+**Light Mode (Default)**:
 ```css
-/* Light Mode (Default) */
 :root {
-  --bg-primary: #ffffff;
-  --bg-secondary: #f8fafc;
-  --text-primary: #0f172a;
+  /* Light mode */
+  --bg-primary: #ffffff;        /* Main background */
+  --bg-secondary: #f8fafc;      /* Card backgrounds */
+  --bg-tertiary: #f1f5f9;       /* Hover states */
+  --text-primary: #0f172a;      /* Headings, primary text */
+  --text-secondary: #64748b;    /* Body text */
+  --text-tertiary: #94a3b8;     /* Metadata, subtle text */
+  --border-color: rgba(15, 23, 42, 0.1);    /* Borders */
+  --border-subtle: rgba(15, 23, 42, 0.05);  /* Dividers */
 }
+```
 
-/* Dark Mode */
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg-primary: #0f172a;
-    --bg-secondary: #1e293b;
-    --text-primary: #f8fafc;
-  }
-}
-
-/* Or toggle class */
+**Dark Mode**:
+```css
 .dark {
-  --bg-primary: #0f172a;
-  --bg-secondary: #1e293b;
-  --text-primary: #f8fafc;
+  /* Dark mode */
+  --bg-primary: #111827;        /* Main background (Nextra-style) */
+  --bg-secondary: #1e293b;      /* Card backgrounds */
+  --bg-tertiary: #334155;       /* Hover states */
+  --text-primary: #f8fafc;      /* Headings, primary text */
+  --text-secondary: #cbd5e1;    /* Body text */
+  --text-tertiary: #94a3b8;     /* Metadata, subtle text */
+  --border-color: rgba(255, 255, 255, 0.1);   /* Borders */
+  --border-subtle: rgba(255, 255, 255, 0.05); /* Dividers */
 }
 ```
 
-### Component Adjustments
+### Using CSS Variables in Components
 
-**Cards in Dark Mode**:
+**Background Colors**:
+```tsx
+// ✅ Use CSS variable for theme-aware backgrounds
+<div className="min-h-screen" style={{ backgroundColor: 'var(--bg-primary)' }}>
+  {content}
+</div>
+
+// Alternative with bg-[var(...)]
+<div className="min-h-screen bg-[var(--bg-primary)]">
+  {content}
+</div>
+```
+
+**Text Colors**:
+```tsx
+// ✅ Use CSS variable for theme-aware text
+<h1 style={{ color: 'var(--text-primary)' }}>
+  Title
+</h1>
+
+<p style={{ color: 'var(--text-secondary)' }}>
+  Body text
+</p>
+```
+
+**Borders**:
+```tsx
+// ✅ Use CSS variable for theme-aware borders
+<div
+  className="border rounded-lg p-4"
+  style={{ borderColor: 'var(--border-color)' }}
+>
+  {content}
+</div>
+```
+
+### Header Component Example
+
+```tsx
+import { useTheme } from '../../contexts/ThemeContext';
+import { Moon, Sun } from 'lucide-react';
+
+export const Header = () => {
+  const { theme, toggleTheme } = useTheme();
+
+  return (
+    <header
+      className="sticky top-0 z-50 backdrop-blur-md border-b"
+      style={{ borderColor: 'var(--border-color)' }}
+    >
+      <button
+        onClick={toggleTheme}
+        className="w-10 h-10 rounded-full border flex items-center justify-center"
+        style={{
+          backgroundColor: theme === 'dark'
+            ? 'rgba(255, 255, 255, 0.05)'
+            : 'rgba(15, 23, 42, 0.05)',
+          borderColor: 'var(--border-color)'
+        }}
+        aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+      >
+        {theme === 'dark' ? (
+          <Sun className="w-5 h-5" style={{ color: 'var(--text-primary)' }} />
+        ) : (
+          <Moon className="w-5 h-5" style={{ color: 'var(--text-primary)' }} />
+        )}
+      </button>
+    </header>
+  );
+};
+```
+
+### Body Transition
+
 ```css
-.dark .card {
-  background: rgba(30, 41, 59, 0.5);
-  border-color: rgba(148, 163, 184, 0.2);
+body {
+  @apply font-sans antialiased;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 ```
 
-**Buttons in Dark Mode**:
-```css
-.dark .button-secondary {
-  border-color: rgba(255, 255, 255, 0.2);
-  color: #f8fafc;
-}
+**Why 0.3s?** Smooth but fast enough to not feel sluggish.
+
+### Component-Specific Adjustments
+
+**MilestoneCard in Light Mode**:
+```tsx
+// Borders adapt automatically via CSS variables
+<div
+  className="bg-white/5 backdrop-blur-sm border rounded-lg p-6"
+  style={{ borderColor: isCompleted ? '#10b981' : 'var(--border-color)' }}
+>
+  {content}
+</div>
+```
+
+**ProgressTracker in Light Mode**:
+```tsx
+// Use inline styles for conditional theming
+<div
+  className="rounded-lg p-4 border"
+  style={{
+    backgroundColor: theme === 'dark' ? 'rgba(255, 255, 255, 0.05)' : 'rgba(15, 23, 42, 0.05)',
+    borderColor: 'var(--border-color)'
+  }}
+>
+  {content}
+</div>
+```
+
+### Testing Checklist
+
+When implementing theme support:
+
+- [ ] All backgrounds use `var(--bg-primary)`, `var(--bg-secondary)`, or `var(--bg-tertiary)`
+- [ ] All text uses `var(--text-primary)`, `var(--text-secondary)`, or `var(--text-tertiary)`
+- [ ] All borders use `var(--border-color)` or `var(--border-subtle)`
+- [ ] Theme toggle button shows correct icon (Sun in dark mode, Moon in light mode)
+- [ ] Theme persists on page reload (localStorage check)
+- [ ] System preference detection works on first visit
+- [ ] Smooth 0.3s transition when toggling theme
+- [ ] No flash of unstyled content (FOUC) on load
+
+### Accessibility Considerations
+
+**Contrast in Light Mode**:
+- Text on white background: `#0f172a` (AAA compliance: 15.8:1)
+- Secondary text: `#64748b` (AA compliance: 4.6:1)
+
+**Contrast in Dark Mode**:
+- Text on dark background: `#f8fafc` (AAA compliance: 18.2:1)
+- Secondary text: `#cbd5e1` (AA compliance: 12.6:1)
+
+**Prefers Color Scheme**:
+```tsx
+// ThemeContext respects system preference on first load
+const getInitialTheme = (): Theme => {
+  const savedTheme = localStorage.getItem('claudecodeninja-theme') as Theme;
+  if (savedTheme) return savedTheme;
+
+  // Respect system preference
+  if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+    return 'dark';
+  }
+  return 'light';
+};
 ```
 
 ---

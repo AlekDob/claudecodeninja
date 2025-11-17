@@ -20,13 +20,15 @@
 ### 2. The 300-Line Rule
 **Files over 300 lines should be broken into feature folders.**
 
-✅ **Good** (when `milestones.ts` grows to include all 12):
+✅ **Good** (IMPLEMENTED - Current structure):
 ```
 /Users/alekdob/Desktop/Dev/Personal/claudecodeninja/src/data/milestones/
-├── index.ts           # Re-exports all milestones
-├── beginner.ts        # Milestones 1-4
-├── intermediate.ts    # Milestones 5-8
-└── advanced.ts        # Milestones 9-12
+├── index.ts                          # Exports aggregator (16 lines)
+├── milestone-01-getting-started.ts   # Milestone 1 (73 lines)
+├── milestone-02-core-cli.ts          # Milestone 2 (105 lines)
+├── milestone-03-permissions.ts       # Milestone 3 (86 lines)
+├── milestone-04-settings.ts          # Milestone 4 (96 lines)
+└── milestone-{05-12}-*.ts            # Future milestones (pending)
 ```
 
 ❌ **Bad**:
@@ -34,7 +36,7 @@
 /Users/alekdob/Desktop/Dev/Personal/claudecodeninja/src/data/milestones.ts  # 1200 lines
 ```
 
-**Current Status**: `milestones.ts` is ~400 lines (4 milestones). When 5-12 are added, split it.
+**Current Status**: ✅ Milestones 1-4 refactored into separate files (Jan 2025). Each file under 300 lines. Milestones 5-12 will follow same pattern when created by content-enricher agent.
 
 ### 3. The Domain Rule
 **Organize by feature/domain, not by technical type.**
@@ -101,7 +103,14 @@ resolve: {
 │   │   ├── HomePage.tsx                    # Landing with all milestones
 │   │   └── MilestonePage.tsx               # Individual milestone detail
 │   ├── data/
-│   │   ├── milestones.ts                   # Milestone content (1-4 done, 5-12 pending)
+│   │   ├── milestones.ts                   # Re-exports from milestones/
+│   │   ├── milestones/
+│   │   │   ├── index.ts                    # Aggregator
+│   │   │   ├── milestone-01-getting-started.ts
+│   │   │   ├── milestone-02-core-cli.ts
+│   │   │   ├── milestone-03-permissions.ts
+│   │   │   ├── milestone-04-settings.ts
+│   │   │   └── milestone-{05-12}-*.ts      # Future (pending)
 │   │   └── badges.ts                       # Badge tier configuration
 │   ├── utils/
 │   │   └── progressTracking.ts             # LocalStorage persistence logic
