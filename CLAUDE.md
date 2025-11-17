@@ -1,210 +1,249 @@
-# ClaudeCodeNinja
+# CLAUDE.md
 
-Learning path gamificato per diventare Claude Code Master. Progetto creato interamente con Claude Code come showcase del prodotto!
+<!-- QUACK_AGENT_HEADER_START - DO NOT EDIT MANUALLY -->
+Your name is **Agent Soo-yeon**, and you're the **Feature Coordinator**.
 
-## 🎯 Project Type
+**Communication Style:** friendly
 
-Interactive learning platform con gamification system.
+**Protocol Droids Available:**
+Specialized subagents that assist with specific tasks. Dynamically loaded when invoked via the Task tool.
 
-## 🛠️ Tech Stack
+**Project-Specific Protocol Droids:** `.claude/agents/`
+**Global Protocol Droids:** `~/.claude/agents/`
 
-- **Framework**: React 18 + TypeScript
-- **Build Tool**: Vite 5
-- **Styling**: Tailwind CSS 3
-- **Routing**: React Router v6
-- **Animations**: Framer Motion
-- **Markdown**: React Markdown + Remark GFM
-- **Icons**: Lucide React
-- **Storage**: LocalStorage (Supabase ready)
+Use the Task tool to invoke agents with their subagent_type. Each agent's full description and capabilities are loaded dynamically when needed.
 
-## 📁 Project Structure
+- **Your role**: Coordinate the implementation, delegate to Protocol Droids for specialized work
+- **Remember**: You're a PM managing a feature/sprint on a specific branch, not a technical specialist!
 
-```
-claudecodeninja/
-├── src/
-│   ├── components/          # React components
-│   │   ├── LearningPath/   # Milestone cards, progress tracking
-│   │   ├── Gamification/   # Badges, achievements
-│   │   └── ui/             # Reusable UI components
-│   ├── pages/              # Route pages (Home, Milestone)
-│   ├── data/               # Static data (milestones, badges)
-│   ├── utils/              # Helper functions (progress tracking)
-│   ├── types/              # TypeScript interfaces
-│   └── assets/             # CSS, images
-├── public/                 # Static files
-│   ├── badges/            # Badge SVG assets
-│   └── images/            # Other images
-└── package.json
-```
+**Skills Available:**
+Specialized knowledge domains that provide expert guidance. Dynamically loaded via the Skill tool.
 
-## 🎨 Code Style
+**Project-Specific Skills:** `.claude/skills/`
 
-- **Components**: Functional components with hooks only
-- **TypeScript**: Strict mode enabled, no `any` types
-- **Naming**: PascalCase for components, camelCase for functions/variables
-- **Files**: One component per file, colocate related files
-- **Imports**: Absolute imports via `@/` alias
-- **CSS**: Tailwind utility-first, custom utilities in `assets/css/index.css`
+Use the Skill tool to invoke skills by name. Each skill's documentation and capabilities are loaded dynamically when needed.
 
-## 🧩 Component Guidelines
+**MCP Servers Available:**
+Model Context Protocol servers for external integrations. Configured in `.mcp.json`
 
-### MilestoneCard
-Shows individual milestone with:
-- Status (locked/in-progress/completed)
-- XP reward, estimated time, badge emoji
-- Topics covered
-- Click to navigate to detail page
+**Project MCP Servers:** `.mcp.json` in project root
+**Global MCP Servers:** `~/.mcp.json`
 
-### ProgressTracker
-Displays:
-- Progress bar (X/12 milestones)
-- Total XP
-- Current badge tier
-- Next badge preview
+**Slash Commands Available:**
+Pre-configured commands for common operations. Located in `.claude/commands/`
 
-### BadgeDisplay
-Grid of all 4 badges:
-- Bronze, Silver, Gold, Platinum
-- Locked/unlocked states
-- XP requirements
+**📚 Discovery Protocol:**
 
-## 🎮 Gamification Logic
+Before answering any question, ALWAYS check if there's a relevant resource:
 
-### Progress Tracking (LocalStorage)
-```typescript
-interface UserProgress {
-  completedMilestones: number[]
-  totalXP: number
-  badges: BadgeTier[]
-  startedAt: Date
-  lastActivity: Date
-  quizScores: Record<number, number>
-}
-```
+1. **Check Skills First**: If the question relates to a specific domain (Discord, terminals, design, etc.)
+   - Scan `.claude/skills/` directory to see available skill folders
+   - Use the SlashCommand tool to invoke the skill (e.g., `/discord-community-manager`)
+   - Let the skill provide specialized guidance
 
-### Badge Tiers
-- Bronze: 0-600 XP (Milestones 1-4)
-- Silver: 600-1500 XP (Milestones 5-8)
-- Gold: 1500-2500 XP (Milestones 9-12)
-- Platinum: 2500+ XP (All + projects)
+2. **Check Protocol Droids Next**: If the task requires specialized technical work
+   - Scan `.claude/agents/` directory to see available agents
+   - Use the Task tool to delegate to the appropriate agent
+   - Coordinate their work as PM
 
-### Milestone Unlock Logic
-- Milestone 1 always unlocked
-- Milestone N requires N-1 completed
-- Sequential unlocking only
+3. **Check Slash Commands**: For common operations (commit, review, etc.)
+   - Scan `.claude/commands/` directory for available commands
+   - Use SlashCommand tool with appropriate command
 
-## 📝 Content Structure
+4. **Check MCP Servers**: For external integrations (Supabase, GitHub, etc.)
+   - Check `.mcp.json` for configured MCP servers
+   - Use MCP tools when available for the task
 
-Each milestone includes:
-- `title` & `subtitle`
-- `description` (Markdown formatted)
-- `xp` reward
-- `badge` emoji
-- `estimatedTime`
-- `topics` array
-- `quiz` (optional)
-- `challenge` (optional)
+**Examples:**
+- User asks about Discord → Check `.claude/skills/discord-community-manager/` FIRST
+- User asks about terminal issues → Check `.claude/skills/xterm-terminal-expert/` FIRST
+- User wants to commit → Scan `.claude/commands/` for commit command
+- User wants code review → Use `/code-review` slash command
+- User needs Git Flow operations → Check `.claude/agents/git-flow-manager.md`
+- User needs Supabase query → Check `.mcp.json` for Supabase MCP server
 
-## 🎯 Development Workflow
+<!-- QUACK_AGENT_HEADER_END -->
 
-### Add New Milestone
-1. Add to `src/data/milestones.ts`
-2. Include all required fields
-3. Escape backticks in description: \`code\`
-4. Test in dev server
+## 🎯 Repository Type
 
-### Modify Progress Tracking
-1. Update types in `src/types/index.ts`
-2. Update logic in `src/utils/progressTracking.ts`
-3. Update UI components to reflect changes
+**ClaudeCodeNinja** is a gamified interactive learning platform for mastering Claude Code. This project is itself a showcase of AI-first development - everything was generated by Claude Code in a single session.
 
-### Add New Page
-1. Create in `src/pages/`
-2. Add route in `src/App.tsx`
-3. Use existing layout patterns
+**Purpose**: Transform traditional documentation into an engaging learning experience with:
+- 12 sequential milestones from beginner to expert
+- XP system and badge unlocking (Bronze → Silver → Gold → Platinum)
+- Progress tracking and completion rewards
+- Interactive quizzes and coding challenges
+- Italian-first content with English translation planned
 
-## 🧪 Testing
+**Business Model**:
+- Free tier: Milestones 1-4
+- Premium: €49/month for all milestones + certification
+- Enterprise: €2000 package for team training
 
-No automated tests yet. Manual testing checklist:
+## 🛠 Tech Stack
 
-- [ ] All milestones load correctly
-- [ ] Progress tracking persists on refresh
-- [ ] Locked milestones cannot be accessed
-- [ ] Completing milestone updates XP and badges
-- [ ] Navigation works between pages
-- [ ] Responsive on mobile/tablet/desktop
+**Core Framework**:
+- React 18.2.0 - Functional components with hooks only
+- TypeScript 5.3.3 - Strict mode, no `any` types allowed
+- Vite 5.0.8 - Fast dev server and optimized builds
 
-## 🔧 Common Tasks
+**Styling & Animation**:
+- Tailwind CSS 3.4.0 - Utility-first with custom brand extensions
+- Framer Motion 10.16.5 - Smooth animations for cards/transitions
+- Custom glass-card utilities - Glassmorphism effects
 
-### Run Development Server
+**Routing & State**:
+- React Router v6.20.0 - Client-side routing
+- LocalStorage - Progress persistence (Phase 1)
+- Supabase - Future user auth and sync (Phase 2, not active yet)
+
+**Content Rendering**:
+- React Markdown 9.0.1 - Render milestone descriptions
+- Remark GFM 4.0.0 - GitHub Flavored Markdown support
+- Lucide React 0.294.0 - Icon library
+
+**Build & Dev**:
+- Node.js 18.17.0 - Current environment (no Node 20 required)
+- TypeScript strict mode - Type safety enforced
+- ESLint ready - Code quality (to be configured)
+
+## 📚 Detailed Documentation
+
+All detailed documentation has been organized into focused files following the 300-line rule:
+
+### 📂 **Project Structure & Organization**
+👉 **[File Organization Laws](.claude/docs/file-organization.md)**
+- The 4 fundamental laws (20-line, 300-line, Domain, Name rules)
+- Complete file structure with absolute paths
+- When and how to split files
+
+### 🎨 **Code Standards**
+👉 **[Code Style & Conventions](.claude/docs/code-style.md)**
+- TypeScript rules (strict typing, explicit returns)
+- React component patterns (functional only, typed props)
+- Tailwind CSS guidelines (utility-first)
+- Naming conventions (PascalCase, camelCase, UPPER_SNAKE_CASE)
+- Code commenting best practices
+
+### 🎮 **Gamification & Progress**
+👉 **[Gamification System](.claude/docs/gamification-system.md)**
+- Progress tracking architecture (UserProgress interface)
+- Badge system logic (Bronze/Silver/Gold/Platinum)
+- Milestone unlock rules (sequential progression)
+- XP distribution across 12 milestones
+
+### 📝 **Content Creation**
+👉 **[Milestone Content Structure](.claude/docs/milestone-content.md)**
+- Required fields for each milestone
+- Markdown formatting rules (CRITICAL: escaped backticks!)
+- Content template for new milestones
+- The 12 milestones roadmap with topics and XP
+
+### 🚀 **Development**
+👉 **[Development Workflow](.claude/docs/development-workflow.md)**
+- Adding new milestones (step-by-step)
+- Modifying progress tracking
+- Adding new pages
+- Common npm commands
+
+### 🧪 **Testing**
+👉 **[Testing Guidelines](.claude/docs/testing-guidelines.md)**
+- Manual testing checklist (milestone display, progress, badges, navigation)
+- Testing progress reset (localStorage manipulation)
+- Common issues & fixes (Date serialization, backticks)
+
+### 🤖 **AI Development**
+👉 **[AI Agent Instructions](.claude/docs/ai-agent-instructions.md)**
+- When asked to add content (workflow + template)
+- When asked to debug (diagnostic checklist)
+- Next steps for AI (milestones 5-12 pending)
+
+### 🎨 **Brand & Design**
+👉 **[Brand Identity](.claude/docs/brand-identity.md)**
+- Color palette (Primary Orange, Secondary Blue, Accent Gold, Success Cyan)
+- Typography (Inter for UI, Fira Code for code blocks)
+- Custom utilities (glass-card, shadow-glow, badge-glow)
+- Brand voice guidelines
+
+### 🚀 **Deployment**
+👉 **[Deployment Guide](.claude/docs/deployment.md)**
+- Vercel deployment setup
+- Build optimizations
+- Performance tips
+- Security (CSP, HTTPS)
+- Analytics recommendations
+
+## 🎯 Quick Start for AI Agents
+
+**Current Status:**
+- ✅ Milestones 1-4 complete with full Italian content
+- ⏳ Milestones 5-12 pending
+- ✅ Progress tracking with LocalStorage working
+- ✅ Badge system implemented
+- ⏳ Quiz functionality (data ready, UI pending)
+- ⏳ Coding challenges (pending)
+
+**When adding new content:**
+1. Read [milestone-content.md](.claude/docs/milestone-content.md) for the template
+2. Read [code-style.md](.claude/docs/code-style.md) for conventions
+3. Read existing milestones 1-4 in `/Users/alekdob/Desktop/Dev/Personal/claudecodeninja/src/data/milestones.ts`
+4. Follow the pattern with escaped backticks
+5. Test with `npm run dev`
+
+**When debugging:**
+1. Read [testing-guidelines.md](.claude/docs/testing-guidelines.md) for common issues
+2. Check browser console for errors
+3. Verify LocalStorage: `claudecodeninja-progress`
+
+## 🔧 Common Commands
+
 ```bash
+# Start development server
 npm run dev
-# Opens on http://localhost:3000
-```
+# → http://localhost:3000/
 
-### Build for Production
-```bash
+# Build for production
 npm run build
-# Outputs to dist/
-```
+# → Outputs to dist/
 
-### Preview Production Build
-```bash
+# Preview production build
 npm run preview
+
+# Type checking
+npx tsc --noEmit
 ```
 
-### Reset Progress (for testing)
-Open browser console:
-```javascript
-localStorage.removeItem('claudecodeninja-progress')
-```
+## 🧠 Project Philosophy
 
-## 🚀 Future Enhancements
+### AI-First Development
+This entire project was generated by Claude Code in a single session. With proper documentation, future AI agents can autonomously add milestones 5-12 without human intervention.
 
-Planned features (not yet implemented):
-- Supabase integration for user auth and sync
-- Quiz functionality with score tracking
-- Coding challenges with validation
-- Certificate PDF generation
-- English i18n version
-- Dark/light theme toggle
-- Social sharing for badges
+### Documentation as Enabler
+This CLAUDE.md and its supporting docs in `.claude/docs/` are the blueprint for autonomous AI work. Every question has an answer in these files.
 
-## 🎨 Brand Colors
+### Gamification as Engagement
+Traditional documentation has ~10% completion rate. This platform targets ~70% through:
+- Sequential unlocking (builds proper foundation)
+- XP rewards (tangible progress)
+- Badge system (social proof)
+- Quiz validation (ensures learning)
 
-```css
---primary: #FF6B35     /* Ninja Orange - Action & Energy */
---secondary: #004E89   /* Deep Blue - Professional */
---accent: #F7931E      /* Gold - Achievements */
---success: #00D9FF     /* Cyan - Progress */
---dark: #1A1A2E        /* Dark background */
---light: #F8F9FA       /* Light background */
-```
+### Italian-First Strategy
+First comprehensive Italian learning path for Claude Code. Captures underserved market, builds authority, enables consulting opportunities.
 
-## 🐛 Known Issues
+---
 
-None yet! Report any bugs you find.
+**Last Updated**: 2025-11-16 by Claude Code (Agent Soo-yeon)
+**Status**: Milestones 1-4 complete, 5-12 pending
+**Next Steps**: Generate remaining milestone content, test full learning path, deploy to Vercel
 
-## 📦 Dependencies
-
-Key dependencies and their purpose:
-- `react-router-dom`: Client-side routing
-- `framer-motion`: Smooth animations
-- `react-markdown`: Render milestone content
-- `lucide-react`: Icon library
-- `@supabase/supabase-js`: Future auth/sync (not active yet)
-
-## 🤝 Contributing
-
-This project is a showcase of AI-first development.
-
-When working on this project:
-1. Keep component structure simple and readable
-2. Maintain gamification integrity (don't allow cheating!)
-3. Add new milestones following existing patterns
-4. Test progress tracking thoroughly
-5. Keep markdown content well-formatted
-
-## 📄 License
-
-MIT - Created by Alek Dobrohotov with Claude Code
+**📖 Full Documentation Index:**
+- [File Organization](.claude/docs/file-organization.md)
+- [Code Style](.claude/docs/code-style.md)
+- [Gamification System](.claude/docs/gamification-system.md)
+- [Milestone Content](.claude/docs/milestone-content.md)
+- [Development Workflow](.claude/docs/development-workflow.md)
+- [Testing Guidelines](.claude/docs/testing-guidelines.md)
+- [AI Agent Instructions](.claude/docs/ai-agent-instructions.md)
+- [Brand Identity](.claude/docs/brand-identity.md)
+- [Deployment Guide](.claude/docs/deployment.md)

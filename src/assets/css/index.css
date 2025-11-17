@@ -3,49 +3,470 @@
 @tailwind utilities;
 
 @layer base {
+  /* CSS Variables for theme support */
+  :root {
+    --bg-primary: #ffffff;
+    --bg-secondary: #f8fafc;
+    --text-primary: #0f172a;
+    --text-secondary: #64748b;
+    --text-tertiary: #94a3b8;
+  }
+
+  .dark {
+    --bg-primary: #0f172a;
+    --bg-secondary: #1e293b;
+    --text-primary: #f8fafc;
+    --text-secondary: #94a3b8;
+    --text-tertiary: #64748b;
+  }
+
   body {
-    @apply bg-dark text-light font-sans antialiased;
+    @apply font-sans antialiased;
+    background: #111827;
+    color: #f8fafc;
   }
 
   h1 {
-    @apply text-4xl font-bold tracking-tight;
+    @apply text-2xl md:text-3xl font-bold tracking-tight leading-tight;
   }
 
   h2 {
-    @apply text-3xl font-bold tracking-tight;
+    @apply text-xl md:text-2xl font-bold tracking-tight leading-tight;
   }
 
   h3 {
-    @apply text-2xl font-semibold;
+    @apply text-lg md:text-xl font-semibold leading-tight;
   }
 
   code {
-    @apply font-mono bg-secondary/20 px-1.5 py-0.5 rounded text-sm;
+    @apply font-mono px-1.5 py-0.5 rounded text-xs border border-white/10;
+    background: rgba(30, 41, 59, 0.5);
   }
 
   pre {
-    @apply font-mono bg-secondary/20 p-4 rounded-lg overflow-x-auto;
+    @apply font-mono p-3 rounded-lg overflow-x-auto border border-white/10 text-xs;
+    background: rgba(30, 41, 59, 0.5);
+    line-height: 1.5;
+  }
+
+  pre code {
+    @apply p-0 border-0 text-xs;
+    background: transparent;
+  }
+
+  /* Focus visible for accessibility */
+  :focus-visible {
+    @apply outline-none ring-2 ring-offset-2 rounded;
+    --tw-ring-color: #3b82f6;
+    ring-offset-color: #1e293b;
+  }
+
+  /* Smooth scrolling */
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* Screen reader only */
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
   }
 }
 
 @layer components {
+  /* Glass Card Effect (AgentVoice-inspired) */
   .glass-card {
-    @apply bg-white/5 backdrop-blur-lg border border-white/10 rounded-xl;
+    @apply bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
-  .glow-effect {
-    box-shadow: 0 0 20px rgba(255, 107, 53, 0.3);
+  .glass-card:hover {
+    @apply border-white/30;
+    transform: translateY(-4px);
+    box-shadow: 0 12px 48px rgba(0, 0, 0, 0.15);
   }
 
+  /* Shadow Glow */
+  .shadow-glow {
+    box-shadow: 0 0 40px rgba(102, 126, 234, 0.4);
+  }
+
+  .shadow-glow-lg {
+    box-shadow: 0 0 60px rgba(102, 126, 234, 0.6);
+  }
+
+  /* Badge Glow */
+  .badge-glow {
+    box-shadow: 0 0 20px rgba(255, 215, 155, 0.4);
+    animation: badgeGlow 2s ease-in-out infinite;
+  }
+
+  /* Button Variants */
+  .btn-primary {
+    @apply px-6 py-3 rounded-full font-semibold text-white;
+    @apply transition-all duration-200;
+    background: #3b82f6;
+    box-shadow: 0 4px 6px rgba(59, 130, 246, 0.25);
+  }
+
+  .btn-primary:hover {
+    background: #2563eb;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(59, 130, 246, 0.35);
+  }
+
+  .btn-secondary {
+    @apply bg-transparent px-6 py-3 rounded-full font-semibold;
+    @apply transition-all duration-200;
+    color: #3b82f6;
+    border: 2px solid #3b82f6;
+  }
+
+  .btn-secondary:hover {
+    background: #3b82f6;
+    color: white;
+  }
+
+  .btn-ghost {
+    @apply bg-transparent px-4 py-2 rounded-lg font-medium;
+    @apply transition-all duration-200;
+    color: #64748b;
+  }
+
+  .btn-ghost:hover {
+    background: rgba(59, 130, 246, 0.1);
+    color: #3b82f6;
+  }
+
+  /* Status Badges */
+  .badge-locked {
+    @apply px-3 py-1 rounded-lg text-xs font-semibold uppercase tracking-wide;
+    background: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+    border: 1px solid rgba(239, 68, 68, 0.3);
+  }
+
+  .badge-unlocked {
+    @apply px-3 py-1 rounded-lg text-xs font-semibold uppercase tracking-wide;
+    background: rgba(59, 130, 246, 0.1);
+    color: #3b82f6;
+    border: 1px solid rgba(59, 130, 246, 0.3);
+  }
+
+  .badge-completed {
+    @apply px-3 py-1 rounded-lg text-xs font-semibold uppercase tracking-wide;
+    background: rgba(16, 185, 129, 0.1);
+    color: #10b981;
+    border: 1px solid rgba(16, 185, 129, 0.3);
+  }
+
+  .badge-xp {
+    @apply text-white px-3 py-1 rounded-full text-sm font-semibold inline-flex items-center gap-1;
+    background: linear-gradient(90deg, #ffd89b 0%, #19547b 100%);
+  }
+
+  /* Milestone States */
   .milestone-locked {
     @apply opacity-50 cursor-not-allowed;
   }
 
   .milestone-completed {
-    @apply border-success border-2;
+    @apply border-2;
+    border-color: #10b981;
   }
 
   .milestone-in-progress {
-    @apply border-primary border-2 glow-effect;
+    @apply border-2;
+    border-color: #f97316;
+    box-shadow: 0 0 20px rgba(249, 115, 22, 0.4);
+  }
+
+  /* Progress Bar */
+  .progress-container {
+    @apply bg-white/10 h-2 rounded-full overflow-hidden;
+  }
+
+  .progress-fill {
+    @apply h-full rounded-full;
+    background: linear-gradient(90deg, #3b82f6 0%, #8b5cf6 100%);
+    transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* Featured Card (Premium milestones) */
+  .featured-card {
+    @apply rounded-2xl p-8 text-white relative overflow-hidden;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    box-shadow: 0 0 40px rgba(102, 126, 234, 0.4);
+  }
+
+  /* Compact Prose Styles (Markdown Content) */
+  .prose-compact {
+    @apply leading-relaxed;
+    color: rgba(248, 250, 252, 0.9); /* text-light/90 */
+    max-width: 65ch; /* Optimal line length for readability */
+  }
+
+  .prose-compact h1 {
+    @apply text-2xl font-bold mb-4 mt-6;
+    color: #f8fafc; /* text-light */
+  }
+
+  .prose-compact h2 {
+    @apply text-xl font-bold mb-3 mt-6;
+    color: #f8fafc; /* text-light */
+  }
+
+  .prose-compact h3 {
+    @apply text-lg font-semibold mb-3 mt-4;
+    color: #f8fafc; /* text-light */
+  }
+
+  .prose-compact p {
+    @apply text-base mb-4 leading-normal;
+    color: rgba(248, 250, 252, 0.9); /* text-light/90 */
+  }
+
+  .prose-compact ul,
+  .prose-compact ol {
+    @apply mb-4 ml-4 space-y-1;
+  }
+
+  .prose-compact li {
+    @apply text-base leading-normal;
+    color: rgba(248, 250, 252, 0.9); /* text-light/90 */
+  }
+
+  .prose-compact code {
+    @apply font-mono px-1.5 py-0.5 rounded text-xs border border-white/10 bg-white/5 text-cyan-400;
+  }
+
+  .prose-compact pre {
+    @apply font-mono p-3 rounded-lg overflow-x-auto border border-white/10 mb-4 text-xs;
+    background: rgba(30, 41, 59, 0.8);
+    line-height: 1.5;
+  }
+
+  .prose-compact pre code {
+    @apply p-0 border-0 bg-transparent text-xs;
+  }
+
+  .prose-compact strong {
+    @apply font-semibold;
+    color: #f8fafc; /* text-light */
+  }
+
+  .prose-compact a {
+    @apply underline transition-colors;
+    color: #3b82f6; /* text-accent */
+  }
+
+  .prose-compact a:hover {
+    color: rgba(59, 130, 246, 0.8); /* text-accent/80 */
+  }
+
+  .prose-compact blockquote {
+    @apply border-l-4 pl-4 italic my-4;
+    border-color: #1e293b; /* border-primary */
+    color: rgba(248, 250, 252, 0.7); /* text-light/70 */
+  }
+
+  .prose-compact hr {
+    @apply border-t border-white/20 my-6;
+  }
+
+  .prose-compact table {
+    @apply w-full border-collapse mb-4;
+  }
+
+  .prose-compact th,
+  .prose-compact td {
+    @apply border border-white/20 px-3 py-2 text-sm;
+  }
+
+  .prose-compact th {
+    @apply bg-white/5 font-semibold;
+    color: #f8fafc; /* text-light */
+  }
+
+  .prose-compact img {
+    @apply rounded-lg my-4 max-w-full h-auto;
+  }
+}
+
+@layer utilities {
+  /* Animations */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes slideUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes slideDown {
+    from {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes badgeGlow {
+    0%,
+    100% {
+      box-shadow: 0 0 20px rgba(102, 126, 234, 0.4);
+    }
+    50% {
+      box-shadow: 0 0 40px rgba(102, 126, 234, 0.8);
+    }
+  }
+
+  @keyframes shimmer {
+    0% {
+      background-position: -1000px 0;
+    }
+    100% {
+      background-position: 1000px 0;
+    }
+  }
+
+  @keyframes pulse {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.5;
+    }
+  }
+
+  /* Animation utilities */
+  .animate-fade-in {
+    animation: fadeIn 0.3s ease-out;
+  }
+
+  .animate-slide-up {
+    animation: slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .animate-slide-down {
+    animation: slideDown 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .animate-pulse-slow {
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  /* Shimmer loading skeleton */
+  .shimmer {
+    background: linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0) 0%,
+      rgba(255, 255, 255, 0.3) 50%,
+      rgba(255, 255, 255, 0) 100%
+    );
+    background-size: 1000px 100%;
+    animation: shimmer 2s infinite;
+  }
+
+  /* Container utilities */
+  .container-narrow {
+    @apply max-w-4xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  .container-wide {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  /* Gradient text */
+  .gradient-text {
+    @apply bg-clip-text text-transparent;
+    background-image: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  }
+
+  .gradient-text-hero {
+    @apply bg-clip-text text-transparent;
+    background-image: linear-gradient(90deg, #3b82f6 0%, #8b5cf6 50%, #06b6d4 100%);
+  }
+}
+
+/* Dark mode specific adjustments */
+.dark .glass-card {
+  background: rgba(30, 41, 59, 0.5);
+  border-color: rgba(148, 163, 184, 0.2);
+}
+
+.dark .btn-secondary {
+  @apply border-white/20;
+  color: #f8fafc;
+}
+
+.dark code {
+  background: rgba(50, 55, 60, 0.8);
+}
+
+/* Responsive typography adjustments */
+@media (max-width: 640px) {
+  h1 {
+    @apply text-xl;
+  }
+
+  h2 {
+    @apply text-lg;
+  }
+
+  h3 {
+    @apply text-base;
+  }
+
+  .prose-compact h1 {
+    @apply text-xl;
+  }
+
+  .prose-compact h2 {
+    @apply text-lg;
+  }
+
+  .prose-compact h3 {
+    @apply text-base;
+  }
+
+  .prose-compact p,
+  .prose-compact li {
+    @apply text-sm;
+  }
+}
+
+/* Print styles */
+@media print {
+  .glass-card {
+    @apply bg-white border-gray-300;
+  }
+
+  body {
+    @apply bg-white text-black;
   }
 }

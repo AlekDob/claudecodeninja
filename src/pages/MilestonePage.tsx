@@ -1,6 +1,9 @@
+import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { milestones } from '../data/milestones';
 import { completeMilestone, getMilestoneStatus, isMilestoneUnlocked } from '../utils/progressTracking';
+import { Header } from '../components/Header/Header';
+import { Footer } from '../components/Footer/Footer';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { ArrowLeft, Award, CheckCircle2 } from 'lucide-react';
@@ -9,6 +12,8 @@ import { motion } from 'framer-motion';
 export const MilestonePage = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const [language, setLanguage] = useState<'it' | 'en'>('it');
+  const [isDarkMode, setIsDarkMode] = useState(true);
 
   const milestoneId = parseInt(id || '1');
   const milestone = milestones.find((m) => m.id === milestoneId);
@@ -21,16 +26,16 @@ export const MilestonePage = () => {
 
   if (!isUnlocked) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-dark to-secondary/20 flex items-center justify-center">
-        <div className="glass-card p-12 text-center max-w-md">
-          <div className="text-6xl mb-4">🔒</div>
-          <h2 className="text-2xl font-bold mb-4">Milestone Bloccata</h2>
-          <p className="text-light/70 mb-6">
+      <div className="min-h-screen bg-[#111827] flex items-center justify-center">
+        <div className="text-center max-w-md px-6">
+          <div className="text-6xl mb-6">🔒</div>
+          <h2 className="text-3xl font-bold text-white mb-3">Milestone Bloccata</h2>
+          <p className="text-white/60 mb-8 text-base">
             Completa la Milestone {milestoneId - 1} per sbloccare questa!
           </p>
           <button
             onClick={() => navigate('/')}
-            className="px-6 py-3 bg-primary text-white rounded-lg font-medium hover:bg-primary/90 transition-colors"
+            className="px-4 py-2.5 bg-blue-600 hover:bg-blue-500 text-white rounded-lg font-medium text-sm transition-colors"
           >
             Torna alle Milestone
           </button>
@@ -44,53 +49,59 @@ export const MilestonePage = () => {
     navigate('/');
   };
 
+  const handleLanguageChange = (lang: 'it' | 'en') => {
+    setLanguage(lang);
+    console.log('Language changed to:', lang);
+  };
+
+  const handleThemeChange = () => {
+    setIsDarkMode(!isDarkMode);
+    console.log('Theme changed to:', !isDarkMode ? 'dark' : 'light');
+  };
+
   return (
-    <div className="min-h-screen bg-gradient-to-b from-dark to-secondary/20">
-      {/* Header */}
-      <header className="container mx-auto px-4 py-8">
-        <button
-          onClick={() => navigate('/')}
-          className="flex items-center gap-2 text-light/70 hover:text-light transition-colors mb-8"
-        >
-          <ArrowLeft className="w-5 h-5" />
-          Torna alle Milestone
-        </button>
+    <div className="min-h-screen bg-[#111827]">
+      {/* Global Header */}
+      <Header
+        currentLanguage={language}
+        isDarkMode={isDarkMode}
+        onLanguageChange={handleLanguageChange}
+        onThemeChange={handleThemeChange}
+      />
 
-        <div className="glass-card p-8">
-          <div className="flex items-start justify-between mb-4">
-            <div>
-              <div className="flex items-center gap-3 mb-2">
-                <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold text-xl">
-                  {milestone.id}
-                </div>
-                <h1 className="text-4xl font-bold">{milestone.title}</h1>
-              </div>
-              <p className="text-xl text-light/70">{milestone.subtitle}</p>
-            </div>
-
-            <div className="text-right">
-              <div className="flex items-center gap-2 text-accent mb-2">
-                <Award className="w-6 h-6" />
-                <span className="text-2xl font-bold">{milestone.xp} XP</span>
-              </div>
-              <span className="text-4xl">{milestone.badge}</span>
+      {/* Milestone Header - Nextra Style */}
+      <header className="border-b border-white/5">
+        <div className="container mx-auto px-4 md:px-6 lg:px-8 py-6">
+          <div className="flex items-center justify-between mb-6">
+            <button
+              onClick={() => navigate('/')}
+              className="flex items-center gap-2 text-white/60 hover:text-white transition-colors text-sm"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              Torna alle Milestone
+            </button>
+            <div className="flex items-center gap-2">
+              {status === 'completed' && (
+                <span className="px-2.5 py-1 rounded text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                  Completata
+                </span>
+              )}
+              <span className="px-2.5 py-1 rounded text-xs font-medium bg-amber-500/10 text-amber-400 border border-amber-500/20">
+                {milestone.xp} XP
+              </span>
             </div>
           </div>
-
-          <div className="flex gap-4 text-sm text-light/70">
-            <span>⏱️ {milestone.estimatedTime}</span>
-            <span>•</span>
-            <span>{milestone.topics.length} argomenti</span>
-          </div>
+          <h1 className="text-4xl font-bold text-white mb-3">{milestone.title}</h1>
+          <p className="text-lg text-white/70 leading-relaxed">{milestone.subtitle}</p>
         </div>
       </header>
 
-      {/* Content */}
-      <main className="container mx-auto px-4 pb-16">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Main Content */}
-          <div className="lg:col-span-2">
-            <div className="glass-card p-8 prose prose-invert prose-lg max-w-none">
+      {/* Content - Nextra Style Layout */}
+      <main className="container mx-auto px-4 md:px-6 lg:px-8 py-8">
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-12">
+          {/* Main Content - Clean, no card */}
+          <div>
+            <div className="prose-compact max-w-none">
               <ReactMarkdown remarkPlugins={[remarkGfm]}>
                 {milestone.description}
               </ReactMarkdown>
@@ -101,26 +112,26 @@ export const MilestonePage = () => {
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="mt-8"
+                className="mt-6"
               >
                 <button
                   onClick={handleComplete}
-                  className="w-full py-4 bg-gradient-to-r from-primary to-accent text-white rounded-lg font-bold text-lg hover:opacity-90 transition-opacity flex items-center justify-center gap-2"
+                  className="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg font-medium text-sm transition-colors flex items-center gap-2"
                 >
-                  <CheckCircle2 className="w-6 h-6" />
-                  Completa Milestone e Guadagna {milestone.xp} XP
+                  <CheckCircle2 className="w-4 h-4" />
+                  Completa Milestone ({milestone.xp} XP)
                 </button>
               </motion.div>
             )}
 
             {status === 'completed' && (
-              <div className="mt-8 glass-card p-6 border-2 border-success">
-                <div className="flex items-center gap-3 text-success">
-                  <CheckCircle2 className="w-8 h-8" />
+              <div className="mt-6 border-l-4 border-emerald-500 bg-emerald-500/5 px-4 py-3">
+                <div className="flex items-center gap-2 text-emerald-400">
+                  <CheckCircle2 className="w-5 h-5" />
                   <div>
-                    <p className="font-bold text-lg">Milestone Completata! 🎉</p>
-                    <p className="text-sm text-light/70">
-                      Hai guadagnato {milestone.xp} XP
+                    <p className="font-medium text-sm">Milestone Completata! 🎉</p>
+                    <p className="text-xs text-white/60 mt-0.5">
+                      +{milestone.xp} XP guadagnati
                     </p>
                   </div>
                 </div>
@@ -128,49 +139,53 @@ export const MilestonePage = () => {
             )}
           </div>
 
-          {/* Sidebar */}
-          <div className="lg:col-span-1 space-y-6">
-            {/* Topics */}
-            <div className="glass-card p-6">
-              <h3 className="font-bold text-lg mb-4">Argomenti Trattati</h3>
-              <div className="space-y-2">
-                {milestone.topics.map((topic, index) => (
-                  <div
-                    key={index}
-                    className="flex items-center gap-2 text-sm"
-                  >
-                    <div className="w-2 h-2 rounded-full bg-primary"></div>
-                    <span>{topic}</span>
-                  </div>
-                ))}
+          {/* Sidebar - Nextra Style */}
+          <aside className="hidden lg:block">
+            <div className="sticky top-4 space-y-6">
+              {/* Topics */}
+              <div>
+                <h3 className="font-semibold text-xs uppercase tracking-wide text-white/40 mb-3">Argomenti Trattati</h3>
+                <ul className="space-y-2 text-sm">
+                  {milestone.topics.map((topic, index) => (
+                    <li
+                      key={index}
+                      className="text-white/70 hover:text-white transition-colors leading-snug"
+                    >
+                      {topic}
+                    </li>
+                  ))}
+                </ul>
               </div>
-            </div>
 
-            {/* Navigation */}
-            <div className="glass-card p-6">
-              <h3 className="font-bold text-lg mb-4">Navigazione</h3>
-              <div className="space-y-2">
-                {milestone.id > 1 && (
-                  <button
-                    onClick={() => navigate(`/milestone/${milestone.id - 1}`)}
-                    className="w-full py-2 px-4 bg-white/10 hover:bg-white/20 rounded-lg text-sm transition-colors"
-                  >
-                    ← Milestone Precedente
-                  </button>
-                )}
-                {milestone.id < 12 && (
-                  <button
-                    onClick={() => navigate(`/milestone/${milestone.id + 1}`)}
-                    className="w-full py-2 px-4 bg-white/10 hover:bg-white/20 rounded-lg text-sm transition-colors"
-                  >
-                    Milestone Successiva →
-                  </button>
-                )}
+              {/* Navigation */}
+              <div className="pt-4 border-t border-white/5">
+                <h3 className="font-semibold text-xs uppercase tracking-wide text-white/40 mb-3">Navigazione</h3>
+                <div className="space-y-2 text-sm">
+                  {milestone.id > 1 && (
+                    <button
+                      onClick={() => navigate(`/milestone/${milestone.id - 1}`)}
+                      className="block text-white/70 hover:text-white transition-colors text-left"
+                    >
+                      ← Milestone Precedente
+                    </button>
+                  )}
+                  {milestone.id < 12 && (
+                    <button
+                      onClick={() => navigate(`/milestone/${milestone.id + 1}`)}
+                      className="block text-white/70 hover:text-white transition-colors text-left"
+                    >
+                      Milestone Successiva →
+                    </button>
+                  )}
+                </div>
               </div>
             </div>
-          </div>
+          </aside>
         </div>
       </main>
+
+      {/* Footer */}
+      <Footer />
     </div>
   );
 };
