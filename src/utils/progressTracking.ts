@@ -45,6 +45,12 @@ export const saveProgress = (progress: UserProgress): void => {
 export const completeMilestone = (milestoneId: number, xp: number, quizScore?: number): void => {
   const progress = loadProgress();
 
+  // Validate quiz score if provided (must be >= 80%)
+  if (quizScore !== undefined && quizScore < 80) {
+    console.warn(`Quiz score ${quizScore}% is below 80% threshold. Milestone not completed.`);
+    return;
+  }
+
   // Don't add if already completed
   if (!progress.completedMilestones.includes(milestoneId)) {
     progress.completedMilestones.push(milestoneId);

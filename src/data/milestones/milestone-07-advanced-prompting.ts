@@ -3,7 +3,7 @@ import { Milestone } from '../../types';
 export const milestone07: Milestone = {
   id: 7,
   title: "Tecniche Avanzate di Prompting",
-  subtitle: "Padroneggia precisione, contesto, pattern e meta-prompting per risultati professionali",
+  subtitle: "Padroneggia precisione, pattern, meta-prompting, Plan Mode e Thinking Mode per risultati professionali",
   description: `
 # Milestone 7: Tecniche Avanzate di Prompting
 
@@ -19,6 +19,8 @@ Questa milestone si basa sui fondamentali della Milestone 6 e introduce:
 - **Pattern collaudati** - Feature Request, Debugging, Refactoring, Learning
 - **Pitfall comuni** - Ambiguità, information overload, vincoli mancanti
 - **Meta-prompting** - Far ragionare Claude Code sul problema prima di risolverlo
+- **Plan Mode** - Modalità architetto per visione d'insieme e pianificazione multi-file
+- **Thinking Mode** - Modalità ragionamento profondo per problemi complessi
 
 Al termine di questa milestone sarai in grado di:
 - ✅ Scrivere prompt precisi che riducono iterazioni del 70%
@@ -26,6 +28,8 @@ Al termine di questa milestone sarai in grado di:
 - ✅ Evitare i 4 pitfall più comuni che rovinano i prompt
 - ✅ Applicare meta-prompting per decisioni architetturali
 - ✅ Riconoscere quale pattern usare per ogni scenario
+- ✅ Attivare Plan Mode per refactoring e architetture complesse
+- ✅ Usare Thinking Mode per debugging avanzato e ottimizzazioni
 
 ---
 
@@ -1106,51 +1110,791 @@ Produrrà raccomandazione ponderata invece di saltare a implementazione.
 
 ---
 
-## Capitolo 6: Riepilogo e Best Practices
+## Capitolo 6: Plan Mode e Thinking Mode - Superpotenze Cognitive
+
+Hai padroneggiato prompt efficaci, pattern avanzati, e meta-prompting.
+Ma Claude Code ha **due modalità speciali** che sbloccano capacità cognitive ancora più potenti.
+
+Pensa a queste modalità come **gear differenti** di un'auto:
+- **Modalità normale**: buona per la maggior parte dei percorsi (prompt conversazionali)
+- **Plan Mode**: prima marcia alta per **ampiezza** (multi-file, architetture)
+- **Thinking Mode**: massima marcia per **profondità** (problemi complessi, logica intricata)
+
+### 6.1 Plan Mode: Padroneggiare l'Ampiezza
+
+**Cosa fa Plan Mode:**
+
+Plan Mode trasforma Claude Code da **assistente reattivo** in **architetto proattivo**.
+
+Invece di rispondere direttamente alla tua richiesta, Claude Code:
+1. **Analizza** il contesto completo e le dipendenze
+2. **Ricerca** scenari e casi d'uso attraverso la codebase
+3. **Crea** un piano implementativo dettagliato
+4. **Presenta** il piano per review prima di eseguire qualsiasi modifica
+
+**Attivazione:**
+
+\`\`\`bash
+# Premi Shift + Tab due volte per attivare Plan Mode
+Shift + Tab (twice)
+\`\`\`
+
+**Quando Usare Plan Mode:**
+
+✅ **Multi-file refactoring**: Cambiamenti attraverso numerosi file
+
+Esempio scenario:
+\`\`\`bash
+# Senza Plan Mode - RISCHIOSO
+claude "Rinomina la funzione getUserData in fetchUserProfile
+ovunque nel progetto"
+
+# Claude Code modifica direttamente 40+ file
+# Rischio: breaking changes, import rotti, test falliti
+
+# Con Plan Mode - SICURO
+[Shift + Tab twice]
+claude "Rinomina la funzione getUserData in fetchUserProfile
+ovunque nel progetto"
+
+# Claude Code:
+# 1. Analizza: trova tutti i 47 file che usano getUserData
+# 2. Identifica: import statements, test files, documentation
+# 3. Presenta piano:
+#    - Aggiorna definizione in @utils/api.ts
+#    - Aggiorna 32 import in @components/*
+#    - Aggiorna 8 test in @tests/*
+#    - Aggiorna 6 doc references in @docs/*
+#    - Ordine: prima test, poi implementation, poi docs
+# 4. Aspetta tua approvazione prima di procedere
+\`\`\`
+
+✅ **Architecture decisions**: Prima di implementare nuove feature o sistemi
+
+Scenario:
+\`\`\`bash
+[Shift + Tab twice]
+claude "Implementa notification system con supporto per email,
+SMS, push notifications, e in-app notifications"
+
+# Plan Mode analizza:
+# - Patterns esistenti nel progetto
+# - Librerie già installate
+# - Architecture attuale (monolith? microservices?)
+# - Database schema e tabelle esistenti
+
+# Presenta piano:
+# 1. Crea notification service layer (@services/notifications/)
+# 2. Definisci interface NotificationChannel
+# 3. Implementa adapters: EmailAdapter, SMSAdapter, PushAdapter, InAppAdapter
+# 4. Aggiungi tabella notifications (schema migration)
+# 5. Crea queue system per sending asincrono
+# 6. Aggiungi monitoring e retry logic
+# 7. Crea test suite per ogni channel
+
+# Chiede conferma prima di generare una riga di codice
+\`\`\`
+
+✅ **Complex migrations**: Database updates, API versioning, framework upgrades
+
+Scenario:
+\`\`\`bash
+[Shift + Tab twice]
+claude "Migra da Sequelize ORM a Prisma ORM mantenendo
+compatibilità API esistente"
+
+# Plan Mode:
+# - Analizza tutti i modelli Sequelize esistenti
+# - Identifica query patterns usati nel progetto
+# - Mappa relazioni (hasMany, belongsTo, etc.)
+# - Identifica transazioni e complex queries
+
+# Piano proposto:
+# 1. Setup Prisma schema basato su modelli Sequelize attuali
+# 2. Crea migration scripts per schema database
+# 3. Implementa adapter layer per mantenere API backward compatible
+# 4. Migra modelli uno alla volta (User → Order → Product → ...)
+# 5. Per ogni modello:
+#    - Genera Prisma schema
+#    - Aggiorna repository layer
+#    - Aggiorna test
+#    - Deploy feature flag per A/B testing
+# 6. Monitoring per verificare performance parity
+\`\`\`
+
+✅ **Unknown codebases**: Quando esplori progetti non familiari
+
+Scenario:
+\`\`\`bash
+[Shift + Tab twice]
+claude "Aggiungi OAuth2 authentication con Google e GitHub"
+
+# Se è un nuovo progetto, Plan Mode:
+# 1. Analizza stack esistente (Express? NestJS? Fastify?)
+# 2. Cerca auth patterns già implementati
+# 3. Identifica dove configurare routes
+# 4. Verifica librerie OAuth2 compatibili con stack
+# 5. Presenta piano comprensivo che si integra con architettura esistente
+
+# Invece di assumere pattern generici
+\`\`\`
+
+**Plan Mode Benefits:**
+
+• **Previene cascading issues** dovuti a comprensione incompleta
+
+Se rinomini funzione ma dimentichi file nascosto → Plan Mode lo trova prima.
+
+• **Identifica potential conflicts** prima che avvengano
+
+Due branch modificano stesso file? Plan Mode vede entrambi.
+
+• **Fornisce clear roadmap** per modifiche complesse
+
+Sai esattamente cosa verrà modificato, in che ordine, e perché.
+
+• **Riduce bisogno di fix successivi**
+
+Meno "ops, ho dimenticato di aggiornare quel file" → meno iterazioni.
+
+### 6.2 Thinking Mode: Risolvere in Profondità
+
+**Cosa fa Thinking Mode:**
+
+Thinking Mode dà a Claude Code **capacità di ragionamento estese** per problemi logici intricati.
+
+Quando attivato, Claude Code:
+- Alloca risorse computazionali aggiuntive
+- Esplora multiple ipotesi in parallelo
+- Considera scenari non ovvi e casi limite
+- Fornisce ragionamento dettagliato per le conclusioni
+
+**Attivazione:**
+
+Usa frasi trigger nel prompt:
+
+\`\`\`bash
+# Trigger phrases che attivano Thinking Mode:
+- "Ultra think:"
+- "Think deeply:"
+- "Deep reasoning:"
+- "Analyze thoroughly:"
+\`\`\`
+
+**Quando Usare Thinking Mode:**
+
+✅ **Complex debugging**: Bug elusivi con cause non ovvie
+
+Scenario:
+\`\`\`bash
+claude "Ultra think: Perché la nostra strategia di caching sta
+causando memory leak in produzione?
+
+Context:
+- Memory usage cresce linearmente 10MB/ora
+- Iniziato 3 settimane fa dopo deploy v2.4.0
+- Succede solo in production, non in staging
+- Database metrics look normal
+- No error logs rilevanti
+
+Affected services:
+@services/cache.ts @utils/redis.ts @config/memory.ts"
+
+# Thinking Mode analizza:
+# 1. Pattern across multiple dimensions:
+#    - Timing (perché 3 settimane fa?)
+#    - Environment (perché solo production?)
+#    - Growth rate (perché lineare?)
+# 2. Considera correlazioni non ovvie:
+#    - Deploy v2.4.0 added new feature → più cache keys?
+#    - Production traffic pattern diverso da staging?
+#    - TTL configuration differente tra env?
+# 3. Esplora ipotesi alternative:
+#    - Memory leak in Redis client
+#    - Cache keys mai invalidate
+#    - Event emitter listeners non rimossi
+#    - Closures che mantengono riferimenti
+# 4. Verifica ognuna con reasoning chains
+# 5. Suggerisce multiple hypotheses con evidenza
+\`\`\`
+
+✅ **Algorithm optimization**: Performance-critical code sections
+
+Scenario:
+\`\`\`bash
+claude "Think deeply: Ottimizza l'algoritmo di matching
+per ridurre tempo esecuzione da O(n²) a O(n log n)
+
+Current implementation @algorithms/matcher.ts:
+- Compara ogni utente con ogni altro utente
+- ~10k utenti = 100M comparazioni
+- Esecuzione: 45 secondi
+- Target: <5 secondi
+
+Constraints:
+- Must maintain exact matching logic (no approximations)
+- Scoring function è complex (15+ factors)
+- Real-time requirement per API endpoint"
+
+# Thinking Mode:
+# 1. Analizza bottleneck attuale (nested loops)
+# 2. Esplora strutture dati alternative:
+#    - Spatial hashing per clustering
+#    - KD-tree per nearest neighbor
+#    - Inverted index per fast filtering
+# 3. Considera trade-offs:
+#    - Pre-computation overhead
+#    - Memory usage increase
+#    - Accuracy vs speed
+# 4. Propone soluzione ibrida:
+#    - Pre-filter con inverted index (filters 90% candidates)
+#    - Detailed scoring solo su remaining 10%
+#    - Parallel processing per remaining candidates
+# 5. Stima performance: O(n log n) → ~3 secondi
+\`\`\`
+
+✅ **Security analysis**: Identificare vulnerabilità
+
+Scenario:
+\`\`\`bash
+claude "Ultra think: Analizza questo authentication flow per
+identificare security vulnerabilities
+
+Flow:
+1. User submits email + password
+2. Server verifica credentials
+3. Genera JWT token (24h expiry)
+4. Ritorna token a client
+5. Client stores in localStorage
+6. Ogni request include token in header
+
+Code:
+@routes/auth.ts @middleware/jwt.ts @services/user.ts"
+
+# Thinking Mode cerca vulnerabilità che quick analysis potrebbe perdere:
+
+# 1. Token storage (localStorage):
+#    - Vulnerable to XSS attacks
+#    - Consider httpOnly cookies invece
+
+# 2. Password verification:
+#    - Timing attack possible?
+#    - Constant-time comparison needed?
+
+# 3. JWT secret:
+#    - How is secret generated/stored?
+#    - Rotazione del secret implemented?
+
+# 4. Token refresh:
+#    - Expired token handling?
+#    - Refresh token mechanism?
+
+# 5. Rate limiting:
+#    - Brute force protection?
+#    - Account lockout after N failures?
+
+# 6. Session invalidation:
+#    - Logout invalida token?
+#    - Blacklist per revoked tokens?
+
+# Suggerisce fix prioritizzati per ogni vulnerability
+\`\`\`
+
+✅ **Business logic**: Regole intricate con molti edge cases
+
+Scenario:
+\`\`\`bash
+claude "Deep reasoning: Implementa sistema di pricing dinamico
+con queste regole:
+
+Business Rules:
+- Base price varia per categoria prodotto (10 categorie)
+- Sconto volume: 5% se qty 10-50, 10% se qty 50-100, 15% se >100
+- Utenti premium: ulteriore 5% su tutto
+- Early bird discount: 10% se ordine prima delle 10:00
+- Seasonal pricing: estate +20%, inverno -15% (tranne elettronica)
+- Flash sales: override tutti gli sconti se attivo
+- Price floor: mai sotto costo di produzione + 10%
+- Bundle deals: se prodotti A+B insieme, sconto 8%
+- Loyalty points: convertibili 100 punti = €1 sconto
+- Tax computation: varia per stato (50 stati US)
+
+Edge Cases:
+- Cosa succede se utente premium compra >100 qty durante flash sale
+  con bundle deal e usa loyalty points?
+- Validation: prevent negative final price
+- Audit: log ogni step del price calculation per compliance"
+
+# Thinking Mode:
+# 1. Identifica regole che potrebbero confliggere
+# 2. Definisce ordine di precedenza chiaro:
+#    - Flash sale override → base price
+#    - Volume discount → after base
+#    - Premium discount → additive
+#    - Early bird → additive
+#    - Bundle → se applicabile
+#    - Loyalty → final step
+#    - Tax → ultimo calcolo
+# 3. Gestisce edge cases:
+#    - Negative price → clamp a floor price
+#    - Multiple discounts → cap at 50% max total discount
+#    - Seasonal + Flash → flash wins
+# 4. Genera implementation con step-by-step calculations
+# 5. Include extensive test cases per ogni edge case
+\`\`\`
+
+**Thinking Mode Benefits:**
+
+• **Catches subtle issues** che quick analysis potrebbe perdere
+
+Bug nascosti in logica complessa → Thinking Mode li trova.
+
+• **Provides deeper understanding** di sistemi complessi
+
+Non solo "come funziona" ma "perché funziona così, implicazioni, alternative".
+
+• **Generates more creative solutions**
+
+Esplora solution space più ampiamente → trova approcci innovativi.
+
+• **Explains reasoning** per better learning
+
+Capire il PERCHÉ dietro le soluzioni → impari principi trasferibili.
+
+### 6.3 Combinare le Modalità per Massimo Impatto
+
+Il **vero potere** emerge quando combini entrambe le modalità per task eccezionalmente complessi.
+
+**Pattern: Plan Mode per struttura, Thinking Mode per dettagli**
+
+**Scenario: Refactoring di sistema legacy complesso**
+
+**Step 1 - Plan Mode per Breadth:**
+
+\`\`\`bash
+[Shift + Tab twice]
+claude "Piano completo per refactorare authentication system legacy:
+
+Current State:
+- 15 file sparsi nel codebase
+- Mix di patterns (session-based e JWT)
+- Nessun test coverage
+- Security vulnerabilities note
+- Codice 5+ anni vecchio
+
+Target State:
+- Architettura modulare con clear separation
+- 100% JWT-based (no sessions)
+- 80%+ test coverage
+- Security best practices (OWASP compliant)
+- Backward compatibility per 6 mesi"
+
+# Plan Mode genera roadmap dettagliata:
+
+1. **Analysis Phase** (Week 1)
+   - Audit current authentication flows
+   - Document all entry points and dependencies
+   - Identify breaking vs non-breaking changes
+
+2. **Foundation Phase** (Week 2-3)
+   - Create new auth module (@auth/v2/)
+   - Implement core JWT services
+   - Setup test infrastructure
+
+3. **Migration Phase** (Week 4-6)
+   - Implement feature flags for gradual rollout
+   - Migrate endpoints one by one
+   - Parallel run old and new system
+
+4. **Deprecation Phase** (Week 7-8)
+   - Sunset old system
+   - Remove legacy code
+   - Update documentation
+
+# Piano approvato → procedi con implementation
+\`\`\`
+
+**Step 2 - Thinking Mode per dettagli critici:**
+
+Dopo approval del piano, usa Thinking Mode per parti complesse:
+
+\`\`\`bash
+claude "Ultra think: Durante la migration phase del piano,
+come gestiamo la transizione per utenti con sessioni attive?
+
+Constraints:
+- 50k utenti con sessioni attive
+- Sessioni scadono tra 7 giorni
+- Non possiamo forzare logout massivo (UX terribile)
+- Nuova architettura supporta solo JWT
+- Downtime accettabile: <1 minuto
+
+Come facciamo smooth transition senza rompere esperienza utente?"
+
+# Thinking Mode analizza:
+
+# 1. Problemi da risolvere:
+#    - Sessioni vecchie non compatibili con nuovo sistema
+#    - Cookie-based session vs JWT token
+#    - Credential re-authentication necessaria?
+
+# 2. Alternative considerate:
+#    A. Dual authentication support (session + JWT in parallelo)
+#       Pros: zero downtime, graduale migration
+#       Cons: complessità doppia, maintenance burden
+#
+#    B. One-time token exchange (converti session → JWT)
+#       Pros: automazione completa, no user action
+#       Cons: security considerations per exchange
+#
+#    C. Lazy migration (rinnovo a login successivo)
+#       Pros: semplice implementation
+#       Cons: utenti attivi per settimane senza migration
+
+# 3. Recommendation: Hybrid approach
+#    - Dual support per 30 giorni (transizione)
+#    - Background job converte sessioni attive in JWT
+#    - User notification: "Sistema aggiornato, rilogin entro 7 giorni"
+#    - Grace period con fallback a session se JWT manca
+
+# 4. Implementation plan dettagliato
+#    - Auth middleware checks JWT first, fallback a session
+#    - Migration script: session → JWT conversion
+#    - Monitor migration progress (dashboard)
+#    - Sunset date configurabile (env variable)
+\`\`\`
+
+**Strategic Mode Selection:**
+
+| Task Type | Recommended Mode | Why |
+|-----------|------------------|-----|
+| New feature across multiple files | Plan Mode | Needs broad understanding |
+| Debugging race condition | Thinking Mode | Requires deep analysis |
+| Refactoring legacy system | Both | Plan structure, think through complex parts |
+| Performance optimization | Thinking Mode | Needs detailed analysis |
+| API design | Plan Mode | Considers all touchpoints |
+| Algorithm design | Thinking Mode | Complex logic requires depth |
+
+### 6.4 Cost Considerations e Ottimizzazione
+
+**Importante:** Entrambe le modalità consumano token aggiuntivi perché richiedono più elaborazione.
+
+**Token Usage:**
+
+- **Normal Mode**: 1x token usage (baseline)
+- **Plan Mode**: Tipicamente 2-3x normal token usage
+- **Thinking Mode**: Can be 3-5x normal token usage
+- **Combined**: Potenzialmente 5-7x normal token usage
+
+**Cost Optimization Strategies:**
+
+**1. Use modes selectively for high-value tasks**
+
+❌ Non serve:
+\`\`\`bash
+[Thinking Mode]
+claude "Aggiungi bottone rosso al form"
+\`\`\`
+
+✅ Vale il costo:
+\`\`\`bash
+[Thinking Mode]
+claude "Ultra think: Ottimizza query database che sta causando
+timeout in produzione con 100k+ utenti concorrenti"
+\`\`\`
+
+**2. Start with normal mode for exploration**
+
+\`\`\`bash
+# Step 1: Quick exploration (normal mode)
+claude "Quali sono le opzioni per real-time communication
+tra browser e server?"
+
+# Step 2: Dopo identificato approcci (WebSocket, SSE, Long Polling)
+#         usa Thinking Mode per decidere
+[Thinking Mode]
+claude "Deep reasoning: Considerando nostro use case (chat app,
+10k concurrent users, message latency <100ms), quale approccio
+(WebSocket vs SSE vs Long Polling) è ottimale? Analizza
+performance, scalability, browser support, implementation complexity"
+\`\`\`
+
+**3. Activate performance modes for final implementation**
+
+\`\`\`bash
+# Exploration (normal)
+claude "Come posso implementare rate limiting?"
+
+# Planning (after understanding approaches)
+[Plan Mode]
+claude "Piano implementazione rate limiting usando Redis + Lua script"
+
+# Implementation (normal mode è sufficiente se piano è chiaro)
+claude "Implementa il piano discusso"
+\`\`\`
+
+**4. Set token limits in configuration if needed**
+
+Se hai budget constraints, puoi configurare limiti:
+\`\`\`bash
+# In ~/.claude/config.json (se disponibile)
+{
+  "token_limits": {
+    "plan_mode_max_tokens": 8000,
+    "thinking_mode_max_tokens": 10000
+  }
+}
+\`\`\`
+
+### 6.5 Esempio Pratico Progressivo
+
+**Scenario: Implementare sistema di real-time analytics dashboard**
+
+**Progressione attraverso le modalità:**
+
+**Phase 1 - Normal Mode (Exploration):**
+
+\`\`\`bash
+claude "Quali sono le best practices per real-time analytics dashboard
+con aggiornamenti ogni secondo?"
+
+# Quick overview di approcci:
+# - WebSocket push
+# - Server-Sent Events
+# - Polling con cache
+# - etc.
+\`\`\`
+
+**Phase 2 - Plan Mode (Architecture):**
+
+\`\`\`bash
+[Shift + Tab twice]
+claude "Crea piano architetturale completo per real-time analytics dashboard:
+
+Requirements:
+- 5k utenti concorrenti
+- Metrics aggiornati ogni 1 secondo
+- 20+ metric types (revenue, users, conversions, etc.)
+- Filtri real-time (date range, region, product)
+- Export capabilities (CSV, PDF)
+- Mobile responsive
+
+Stack:
+- Backend: Node.js + PostgreSQL + Redis
+- Frontend: React + Chart.js
+- Infrastructure: AWS
+
+Plan phase coverage: architecture, data flow, components, deployment"
+
+# Plan Mode output:
+
+## Architecture Plan
+
+### 1. Data Pipeline
+- PostgreSQL: source of truth
+- Redis: aggregated metrics cache (1s TTL)
+- Background worker: aggregate metrics ogni secondo
+
+### 2. Real-Time Communication
+- WebSocket server (Socket.io)
+- Rooms per dashboard instance (isolate updates)
+- Heartbeat mechanism (detect disconnections)
+
+### 3. Frontend Components
+- DashboardContainer (WebSocket management)
+- MetricCard (individual metric display)
+- ChartRenderer (Chart.js wrapper)
+- FilterPanel (date, region, product selection)
+- ExportModal (CSV/PDF generation)
+
+### 4. Performance Optimizations
+- Lazy load charts (viewport visible)
+- Throttle filter changes (300ms debounce)
+- Cache export queries (5 min)
+- Connection pooling database
+
+### 5. Monitoring
+- WebSocket connection metrics
+- Query performance tracking
+- Error rate monitoring
+- Alert se > 5% error rate
+
+Implementation sequence: Data pipeline → WebSocket → Frontend → Optimizations
+\`\`\`
+
+**Phase 3 - Thinking Mode (Complex Parts):**
+
+Dopo approval del piano, usa Thinking Mode per parti critiche:
+
+\`\`\`bash
+claude "Ultra think: Nel piano architetturale, la parte 'Background worker
+aggregates metrics ogni secondo' ha potential scalability issues.
+
+Problem:
+- 20 metric types × 1000 query aggregations = 20k queries/secondo
+- PostgreSQL può gestire ~5k queries/sec con current hardware
+- Rischio: database overload durante peak traffic
+- Non possiamo upgradefare hardware (budget constraint)
+
+Analyze:
+1. Root cause: perché così tante queries?
+2. Alternative approaches per ridurre DB load
+3. Trade-offs: accuracy vs performance vs complexity
+4. Recommended solution con implementation path"
+
+# Thinking Mode deep dive:
+
+## Root Cause Analysis
+
+Current approach fa 20k queries perché:
+- Each metric computed independently (no batching)
+- Separate query per filter combination
+- No incremental updates (recompute from scratch ogni secondo)
+
+## Alternative Approaches
+
+### Option A: Materialized Views + Incremental Updates
+- Pre-aggregate common metric combinations
+- Update only changed data (delta computation)
+- Pros: DB load reduced 90% (20k → 2k queries/sec)
+- Cons: Staleness up to 5 seconds, complex delta logic
+
+### Option B: Stream Processing (Kafka + Flink)
+- Event stream per user action
+- Continuous aggregation in-memory
+- Pros: True real-time, infinite scalability
+- Cons: Infrastructure overhead, learning curve, cost
+
+### Option C: Smart Caching with Cache Warming
+- Pre-compute top 80% used filters (Pareto principle)
+- Lazy compute remaining 20%
+- Update cache incrementally
+- Pros: Balanced trade-off, no new infrastructure
+- Cons: Requires usage analytics, cache invalidation complexity
+
+## Recommended: Option C (Smart Caching)
+
+Reasoning:
+1. **Budget constraint** eliminates Option B (too expensive)
+2. **5s staleness** too high for "real-time" requirement (Option A)
+3. **Option C** provides 90% users <1s freshness, acceptable for remaining 10%
+
+Implementation Path:
+1. Analyze dashboard usage (which filters used most)
+2. Pre-compute top 80% filter combinations hourly
+3. Update incrementally every second (delta computation)
+4. Lazy compute edge cases on-demand
+5. Monitor cache hit rate (target >80%)
+
+Expected Results:
+- Database load: 20k → 3k queries/sec (85% reduction)
+- Latency P95: <500ms (from 2-3s current)
+- Cache hit rate: ~85% after 1 week of learning
+\`\`\`
+
+**Questo approccio progressivo:**
+- ✅ Esplora opzioni (normal mode)
+- ✅ Crea piano strutturato (plan mode)
+- ✅ Risolve dettagli complessi (thinking mode)
+- ✅ Ottimizza costi (usa modalità appropriate per ogni step)
+
+---
+
+## Capitolo 7: Riepilogo delle Modalità Avanzate
+
+**Quando Usare Ogni Modalità:**
+
+**Normal Mode (Default):**
+- Feature semplici e dirette
+- Bug evidenti
+- Domande conversazionali
+- Modifiche a file singolo
+- Pattern ben definiti
+
+**Plan Mode (Shift + Tab twice):**
+- Multi-file refactoring
+- Architectural decisions
+- Complex migrations
+- Unknown codebases
+- Quando serve vedere il big picture PRIMA di cambiare codice
+
+**Thinking Mode ("Ultra think:", "Think deeply:"):**
+- Complex debugging (cause non ovvie)
+- Algorithm optimization
+- Security analysis
+- Business logic intricata
+- Quando serve deep reasoning su problemi complessi
+
+**Combined (Plan + Thinking):**
+- Refactoring sistemi legacy
+- Implementazioni critiche con high stakes
+- Quando serve sia breadth CHE depth
+
+**Principio Guida:**
+
+> **"Normal mode per esecuzione, Plan mode per struttura, Thinking mode per complessità."**
+
+Se non sei sicuro quale usare, inizia con **normal mode**. Se la risposta è troppo superficiale o manca considerazioni importanti, **escalate** a Plan o Thinking mode.
+
+---
+
+## Capitolo 8: Riepilogo e Best Practices
 
 Complimenti! Hai padroneggiato le tecniche avanzate di prompting. 🎓
 
-### 6.1 Recap Tecniche Apprese
+### 8.1 Recap Tecniche Apprese
 
-**1. Precisione Strategica**
+**1. Precisione Strategica (Capitolo 1)**
 - ✅ Sii preciso per: technical requirements, business logic, integration points, performance
 - ✅ Claude Code inferisce: formatting, naming (se consistent), basic types
 
-**2. Context-Aware Prompting**
+**2. Context-Aware Prompting (Capitolo 2)**
 - ✅ Sfrutta contesto implicito (pattern progetto, librerie)
 - ✅ Usa @ notation per reference espliciti quando serve
 - ✅ Costruisci contextual chains (Analysis → Implementation → Extension) per task complessi
 
-**3. Pattern Collaudati**
+**3. Pattern Collaudati (Capitolo 3)**
 - ✅ **Feature Request**: Business + Technical + Integration + Success + Quality
 - ✅ **Debugging**: Symptom + Expected + Context + Tried + Files
 - ✅ **Refactoring**: Current + Desired + Constraints + Scope
 - ✅ **Learning**: What + Current Understanding + Questions + Goal
 
-**4. Evita Pitfall**
+**4. Evita Pitfall (Capitolo 4)**
 - ✅ **Ambiguity**: Usa baseline misurabili, non termini relativi ("più veloce")
 - ✅ **Overload**: Spezza in step, prioritizza must-have vs nice-to-have
 - ✅ **Missing Constraints**: Specifica limiti tecnici, sicurezza, performance, costi
 - ✅ **Ignoring Conventions**: Riferisci standard progetto, pattern esistenti
 
-**5. Meta-Prompting**
+**5. Meta-Prompting (Capitolo 5)**
 - ✅ Usa per decisioni architetturali e trade-off complessi
 - ✅ Chiedi analisi → alternative → raccomandazione → reasoning
 - ✅ Implementa dopo consenso
 
-### 6.2 Decision Matrix: Quale Tecnica Usare?
+**6. Plan Mode (Capitolo 6)**
+- ✅ Shift + Tab twice per attivare
+- ✅ Per multi-file refactoring, architecture decisions, complex migrations
+- ✅ Analizza → Ricerca → Crea piano → Presenta per review
+
+**7. Thinking Mode (Capitolo 6)**
+- ✅ Trigger phrases: "Ultra think:", "Think deeply:", etc.
+- ✅ Per complex debugging, algorithm optimization, security analysis
+- ✅ Ragionamento esteso con multiple ipotesi
+
+### 8.2 Decision Matrix: Quale Tecnica Usare?
 
 | Scenario | Tecnica Consigliata | Esempio |
 |----------|---------------------|---------|
 | Feature semplice | Conversational + Precisione | "Add endpoint GET /api/users with pagination (limit, offset)" |
 | Feature complessa | Structured Feature Pattern | Business + Technical + Integration + Success + Quality |
-| Bug oscuro | Debugging Pattern | Symptom + Expected + Context + Tried + Files |
-| Refactor | Refactoring Pattern | Current + Desired + Constraints + Scope |
+| Bug oscuro | Debugging Pattern + Thinking Mode | Symptom + Expected + Context + Tried + Files + "Ultra think:" |
+| Refactor multi-file | Refactoring Pattern + Plan Mode | Current + Desired + Constraints + Scope + [Shift+Tab twice] |
 | Task multi-step | Contextual Chain | Analysis → Implementation → Extension |
 | Decisione architetturale | Meta-Prompting | Analyze → Alternatives → Recommend → Reasoning |
 | Imparare codebase | Learning Pattern | What + Understanding + Questions + Goal |
+| Migration complessa | Plan Mode + Thinking Mode | Plan Mode per roadmap, Thinking Mode per edge cases |
+| Optimization algoritmo | Thinking Mode | "Think deeply:" + constraints + current complexity |
 
-### 6.3 Checklist Prima di Inviare Prompt
+### 8.3 Checklist Prima di Inviare Prompt
 
 **Prima di premere Enter, verifica:**
 
@@ -1160,10 +1904,11 @@ Complimenti! Hai padroneggiato le tecniche avanzate di prompting. 🎓
 - [ ] **Vincoli espliciti?** Performance, security, budget, constraints?
 - [ ] **Priorità chiare?** Must-have vs nice-to-have separati?
 - [ ] **Pattern appropriato?** Feature/Debug/Refactor/Learning/Meta?
+- [ ] **Modalità giusta?** Normal/Plan Mode/Thinking Mode per il task?
 - [ ] **Reference espliciti?** @ notation per file non ovvi?
 - [ ] **Conventions menzionate?** Standard progetto, architectural decisions?
 
-### 6.4 Prossimi Passi
+### 8.4 Prossimi Passi
 
 **Pratica questi pattern nelle prossime milestones:**
 
@@ -1173,7 +1918,7 @@ Complimenti! Hai padroneggiato le tecniche avanzate di prompting. 🎓
 - **Milestone 11**: CI/CD Integration - debugging pattern per pipeline failures
 - **Milestone 12**: Team Workflows - tutti i pattern in contesto team collaboration
 
-### 6.5 Mantra del Prompt Expert
+### 8.5 Mantra del Prompt Expert
 
 > **"Precisione nei dettagli, contesto per coerenza, pattern per efficienza, meta-thinking per decisioni."**
 
@@ -1203,6 +1948,10 @@ Congratulazioni! Sei ora un **Prompt Engineering Expert** per Claude Code. 🎓�
     "Pitfall: Missing Constraints",
     "Pitfall: Ignoring Conventions",
     "Meta-prompting per decisioni architetturali",
+    "Plan Mode: Modalità architetto proattivo",
+    "Thinking Mode: Ragionamento profondo",
+    "Combinare modalità per massimo impatto",
+    "Cost optimization per modalità avanzate",
     "Advanced prompting techniques"
   ],
   quiz: {

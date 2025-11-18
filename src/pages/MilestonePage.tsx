@@ -6,11 +6,12 @@ import { Header } from '../components/Header/Header';
 import { Footer } from '../components/Footer/Footer';
 import { TableOfContents } from '../components/TableOfContents/TableOfContents';
 import { PromptExample } from '../components/PromptExample/PromptExample';
+import { QuizModal } from '../components/LearningPath/QuizModal';
 import { remarkPromptPlugin } from '../utils/remarkPromptPlugin';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import rehypeSlug from 'rehype-slug';
-import { ArrowLeft, CheckCircle2 } from 'lucide-react';
+import { ArrowLeft, CheckCircle2, RotateCcw } from 'lucide-react';
 import { motion } from 'framer-motion';
 import type { Components } from 'react-markdown';
 
@@ -18,6 +19,7 @@ export const MilestonePage = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [language, setLanguage] = useState<'it' | 'en'>('it');
+  const [isQuizOpen, setIsQuizOpen] = useState(false);
 
   // Custom components for ReactMarkdown
   const markdownComponents: Components = {
@@ -48,8 +50,8 @@ export const MilestonePage = () => {
       // Default code rendering for regular code blocks
       if (!inline) {
         return (
-          <div className="relative rounded-lg overflow-hidden" style={{ background: 'var(--bg-secondary)' }}>
-            <pre className="p-4 overflow-x-auto border" style={{ borderColor: 'var(--border-color)', margin: 0 }}>
+          <div className="relative rounded-lg overflow-hidden max-w-full" style={{ background: 'var(--bg-secondary)' }}>
+            <pre className="p-4 overflow-x-auto border max-w-full" style={{ borderColor: 'var(--border-color)', margin: 0 }}>
               <code className={className} {...rest}>
                 {children}
               </code>
@@ -97,8 +99,33 @@ export const MilestonePage = () => {
   }
 
   const handleComplete = () => {
-    completeMilestone(milestone.id, milestone.xp);
-    navigate('/');
+    // If milestone has quiz, open quiz modal
+    if (milestone.quiz && milestone.quiz.questions.length > 0) {
+      setIsQuizOpen(true);
+    } else {
+      // No quiz, complete directly
+      completeMilestone(milestone.id, milestone.xp);
+      navigate('/');
+    }
+  };
+
+  const handleRetakeQuiz = () => {
+    // Open quiz modal for retake
+    setIsQuizOpen(true);
+  };
+
+  const handleQuizComplete = (scorePercentage: number) => {
+    // Close quiz modal
+    setIsQuizOpen(false);
+
+    // If milestone already completed, don't redirect (just update score)
+    if (status === 'completed') {
+      completeMilestone(milestone.id, milestone.xp, scorePercentage);
+    } else {
+      // First time completion: complete and redirect
+      completeMilestone(milestone.id, milestone.xp, scorePercentage);
+      navigate('/');
+    }
   };
 
   const handleLanguageChange = (lang: 'it' | 'en') => {
@@ -148,8 +175,8 @@ export const MilestonePage = () => {
       <main className="container mx-auto px-4 md:px-6 lg:px-8 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-12">
           {/* Main Content - Clean, no card */}
-          <div>
-            <div className="prose-compact max-w-none">
+          <div className="min-w-0">
+            <div className="prose-compact max-w-none overflow-x-hidden">
               <ReactMarkdown
                 remarkPlugins={[remarkGfm, remarkPromptPlugin]}
                 rehypePlugins={[rehypeSlug]}
@@ -178,14 +205,28 @@ export const MilestonePage = () => {
 
             {status === 'completed' && (
               <div className="mt-6 border-l-4 border-emerald-500 bg-emerald-500/5 px-4 py-3">
-                <div className="flex items-center gap-2 text-emerald-400">
-                  <CheckCircle2 className="w-5 h-5" />
-                  <div>
-                    <p className="font-medium text-sm">Milestone Completata! 🎉</p>
-                    <p className="text-xs mt-0.5" style={{ color: 'var(--text-tertiary)' }}>
-                      +{milestone.xp} XP guadagnati
-                    </p>
+                <div className="flex items-center justify-between gap-4">
+                  <div className="flex items-center gap-2 text-emerald-400">
+                    <CheckCircle2 className="w-5 h-5 flex-shrink-0" />
+                    <div>
+                      <p className="font-medium text-sm">Milestone Completata! 🎉</p>
+                      <p className="text-xs mt-0.5" style={{ color: 'var(--text-tertiary)' }}>
+                        +{milestone.xp} XP guadagnati
+                      </p>
+                    </div>
                   </div>
+
+                  {/* Retake Quiz Button - Only show if milestone has quiz */}
+                  {milestone.quiz && milestone.quiz.questions.length > 0 && (
+                    <button
+                      onClick={handleRetakeQuiz}
+                      className="px-4 py-2 bg-white/10 hover:bg-white/15 rounded-lg font-medium text-sm transition-colors flex items-center gap-2 flex-shrink-0"
+                      style={{ color: 'var(--text-primary)' }}
+                    >
+                      <RotateCcw className="w-4 h-4" />
+                      Rifai Quiz
+                    </button>
+                  )}
                 </div>
               </div>
             )}
@@ -253,6 +294,18 @@ export const MilestonePage = () => {
 
       {/* Footer */}
       <Footer />
+
+      {/* Quiz Modal */}
+      {milestone.quiz && (
+        <QuizModal
+          quiz={milestone.quiz}
+          milestoneTitle={milestone.title}
+          xpReward={milestone.xp}
+          isOpen={isQuizOpen}
+          onClose={() => setIsQuizOpen(false)}
+          onComplete={handleQuizComplete}
+        />
+      )}
     </div>
   );
 };
