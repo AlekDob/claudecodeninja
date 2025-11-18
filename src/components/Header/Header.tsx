@@ -19,7 +19,7 @@ export const Header = ({
           {/* Logo */}
           <Link
             to="/"
-            className="flex items-center gap-3 group transition-all duration-200 hover:scale-105"
+            className="flex items-center gap-2 group transition-all duration-200 hover:scale-105"
           >
             <img
               src="/claude-code-ninja-logo.png"
