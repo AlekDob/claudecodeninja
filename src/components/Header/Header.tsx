@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Code2, Moon, Sun } from 'lucide-react';
+import { Moon, Sun } from 'lucide-react';
 import { useTheme } from '../../contexts/ThemeContext';
 
 interface HeaderProps {
