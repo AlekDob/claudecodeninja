@@ -70,7 +70,7 @@ export const QuizModal = ({
 
   const getScore = (): number => {
     return selectedAnswers.reduce((score, answer, index) => {
-      if (answer === quiz.questions[index].correctAnswer) {
+      if (answer !== null && answer === quiz.questions[index].correctAnswer) {
         return score + 1;
       }
       return score;
