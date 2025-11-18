@@ -19,16 +19,15 @@ export const Header = ({
           {/* Logo */}
           <Link
             to="/"
-            className="flex items-center gap-2 group transition-all duration-200 hover:scale-105"
+            className="flex items-center gap-3 group transition-all duration-200 hover:scale-105"
           >
-            <div
-              className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500/20 to-purple-500/20 flex items-center justify-center border"
-              style={{ borderColor: 'var(--border-color)' }}
-            >
-              <Code2 className="w-5 h-5" style={{ color: 'var(--text-primary)' }} />
-            </div>
+            <img
+              src="/claude-code-ninja-logo.png"
+              alt="Claude Code Ninja Logo"
+              className="h-8 w-auto object-contain"
+            />
             <span className="text-xl font-bold gradient-text-hero hidden sm:inline-block">
-              ClaudeCodeNinja
+              Claude Code Ninja
             </span>
           </Link>
 

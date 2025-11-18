@@ -85,7 +85,7 @@ export const LandingPage = () => {
   return (
     <>
       <Helmet>
-        <title>ClaudeCodeNinja - Corso Completo Claude Code in Italiano</title>
+        <title>Claude Code Ninja - Corso Completo Claude Code in Italiano</title>
         <meta
           name="description"
           content="Impara Claude Code da zero con il primo corso gamificato in italiano. 12 milestone progressive, quiz interattivi, sistema XP. Da principiante a esperto."
@@ -94,7 +94,7 @@ export const LandingPage = () => {
           name="keywords"
           content="Claude Code, corso Claude Code, AI development, Claude AI, corso programmazione AI, tutorial Claude Code italiano, imparare Claude Code, sviluppo AI, coding con AI"
         />
-        <meta property="og:title" content="ClaudeCodeNinja - Corso Completo Claude Code" />
+        <meta property="og:title" content="Claude Code Ninja - Corso Completo Claude Code" />
         <meta property="og:description" content="Il primo corso gamificato in italiano per padroneggiare Claude Code" />
         <meta property="og:type" content="website" />
         <link rel="canonical" href="https://claudecodeninja.vercel.app" />
@@ -268,7 +268,7 @@ export const LandingPage = () => {
                 className="text-center mb-16"
               >
                 <h2 className="text-4xl md:text-5xl font-bold mb-4" style={{ color: 'var(--text-primary)' }}>
-                  Perché ClaudeCodeNinja?
+                  Perché Claude Code Ninja?
                 </h2>
                 <p className="text-xl max-w-2xl mx-auto" style={{ color: 'var(--text-secondary)' }}>
                   L'unico percorso strutturato in italiano per padroneggiare Claude Code
