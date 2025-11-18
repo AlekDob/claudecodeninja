@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import { ArrowRight, Zap, Target, Trophy, Sparkles } from 'lucide-react';
 import { Header } from '../components/Header/Header';
 import { Footer } from '../components/Footer/Footer';
+import { ConsultingSection } from '../components/ConsultingSection/ConsultingSection';
+import { AboutAuthor } from '../components/AboutAuthor/AboutAuthor';
 import { Helmet } from 'react-helmet-async';
 
 export const LandingPage = () => {
@@ -386,6 +388,12 @@ export const LandingPage = () => {
               </motion.div>
             </div>
           </section>
+
+          {/* Consulting Section */}
+          <ConsultingSection />
+
+          {/* About Author Section */}
+          <AboutAuthor />
 
           {/* Final CTA Section */}
           <section className="py-24" style={{ background: 'var(--bg-secondary)' }}>
