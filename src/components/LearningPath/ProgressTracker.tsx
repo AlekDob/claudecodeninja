@@ -37,7 +37,10 @@ export const ProgressTracker = () => {
         </div>
         <div className="h-3 rounded-full overflow-hidden" style={{ backgroundColor: theme === 'dark' ? 'rgba(255, 255, 255, 0.1)' : 'rgba(15, 23, 42, 0.1)' }}>
           <motion.div
-            className="h-full rounded-full bg-gradient-to-r from-blue-600 to-purple-600"
+            className="h-full rounded-full"
+            style={{
+              background: 'linear-gradient(90deg, #FF6B35 0%, #F7931E 100%)'
+            }}
             initial={{ width: 0 }}
             animate={{ width: `${percentage}%` }}
             transition={{ duration: 1, ease: [0.4, 0, 0.2, 1], delay: 0.2 }}

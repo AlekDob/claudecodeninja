@@ -49,7 +49,7 @@ export const HomePage = () => {
                   onClick={() => setView('milestones')}
                   className="flex-1 py-2 px-4 rounded-lg font-medium text-sm transition-colors"
                   style={{
-                    backgroundColor: view === 'milestones' ? '#3b82f6' : (theme === 'dark' ? 'rgba(255, 255, 255, 0.1)' : 'rgba(15, 23, 42, 0.05)'),
+                    backgroundColor: view === 'milestones' ? '#FF6B35' : (theme === 'dark' ? 'rgba(255, 255, 255, 0.1)' : 'rgba(15, 23, 42, 0.05)'),
                     color: view === 'milestones' ? '#ffffff' : 'var(--text-secondary)'
                   }}
                   onMouseEnter={(e) => {
@@ -71,7 +71,7 @@ export const HomePage = () => {
                   onClick={() => setView('badges')}
                   className="flex-1 py-2 px-4 rounded-lg font-medium text-sm transition-colors"
                   style={{
-                    backgroundColor: view === 'badges' ? '#3b82f6' : (theme === 'dark' ? 'rgba(255, 255, 255, 0.1)' : 'rgba(15, 23, 42, 0.05)'),
+                    backgroundColor: view === 'badges' ? '#FF6B35' : (theme === 'dark' ? 'rgba(255, 255, 255, 0.1)' : 'rgba(15, 23, 42, 0.05)'),
                     color: view === 'badges' ? '#ffffff' : 'var(--text-secondary)'
                   }}
                   onMouseEnter={(e) => {
