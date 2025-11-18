@@ -57,10 +57,11 @@ export const MilestoneCard = ({ milestone, onClick }: MilestoneCardProps) => {
         {/* Numero Milestone */}
         <div className="flex-shrink-0">
           <div
-            className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500/20 to-purple-500/20 flex items-center justify-center font-bold text-xl border"
+            className="w-12 h-12 rounded-full flex items-center justify-center font-bold text-xl border"
             style={{
-              borderColor: 'var(--border-color)',
-              color: 'var(--text-primary)'
+              background: 'rgba(255, 107, 53, 0.1)',
+              borderColor: 'rgba(255, 107, 53, 0.3)',
+              color: '#FF6B35'
             }}
           >
             {milestone.id}
