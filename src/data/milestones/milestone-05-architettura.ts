@@ -527,7 +527,7 @@ L'architettura è la base. Ora costruiamo sopra! 🚀
   `,
   xp: 200,
   badge: "🏗️ Architetto",
-  estimatedTime: "1-2 ore",
+  estimatedTime: "1 ora",
   topics: [
     "Architettura a tre livelli",
     "Tool use system",

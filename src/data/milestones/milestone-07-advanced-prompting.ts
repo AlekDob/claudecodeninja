@@ -1934,7 +1934,7 @@ Congratulazioni! Sei ora un **Prompt Engineering Expert** per Claude Code. 🎓�
   `,
   xp: 250,
   badge: "🎓 Prompt Expert",
-  estimatedTime: "2 ore",
+  estimatedTime: "1h 30min",
   topics: [
     "Precisione strategica nei prompt",
     "Context-aware prompting",

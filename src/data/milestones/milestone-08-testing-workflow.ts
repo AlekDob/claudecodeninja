@@ -1,7 +1,7 @@
 import { Milestone } from '../../types';
 
 export const milestone08: Milestone = {
-  id: 8,
+  id: 11,
   title: "Testing & Refactoring Workflow",
   subtitle: "Padroneggia TDD, refactoring sicuro e debugging avanzato con Claude Code",
   description: `
@@ -1943,7 +1943,7 @@ Sviluppo efficace spesso combina approcci:
   `,
   xp: 200,
   badge: "🧪 Test Master",
-  estimatedTime: "2-3 ore",
+  estimatedTime: "1h 30min",
   topics: [
     "Test-Driven Development",
     "Refactoring Sicuro",

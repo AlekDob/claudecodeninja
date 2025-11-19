@@ -87,7 +87,7 @@ Padroneggiare questi comandi ti rende 10x più produttivo! 🚀
   `,
   xp: 100,
   badge: "⌨️ CLI Master",
-  estimatedTime: "45 minuti",
+  estimatedTime: "30 minuti",
   topics: ["CLI Commands", "Flags", "Project Mode", "Continue", "Review"],
   quiz: {
     questions: [

@@ -132,6 +132,6 @@ Un buon CLAUDE.md ti fa risparmiare ore di context! 🎯
   `,
   xp: 150,
   badge: "📝 Architect",
-  estimatedTime: "1 ora 30 minuti",
+  estimatedTime: "1 ora",
   topics: ["CLAUDE.md", "Settings", "Project Structure", "Best Practices", "Documentation"]
 };

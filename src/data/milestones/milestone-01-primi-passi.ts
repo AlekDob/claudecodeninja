@@ -489,7 +489,7 @@ Congratulazioni! 🎉 Hai completato la prima milestone. Ora sai:
   `,
   xp: 100,
   badge: "🚀 Iniziatore",
-  estimatedTime: "30-45 minuti",
+  estimatedTime: "20-30 minuti",
   topics: [
     "Installazione",
     "Requisiti di sistema",

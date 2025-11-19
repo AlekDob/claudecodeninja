@@ -107,6 +107,6 @@ Ricorda: **Trust, but verify!** 🛡️
   `,
   xp: 150,
   badge: "🔐 Permission Pro",
-  estimatedTime: "1 ora",
+  estimatedTime: "40 minuti",
   topics: ["Permissions", "Security", "Ask/Allow/Reject", "Tool Approval", "Best Practices"]
 };

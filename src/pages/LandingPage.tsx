@@ -17,45 +17,69 @@ export const LandingPage = () => {
     },
     {
       number: '02',
-      title: 'File Operations',
-      description: 'Read, Write, Edit - padroneggia la gestione file',
+      title: 'Core CLI',
+      description: 'Master i comandi essenziali: claude, -p, -c, -r',
       xp: 150
     },
     {
       number: '03',
-      title: 'Advanced Prompting',
-      description: 'Prompt engineering, context-aware, pattern recognition',
-      xp: 200
+      title: 'Permissions',
+      description: 'Ask/Allow/Reject e gestione tool approval workflow',
+      xp: 150
     },
     {
       number: '04',
-      title: 'Project Architecture',
-      description: 'Strutturare progetti complessi, best practices',
-      xp: 250
+      title: 'Settings & CLAUDE.md',
+      description: 'Gerarchia settings, struttura CLAUDE.md, organizzazione',
+      xp: 150
     },
     {
       number: '05',
-      title: 'Debugging & Optimization',
-      description: 'Problem solving sistematico, performance tuning',
-      xp: 300
+      title: 'Architettura',
+      description: 'Come funziona Claude Code sotto il cofano',
+      xp: 200
     },
     {
       number: '06',
-      title: 'Collaboration Workflows',
-      description: 'Git integration, team workflows, code review',
-      xp: 350
+      title: 'Prompt Engineering',
+      description: 'Anatomia prompt efficaci, precisione, contesto',
+      xp: 200
     },
     {
       number: '07',
-      title: 'Advanced Techniques',
-      description: 'Plan Mode, Thinking Mode, meta-prompting',
-      xp: 400
+      title: 'Advanced Prompting',
+      description: 'Plan Mode, Thinking Mode, meta-prompting avanzato',
+      xp: 350
     },
     {
       number: '08',
-      title: 'Testing & CI/CD',
-      description: 'TDD, automazione, deployment strategies',
+      title: 'Project Setup',
+      description: 'CLAUDE.md di progetto, ADR, feature specs, architettura',
+      xp: 400
+    },
+    {
+      number: '09',
+      title: 'Subagents & Skills',
+      description: 'Protocol Droids, B-MAD Method, orchestrazione multi-agent',
+      xp: 500
+    },
+    {
+      number: '10',
+      title: 'Hooks & MCP',
+      description: 'Lifecycle hooks, Model Context Protocol, estensioni custom',
       xp: 600
+    },
+    {
+      number: '11',
+      title: 'Testing Workflow',
+      description: 'TDD, test automation, coverage analysis, debugging avanzato',
+      xp: 400
+    },
+    {
+      number: '12',
+      title: 'GitLab/GitHub CI/CD',
+      description: 'Pipeline automation, code review AI, deployment strategies',
+      xp: 450
     }
   ];
 
@@ -127,11 +151,11 @@ export const LandingPage = () => {
               "Testing & CI/CD"
             ],
             "numberOfCredits": 12,
-            "timeRequired": "P40H",
+            "timeRequired": "P15H",
             "hasCourseInstance": {
               "@type": "CourseInstance",
               "courseMode": "online",
-              "courseWorkload": "PT40H"
+              "courseWorkload": "PT15H"
             },
             "aggregateRating": {
               "@type": "AggregateRating",
@@ -187,7 +211,7 @@ export const LandingPage = () => {
                 "name": "Quanto tempo ci vuole per completare il corso?",
                 "acceptedAnswer": {
                   "@type": "Answer",
-                  "text": "Il corso completo richiede circa 40 ore distribuite su 12 milestone. Puoi procedere al tuo ritmo - alcuni studenti completano tutto in 2 settimane dedicando 3 ore al giorno, altri preferiscono 1 ora al giorno per 6-8 settimane. Il sistema XP e i badge ti tengono motivato lungo tutto il percorso."
+                  "text": "Il corso completo richiede circa 15 ore distribuite su 12 milestone. Puoi procedere al tuo ritmo - alcuni studenti completano tutto in 2 settimane dedicando 3 ore al giorno, altri preferiscono 1 ora al giorno per 6-8 settimane. Il sistema XP e i badge ti tengono motivato lungo tutto il percorso."
                 }
               },
               {
@@ -351,7 +375,7 @@ export const LandingPage = () => {
                 >
                   {[
                     { value: '12', label: 'Milestone' },
-                    { value: '40+', label: 'Ore Contenuti' },
+                    { value: '15', label: 'Ore Contenuti' },
                     { value: '100%', label: 'Pratico' }
                   ].map((stat, index) => (
                     <div key={index}>
@@ -430,7 +454,7 @@ export const LandingPage = () => {
                   Il Tuo Percorso di Apprendimento
                 </h2>
                 <p className="text-xl max-w-2xl mx-auto" style={{ color: 'var(--text-secondary)' }}>
-                  8 milestone disponibili, 4 in arrivo. Progressione da Bronze a Platinum.
+                  12 milestone complete e disponibili. Progressione da Bronze a Platinum.
                 </p>
               </motion.div>
 
@@ -535,7 +559,7 @@ export const LandingPage = () => {
                     },
                     {
                       question: "Quanto tempo ci vuole per completare il corso?",
-                      answer: "Il corso completo richiede circa 40 ore distribuite su 12 milestone. Puoi procedere al tuo ritmo - alcuni studenti completano tutto in 2 settimane dedicando 3 ore al giorno, altri preferiscono 1 ora al giorno per 6-8 settimane. Il sistema XP e i badge ti tengono motivato lungo tutto il percorso."
+                      answer: "Il corso completo richiede circa 15 ore distribuite su 12 milestone. Puoi procedere al tuo ritmo - alcuni studenti completano tutto in 2 settimane dedicando 3 ore al giorno, altri preferiscono 1 ora al giorno per 6-8 settimane. Il sistema XP e i badge ti tengono motivato lungo tutto il percorso."
                     },
                     {
                       question: "Ho bisogno di esperienza di programmazione?",

@@ -1,7 +1,7 @@
 import { Milestone } from '../../types';
 
 export const milestone09: Milestone = {
-  id: 9,
+  id: 8,
   title: "Project Setup & Architecture",
   subtitle: "Struttura progetti enterprise con CLAUDE.md, ADR, feature specs e organizzazione ottimale",
   description: `
@@ -50,22 +50,20 @@ Claude Code legge TUTTO il file ad ogni sessione. Un file troppo lungo:
 Ecco il template che uso per tutti i miei progetti (testato su 50+ progetti reali):
 
 \`\`\`markdown
-# [Nome Progetto]
+[Nome Progetto]
 
-## 🎯 Overview
-**Purpose**: [Cosa fa l'app in 1 frase]
-**Business Value**: [Perché esiste]
-**Target Users**: [Chi la userà]
-**Key Features**: [3-5 feature principali]
+Overview: [Cosa fa l'app in 1 frase]
+Business Value: [Perché esiste]
+Target Users: [Chi la userà]
+Key Features: [3-5 feature principali]
 
-## 🛠 Tech Stack
-- **Frontend**: React 18, TypeScript 5.3, Tailwind CSS
-- **Backend**: Node.js 20, Express, PostgreSQL 15
-- **Infrastructure**: Vercel (frontend), Railway (backend)
-- **External Services**: Stripe, SendGrid, Supabase Auth
+Tech Stack:
+- Frontend: React 18, TypeScript 5.3, Tailwind CSS
+- Backend: Node.js 20, Express, PostgreSQL 15
+- Infrastructure: Vercel (frontend), Railway (backend)
+- External Services: Stripe, SendGrid, Supabase Auth
 
-## 📁 Directory Structure
-\\\`\\\`\\\`
+Directory Structure:
 /src/
   /features/        # Domain-driven organization
     /auth/          # Authentication feature
@@ -74,65 +72,63 @@ Ecco il template che uso per tutti i miei progetti (testato su 50+ progetti real
   /infrastructure/  # External service integrations
 /tests/            # Test files mirror src structure
 /.claude/          # Claude Code configuration
-\\\`\\\`\\\`
 
-## 🎨 Coding Standards
-### TypeScript
+Coding Standards:
+
+TypeScript:
 - Strict mode SEMPRE abilitato
 - NO any type (usa unknown se necessario)
 - Explicit return types per funzioni pubbliche
 - Interfaces per oggetti, types per union/primitivi
 
-### React
+React:
 - Functional components ONLY (no classi)
 - Custom hooks in /hooks directory
 - Props destructuring nel parametro
 - Memo solo quando dimostrato necessario
 
-### Styling
+Styling:
 - Tailwind CSS inline (NO file CSS separati)
 - Design tokens in tailwind.config.js
 - Mobile-first responsive design
 - Dark mode via CSS variables
 
-### File Organization
+File Organization:
 - Max 300 righe per file
 - Max 20 righe per funzione
 - Co-location: test vicino al codice
 - Barrel exports per features
 
-## 💻 Core Commands
-\\\`\\\`\\\`bash
+Core Commands:
 npm run dev        # Start development server
 npm run build      # Production build
 npm test          # Run all tests
 npm run e2e       # Cypress E2E tests
 npm run typecheck # TypeScript validation
-\\\`\\\`\\\`
 
-## 🔧 Environment Variables
+Environment Variables:
 - .env.local per development
 - Vercel env vars per production
 - NEVER commit .env files
 - Use NEXT_PUBLIC_ prefix per client vars
 
-## ⚠️ DO NOT
-- ❌ Use Bootstrap o jQuery (abbiamo Tailwind)
-- ❌ Create "utils" o "helpers" generici (usa domain names)
-- ❌ Skip tests per "risparmiare tempo"
-- ❌ Commit direttamente su main
-- ❌ Usare console.log in produzione (usa logger)
+DO NOT:
+- Use Bootstrap o jQuery (abbiamo Tailwind)
+- Create "utils" o "helpers" generici (usa domain names)
+- Skip tests per "risparmiare tempo"
+- Commit direttamente su main
+- Usare console.log in produzione (usa logger)
 
-## 📚 Key Decisions
+Key Decisions:
 - Database: PostgreSQL per ACID compliance (vedi ADR-001)
 - Auth: Supabase invece di Auth0 per costi (vedi ADR-002)
 - Monorepo: No, deploy separati più semplici (vedi ADR-003)
 
-## 🚀 Current Sprint
+Current Sprint:
 Working on: User Dashboard (Sprint 12)
 Branch: feature/user-dashboard
 Deadline: 2025-02-01
-\\\`\\\`\\\`
+\`\`\`
 
 ### 1.3 Iterazione e Raffinamento
 
@@ -212,45 +208,45 @@ Chiediti: "Le regole di questa directory sono FONDAMENTALMENTE diverse dal resto
 
 **Root CLAUDE.md (generale):**
 \`\`\`markdown
-# E-commerce Platform Monorepo
+E-commerce Platform Monorepo
 
-## Overview
+Overview:
 Monorepo con 3 applicazioni:
 - backend: API REST
 - frontend: Web app
 - mobile: App iOS/Android
 
-## Shared Conventions
+Shared Conventions:
 - TypeScript everywhere
 - Prettier + ESLint config in root
 - Commit convention: conventional-commits
 - Branch naming: feature/[ticket]-[description]
 
-## DO NOT
+DO NOT:
 - Don't share types between projects (use codegen)
 - Don't reference cross-project files directly
 \`\`\`
 
 **Backend CLAUDE.md (specifico):**
 \`\`\`markdown
-# Backend API
+Backend API
 
-## Stack
+Stack:
 - Node.js 20 + Express 4
 - MongoDB with Mongoose
 - Jest for testing
 
-## Architecture
+Architecture:
 - Repository pattern for data access
 - Service layer for business logic
 - Controller for HTTP handling
 
-## Conventions
+Conventions:
 - Error codes in /constants/errors.ts
 - Validation with Joi schemas
 - Async/await (no callbacks)
 
-## Port
+Port:
 Development: 3000
 Testing: 3001
 \`\`\`
@@ -270,19 +266,19 @@ Claude Code decision
 **Esempio Override Esplicito:**
 
 \`\`\`markdown
-# /legacy-module/CLAUDE.md
+/legacy-module/CLAUDE.md
 
-## ⚠️ LEGACY CODE - SPECIAL RULES
+LEGACY CODE - SPECIAL RULES
 
 This directory contains legacy jQuery code.
 Different rules apply here:
 
-### OVERRIDE: Use jQuery patterns
+OVERRIDE: Use jQuery patterns
 - OK to use $ selector (nowhere else!)
 - Keep existing callback style (don't convert to promises)
 - Bootstrap 3 classes (not Tailwind)
 
-### WHY:
+WHY:
 Migration planned for Q3 2025. Until then, maintain consistency with existing code.
 \`\`\`
 
@@ -326,7 +322,7 @@ I slash commands sono **prompt templates riutilizzabili**. Invece di riscrivere 
 **Crea** \`.claude/commands/bug-report.md\`:
 
 \`\`\`markdown
-# Bug Report
+Bug Report
 
 Analizza questo bug report e genera:
 
@@ -335,7 +331,7 @@ Analizza questo bug report e genera:
 3. Test per prevenire regressioni
 4. Stima tempo fix
 
-## Context Needed:
+Context Needed:
 - Error message/stack trace
 - Steps to reproduce
 - Expected vs actual behavior
@@ -404,11 +400,10 @@ La scelta dipende dalla complessità:
 Claude Code adora ASCII art per visualizzare relazioni:
 
 \`\`\`markdown
-## Database Schema
+Database Schema
 
-### Core Tables
+Core Tables:
 
-\\\`\\\`\\\`
 users
 ├── id (UUID, PK)
 ├── email (VARCHAR 255, UNIQUE, NOT NULL)
@@ -432,11 +427,9 @@ order_items (N:1 with orders, N:1 with products)
 ├── quantity (INT, CHECK > 0)
 ├── price (DECIMAL 10,2)
 └── subtotal (DECIMAL 10,2, GENERATED)
-\\\`\\\`\\\`
 
-### Relationships Diagram
+Relationships Diagram:
 
-\\\`\\\`\\\`
 users ──┐
         ├──< orders ──< order_items >── products
         │
@@ -446,7 +439,6 @@ Legend:
 ──<  = One to Many
 >──  = Many to One
 >──< = Many to Many
-\\\`\\\`\\\`
 \`\`\`
 
 ### 4.3 Esempi SQL Migration
@@ -518,78 +510,70 @@ Pensa al lavoro come una matrioska russa:
 Questo template ha salvato GIORNI di lavoro prevenendo scope creep:
 
 \`\`\`markdown
-## Feature: Sistema Notifiche Real-time
+Feature: Sistema Notifiche Real-time
 
-### 🎯 Business Value
-**Problema**: Utenti non sanno quando ordini sono pronti
-**Soluzione**: Notifiche push real-time
-**Impatto**: -30% chiamate supporto, +15% soddisfazione
+Business Value:
+- Problema: Utenti non sanno quando ordini sono pronti
+- Soluzione: Notifiche push real-time
+- Impatto: -30% chiamate supporto, +15% soddisfazione
 
-### 👤 User Stories
-- Come **cliente**, voglio ricevere notifica quando ordine è spedito
-- Come **admin**, voglio inviare broadcast a tutti gli utenti
-- Come **driver**, voglio confermare consegna con un tap
+User Stories:
+- Come cliente, voglio ricevere notifica quando ordine è spedito
+- Come admin, voglio inviare broadcast a tutti gli utenti
+- Come driver, voglio confermare consegna con un tap
 
-### ✅ Acceptance Criteria (Testabile!)
-- [ ] Notifica arriva entro 5 secondi da evento
-- [ ] Funziona offline (coda + retry)
-- [ ] Utente può disabilitare per categoria
-- [ ] Analytics su delivery rate
-- [ ] Fallback email se push fallisce
+Acceptance Criteria (Testabile!):
+- Notifica arriva entro 5 secondi da evento
+- Funziona offline (coda + retry)
+- Utente può disabilitare per categoria
+- Analytics su delivery rate
+- Fallback email se push fallisce
 
-### 🛠 Technical Specs
+Technical Specs:
 
-**Database**:
-\\\`\\\`\\\`sql
-notifications (
-  id, user_id, type, title, body,
-  read_at, clicked_at, created_at
-)
+Database:
+notifications (id, user_id, type, title, body, read_at, clicked_at, created_at)
+notification_preferences (user_id, category, channel, enabled)
 
-notification_preferences (
-  user_id, category, channel, enabled
-)
-\\\`\\\`\\\`
-
-**API Endpoints**:
+API Endpoints:
 - POST /api/notifications/send
 - GET /api/notifications/user/:id
 - PUT /api/notifications/:id/read
 - POST /api/notifications/broadcast
 
-**Frontend Components**:
+Frontend Components:
 - NotificationBell.tsx (header icon + count)
 - NotificationPanel.tsx (dropdown list)
 - NotificationSettings.tsx (preferences)
 
-**External Services**:
+External Services:
 - Firebase Cloud Messaging (push)
 - SendGrid (email fallback)
 - Mixpanel (analytics)
 
-### ❌ Out of Scope (NO Scope Creep!)
-- ❌ SMS notifications (Future fase 2)
-- ❌ In-app chat (Diverso epic)
-- ❌ Notification scheduling (Futura feature)
+Out of Scope (NO Scope Creep!):
+- SMS notifications (Future fase 2)
+- In-app chat (Diverso epic)
+- Notification scheduling (Futura feature)
 
-### 📋 Dependencies
-- [ ] User authentication implementato
-- [ ] Firebase project configurato
-- [ ] Privacy policy aggiornata per push
+Dependencies:
+- User authentication implementato
+- Firebase project configurato
+- Privacy policy aggiornata per push
 
-### ⚠️ Risks & Mitigations
-**Risk**: iOS rejetta app per troppe notifiche
-**Mitigation**: Rate limiting max 10/giorno/user
+Risks & Mitigations:
+Risk: iOS rejetta app per troppe notifiche
+Mitigation: Rate limiting max 10/giorno/user
 
-**Risk**: Firebase down
-**Mitigation**: Queue locale + retry con exponential backoff
+Risk: Firebase down
+Mitigation: Queue locale + retry con exponential backoff
 
-### ⏱ Effort Estimate
+Effort Estimate:
 - Backend API: 3 giorni
 - Frontend UI: 2 giorni
 - Integration test: 1 giorno
 - Deploy + monitoring: 1 giorno
-**TOTALE: 7 giorni** (1.5 sprints)
+TOTALE: 7 giorni (1.5 sprints)
 \`\`\`
 
 ### 5.3 Come Claude Code Aiuta
@@ -628,73 +612,74 @@ Con ADR: 📋 "Ecco esattamente perché, con pro e contro"
 ### 6.2 Struttura ADR
 
 \`\`\`markdown
-# ADR-004: Usare Server-Side Rendering (SSR) con Next.js
+ADR-004: Usare Server-Side Rendering (SSR) con Next.js
 
-**Status**: Accepted
-**Date**: 2025-01-15
-**Author**: Marco Rossi
-**Deciders**: Team Frontend
+Status: Accepted
+Date: 2025-01-15
+Author: Marco Rossi
+Deciders: Team Frontend
 
-## Context
-La nostra e-commerce app ha problemi SEO. Google non indicizza bene le pagine prodotto perché sono client-side rendered. Perdiamo traffico organico.
+Context:
+La nostra e-commerce app ha problemi SEO. Google non indicizza bene le pagine
+prodotto perché sono client-side rendered. Perdiamo traffico organico.
 
-## Decision
+Decision:
 Migreremo a Next.js 14 con App Router per SSR/SSG dove necessario.
 
-## Alternatives Considered
+Alternatives Considered:
 
-### 1. Restare su React SPA + Prerendering
-**Pro**:
+1. Restare su React SPA + Prerendering
+Pro:
 - Minimo refactoring
 - Team già conosce codebase
 
-**Contro**:
+Contro:
 - Prerendering limitato
 - No real-time SEO data
 - Complessità configurazione
 
-### 2. Migrare tutto a SSR puro (Remix/SvelteKit)
-**Pro**:
+2. Migrare tutto a SSR puro (Remix/SvelteKit)
+Pro:
 - Performance ottimale
 - SEO perfetto
 
-**Contro**:
+Contro:
 - Rewrite completo (3-6 mesi)
 - Team deve imparare nuovo framework
 - Risk progetto
 
-### 3. Next.js Incremental (SCELTA ✅)
-**Pro**:
+3. Next.js Incremental (SCELTA)
+Pro:
 - Migrazione incrementale possibile
 - React components riutilizzabili
 - SSR/SSG/CSR mix ottimale
 - Vercel deployment semplice
 
-**Contro**:
+Contro:
 - App Router learning curve
 - Alcune limitazioni su third-party libraries
 
-## Consequences
+Consequences:
 
-**Positive**:
+Positive:
 - +200% traffico organico stimato
 - -50% Time to First Byte
 - Better Core Web Vitals
 
-**Negative**:
+Negative:
 - 2 mesi migration effort
 - Hosting costs +30% (server rendering)
 - Complessità debugging SSR
 
-## Implementation Plan
+Implementation Plan:
 1. Proof of concept su /products (1 settimana)
 2. Migrazione incremental routes (6 settimane)
 3. Deprecazione vecchio SPA (2 settimane)
 
-## Review Date
+Review Date:
 2025-07-15 - Verificare metriche SEO e decidere se completare migrazione
 
-## Lessons Learned
+Lessons Learned:
 (Compilare dopo implementazione)
 \`\`\`
 
@@ -814,7 +799,7 @@ Ora ce l'hai anche tu. Usala saggiamente! 🏗️
   `,
   xp: 400,
   badge: "🏗️ Architect",
-  estimatedTime: "2-3 ore",
+  estimatedTime: "1h 30min",
   topics: [
     "CLAUDE.md Best Practices",
     "Project Organization",

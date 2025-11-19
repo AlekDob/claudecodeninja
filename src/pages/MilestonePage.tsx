@@ -88,7 +88,7 @@ export const MilestonePage = () => {
             Completa la Milestone {milestoneId - 1} per sbloccare questa!
           </p>
           <button
-            onClick={() => navigate('/')}
+            onClick={() => navigate('/milestones')}
             className="px-4 py-2.5 bg-blue-600 hover:bg-blue-500 text-white rounded-lg font-medium text-sm transition-colors"
           >
             Torna alle Milestone
@@ -105,7 +105,7 @@ export const MilestonePage = () => {
     } else {
       // No quiz, complete directly
       completeMilestone(milestone.id, milestone.xp);
-      navigate('/');
+      navigate('/milestones');
     }
   };
 
@@ -124,7 +124,7 @@ export const MilestonePage = () => {
     } else {
       // First time completion: complete and redirect
       completeMilestone(milestone.id, milestone.xp, scorePercentage);
-      navigate('/');
+      navigate('/milestones');
     }
   };
 
@@ -146,7 +146,7 @@ export const MilestonePage = () => {
         <div className="container mx-auto px-4 md:px-6 lg:px-8 py-6">
           <div className="flex items-center justify-between mb-6">
             <button
-              onClick={() => navigate('/')}
+              onClick={() => navigate('/milestones')}
               className="flex items-center gap-2 transition-colors text-sm"
               style={{ color: 'var(--text-secondary)' }}
               onMouseEnter={(e) => e.currentTarget.style.color = 'var(--text-primary)'}

@@ -8,6 +8,9 @@ export { milestone06 } from './milestone-06-prompt-engineering';
 export { milestone07 } from './milestone-07-advanced-prompting';
 export { milestone08 } from './milestone-08-testing-workflow';
 export { milestone09 } from './milestone-09-project-setup';
+export { milestone10 } from './milestone-10-gitlab-github';
+export { milestone11 } from './milestone-11-subagents-skills';
+export { milestone12 } from './milestone-12-hooks-mcp';
 
 // Aggregate milestones array
 import { Milestone } from '../../types';
@@ -20,16 +23,21 @@ import { milestone06 } from './milestone-06-prompt-engineering';
 import { milestone07 } from './milestone-07-advanced-prompting';
 import { milestone08 } from './milestone-08-testing-workflow';
 import { milestone09 } from './milestone-09-project-setup';
+import { milestone10 } from './milestone-10-gitlab-github';
+import { milestone11 } from './milestone-11-subagents-skills';
+import { milestone12 } from './milestone-12-hooks-mcp';
 
 export const milestones: Milestone[] = [
-  milestone01,
-  milestone02,
-  milestone03,
-  milestone04,
-  milestone05,
-  milestone06,
-  milestone07,
-  milestone08,
-  milestone09,
-  // Milestone 10-12 saranno aggiunte qui quando generate dal content-enricher agent
+  milestone01,  // Primi Passi
+  milestone02,  // Core CLI
+  milestone03,  // Permissions
+  milestone04,  // Settings & CLAUDE.md
+  milestone05,  // Architettura
+  milestone06,  // Prompt Engineering
+  milestone07,  // Advanced Prompting
+  milestone09,  // Project Setup (spostato prima)
+  milestone11,  // Subagents & Skills (spostato prima)
+  milestone12,  // Hooks & MCP (spostato prima)
+  milestone08,  // Testing Workflow (spostato dopo)
+  milestone10   // GitLab/GitHub CI/CD (ultimo)
 ];

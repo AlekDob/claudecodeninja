@@ -722,7 +722,7 @@ Il prompt engineering non è solo una skill - è il **linguaggio** con cui comun
   `,
   xp: 200,
   badge: "🎯 Prompt Master",
-  estimatedTime: "1-2 ore",
+  estimatedTime: "1 ora",
   topics: [
     "Anatomia prompt efficaci",
     "Prompt conversazionali",
