@@ -6,6 +6,7 @@ import { slugifyHeading } from '../../utils/slugify';
 interface Heading {
   id: string;
   text: string;
+  level: number; // 2 for H2, 3 for H3
 }
 
 interface TableOfContentsProps {
@@ -15,8 +16,11 @@ interface TableOfContentsProps {
 /**
  * TableOfContents Component
  *
- * Dynamically extracts h2 headings from markdown content and provides
+ * Dynamically extracts h2 and h3 headings from markdown content and provides
  * smooth scroll navigation with offset for fixed header.
+ *
+ * H2 = Main chapters (e.g., "Capitolo 1: CLAUDE.md di Progetto")
+ * H3 = Subsections (e.g., "1.1 Overview", "1.2 Tech Stack")
  *
  * Uses centralized slugifyHeading utility to match rehype-slug ID generation exactly.
  *
@@ -29,19 +33,20 @@ export const TableOfContents = ({ content }: TableOfContentsProps) => {
   const [headings, setHeadings] = useState<Heading[]>([]);
   const [activeId, setActiveId] = useState<string>('');
 
-  // Extract h2 headings from markdown content
+  // Extract h2 and h3 headings from markdown content
   useEffect(() => {
     const extractHeadings = (markdown: string): Heading[] => {
-      const headingRegex = /^## (.+)$/gm;
+      const headingRegex = /^(#{2,3}) (.+)$/gm;
       const extractedHeadings: Heading[] = [];
       const slugger = new GithubSlugger();
       let match;
 
       while ((match = headingRegex.exec(markdown)) !== null) {
-        const text = match[1];
+        const level = match[1].length; // Count # symbols (2 or 3)
+        const text = match[2];
         // Use centralized slugify utility for consistent ID generation
         const id = slugifyHeading(text, slugger);
-        extractedHeadings.push({ id, text }); // Keep original text for display
+        extractedHeadings.push({ id, text, level }); // Keep original text and level
       }
 
       return extractedHeadings;
@@ -127,20 +132,22 @@ export const TableOfContents = ({ content }: TableOfContentsProps) => {
         Indice dei Contenuti
       </h3>
       <nav aria-label="Table of Contents">
-        <ul className="space-y-2 text-sm">
+        <ul className="space-y-1 text-sm">
           {headings.map((heading, index) => (
             <motion.li
               key={heading.id}
               initial={{ opacity: 0, x: -10 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: index * 0.05 }}
+              className={heading.level === 3 ? 'pl-3' : ''} // Indent H3 subsections
             >
               <button
                 onClick={() => scrollToSection(heading.id)}
-                className="text-left w-full py-1.5 transition-colors leading-snug hover:translate-x-1 transition-transform duration-200"
+                className="text-left w-full py-1 transition-colors leading-snug hover:translate-x-1 transition-transform duration-200"
                 style={{
                   color: activeId === heading.id ? '#FF6B35' : 'var(--text-secondary)',
                   fontWeight: activeId === heading.id ? 600 : 400,
+                  fontSize: heading.level === 2 ? '0.875rem' : '0.8125rem', // H2 slightly larger
                 }}
                 onMouseEnter={(e) => {
                   if (activeId !== heading.id) {
