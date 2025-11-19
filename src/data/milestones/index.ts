@@ -7,6 +7,7 @@ export { milestone05 } from './milestone-05-architettura';
 export { milestone06 } from './milestone-06-prompt-engineering';
 export { milestone07 } from './milestone-07-advanced-prompting';
 export { milestone08 } from './milestone-08-testing-workflow';
+export { milestone09 } from './milestone-09-project-setup';
 
 // Aggregate milestones array
 import { Milestone } from '../../types';
@@ -18,6 +19,7 @@ import { milestone05 } from './milestone-05-architettura';
 import { milestone06 } from './milestone-06-prompt-engineering';
 import { milestone07 } from './milestone-07-advanced-prompting';
 import { milestone08 } from './milestone-08-testing-workflow';
+import { milestone09 } from './milestone-09-project-setup';
 
 export const milestones: Milestone[] = [
   milestone01,
@@ -28,5 +30,6 @@ export const milestones: Milestone[] = [
   milestone06,
   milestone07,
   milestone08,
-  // Milestone 9-12 saranno aggiunte qui quando generate dal content-enricher agent
+  milestone09,
+  // Milestone 10-12 saranno aggiunte qui quando generate dal content-enricher agent
 ];
