@@ -66,12 +66,58 @@ claude -c -p "Continua con i test"
 claude -r -p "Rivedi tutto il modulo di autenticazione"
 \`\`\`
 
+## Checkpoints & Rewind (Nov 2025) 🆕
+
+Una delle feature più potenti di Claude Code 2025: **la macchina del tempo per il tuo codice**! ⏪
+
+### Come Funziona
+
+Claude Code crea automaticamente un **checkpoint** ogni volta che invii un prompt. Puoi tornare indietro in qualsiasi momento!
+
+\`\`\`bash
+# Metodo 1: Doppio ESC
+# Premi ESC due volte per tornare al checkpoint precedente
+ESC ESC
+
+# Metodo 2: Comando /rewind
+claude
+> /rewind
+\`\`\`
+
+### Cosa Puoi Ripristinare
+
+Quando fai rewind, scegli cosa ripristinare:
+- 📝 **Solo conversazione** - Torna indietro nel dialogo
+- 💾 **Solo codice** - Rollback delle modifiche ai file
+- 🔄 **Entrambi** - Reset completo a quel punto nel tempo
+
+### Use Cases Reali
+
+**Scenario 1: Esplorare Alternative**
+\`\`\`bash
+claude "Implementa autenticazione con JWT"
+# Claude crea la soluzione v1
+ESC ESC  # Torna indietro
+claude "Implementa autenticazione con OAuth2"
+# Ora hai due approcci da confrontare!
+\`\`\`
+
+**Scenario 2: Undo Mistakes**
+\`\`\`bash
+claude "Refactora tutto il database layer"
+# Oh no, ha rotto qualcosa!
+ESC ESC  # Rollback immediato, tutto come prima
+\`\`\`
+
+**Retention**: I checkpoint vengono mantenuti per **30 giorni** 📅
+
 ## Best Practices
 
 1. **Usa -p** quando Claude deve avere contesto dell'intero progetto
 2. **Usa -c** per conversazioni iterative lunghe
 3. **Usa -r** quando vuoi feedback costruttivo sul codice
 4. **Combina** i flag quando ha senso per il tuo workflow
+5. **Usa ESC ESC** liberamente per esplorare alternative senza paura 🆕
 
 ## Esempi Pratici
 

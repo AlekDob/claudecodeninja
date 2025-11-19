@@ -652,6 +652,312 @@ echo "✅ Permission granted for $SUBAGENT_TYPE on $ENVIRONMENT"
 4. **💰 Cost Tracking**: Logga usage per chargeback interno teams
 5. **🚨 Alerting**: Notifica team quando subagents critici (security, incident) si attivano
 
+### 2.8 Pattern 8: Plugins System (Nov 2025) 🆕
+
+**⭐ Novità Novembre 2025**: Claude Code introduce il **Plugins System**, un modo per installare con un click bundle completi di hooks + agents + MCP servers + slash commands!
+
+**Plugins = One-Click Extension Packs** 📦
+
+Prima: Installare manualmente hooks, MCP server, agents, slash commands (30+ minuti)
+Dopo: \`/plugin install nome-plugin\` (10 secondi) ✨
+
+#### Cos'è un Plugin?
+
+Un plugin è una **collezione curata** di:
+- 🪝 **Hooks** - Automazioni lifecycle
+- 🤖 **Agents** - Subagents specializzati
+- 🔌 **MCP Servers** - Integrazioni esterne
+- ⚡ **Slash Commands** - Comandi rapidi custom
+
+**Metafora:** I plugin sono come gli "extension packs" di VS Code, ma per Claude Code!
+
+#### Installare un Plugin
+
+**Comando base:**
+
+\`\`\`bash
+# List available plugins
+claude /plugin list
+
+# Install plugin
+claude /plugin install security-pro
+
+# Remove plugin
+claude /plugin remove security-pro
+
+# Update all plugins
+claude /plugin update
+\`\`\`
+
+**Esempio - Security Plugin:**
+
+\`\`\`bash
+claude /plugin install security-pro
+
+# Cosa installa automaticamente:
+# ✅ Hooks: PreCommit secret scanning, vulnerability check
+# ✅ MCP Server: security-scanner (SAST integration)
+# ✅ Agent: security-auditor (code review specialist)
+# ✅ Slash Commands: /security-audit, /dependency-check
+\`\`\`
+
+**Risultato:** In 10 secondi hai un **security toolkit completo**!
+
+#### Plugin Popolari (Gennaio 2025)
+
+**1. security-pro** 🔒
+- Secret scanning automatico
+- Dependency vulnerability checks
+- SAST integration (Semgrep, Snyk)
+- Security-auditor agent
+
+\`\`\`bash
+claude /plugin install security-pro
+# Ready: /security-audit, /dependency-check, /vulnerability-scan
+\`\`\`
+
+**2. frontend-toolkit** 🎨
+- Component generators
+- Design system integration
+- Figma MCP server
+- Storybook automation
+
+\`\`\`bash
+claude /plugin install frontend-toolkit
+# Ready: /generate-component, /figma-sync, /storybook-create
+\`\`\`
+
+**3. devops-essentials** 🚀
+- CI/CD hooks (GitLab, GitHub Actions)
+- Deployment automation
+- Monitoring integration (Prometheus, Grafana)
+- Incident-responder agent
+
+\`\`\`bash
+claude /plugin install devops-essentials
+# Ready: /deploy, /rollback, /incident-report
+\`\`\`
+
+**4. testing-suite** 🧪
+- Smart test runners
+- Coverage tracking
+- Test generation agent
+- Mutation testing integration
+
+\`\`\`bash
+claude /plugin install testing-suite
+# Ready: /test-smart, /coverage-report, /generate-tests
+\`\`\`
+
+#### Creare un Plugin Custom
+
+**Plugin structure:**
+
+\`\`\`bash
+my-plugin/
+├── plugin.json          # Metadata
+├── hooks/              # Hook scripts
+│   ├── pre-commit.sh
+│   └── post-deploy.sh
+├── agents/             # Subagent definitions
+│   └── custom-agent.md
+├── mcp-servers/        # MCP server configs
+│   └── custom-mcp.js
+└── commands/           # Slash commands
+    └── custom-cmd.md
+\`\`\`
+
+**plugin.json:**
+
+\`\`\`json
+{
+  "name": "my-company-plugin",
+  "version": "1.0.0",
+  "description": "Internal tools for MyCompany workflows",
+  "author": "MyCompany DevOps",
+  "hooks": {
+    "PreCommit": "./hooks/pre-commit.sh",
+    "PostDeploy": "./hooks/post-deploy.sh"
+  },
+  "agents": [
+    {
+      "name": "company-auditor",
+      "path": "./agents/custom-agent.md"
+    }
+  ],
+  "mcpServers": [
+    {
+      "name": "internal-api",
+      "path": "./mcp-servers/custom-mcp.js",
+      "transport": "stdio"
+    }
+  ],
+  "commands": [
+    {
+      "name": "/company-deploy",
+      "path": "./commands/custom-cmd.md"
+    }
+  ]
+}
+\`\`\`
+
+**Publish plugin:**
+
+\`\`\`bash
+# Option 1: npm package
+npm publish @mycompany/claude-plugin
+
+# Option 2: Git repository
+git tag v1.0.0
+git push --tags
+
+# Users install:
+claude /plugin install @mycompany/claude-plugin
+# or
+claude /plugin install github:mycompany/claude-plugin
+\`\`\`
+
+#### Plugin Discovery & Marketplace
+
+**Browse plugins:**
+
+\`\`\`bash
+# List all available plugins
+claude /plugin list
+
+# Search by category
+claude /plugin search security
+claude /plugin search frontend
+claude /plugin search devops
+
+# Get plugin info
+claude /plugin info security-pro
+\`\`\`
+
+**Output:**
+
+\`\`\`
+Plugin: security-pro
+Version: 2.1.0
+Author: Anthropic Security Team
+Downloads: 15,234
+Rating: ⭐⭐⭐⭐⭐ (4.8/5)
+
+Includes:
+- 3 Hooks (PreCommit, PrePush, PreDeploy)
+- 2 Agents (security-auditor, penetration-tester)
+- 1 MCP Server (security-scanner)
+- 5 Slash Commands (/security-audit, /dependency-check, ...)
+
+Install: claude /plugin install security-pro
+\`\`\`
+
+#### Plugin Configuration
+
+**Override defaults:**
+
+\`\`\`json
+// .claude/plugin-config.json
+{
+  "security-pro": {
+    "hooks": {
+      "PreCommit": {
+        "enabled": true,
+        "strictMode": false  // Don't block commits, just warn
+      }
+    },
+    "mcpServers": {
+      "security-scanner": {
+        "apiKey": "\${SECURITY_API_KEY}",
+        "severity": "high"  // Only alert on high/critical
+      }
+    }
+  }
+}
+\`\`\`
+
+**Risultato:** Plugins configurabili per ogni team!
+
+#### Use Case Reale - E-commerce Team
+
+**Before Plugins (setup time: 2 hours):**
+
+\`\`\`bash
+# Manualmente:
+1. Scaricare e configurare Stripe MCP server (30 min)
+2. Setup hooks per secret scanning (20 min)
+3. Configurare deployment automation (40 min)
+4. Installare testing tools (30 min)
+Total: 2 hours + troubleshooting
+\`\`\`
+
+**After Plugins (setup time: 2 minutes):**
+
+\`\`\`bash
+claude /plugin install stripe-toolkit
+claude /plugin install security-pro
+claude /plugin install devops-essentials
+claude /plugin install testing-suite
+
+# Done! All configured and ready ✨
+\`\`\`
+
+**ROI:** 60x faster setup, zero configuration friction!
+
+#### Plugin Ecosystem Stats (Gennaio 2025)
+
+- 📦 **500+ plugins** disponibili
+- 🔥 **Top 10 plugins**: 50k+ downloads
+- 🌍 **Community**: 1000+ developer contributors
+- ⭐ **Avg rating**: 4.6/5
+
+**Trend:** Plugin ecosystem cresce del 40% al mese!
+
+#### Best Practices per Plugins
+
+**1. Start Small, Expand Later**
+
+\`\`\`bash
+# Install solo ciò che serve
+claude /plugin install security-pro  # Yes
+# Non installare 10 plugins subito!
+\`\`\`
+
+**2. Review Plugin Permissions**
+
+Ogni plugin dichiara cosa può fare:
+
+\`\`\`bash
+claude /plugin info devops-essentials
+
+Permissions:
+- ✅ Read: git status, file system
+- ⚠️  Write: file system, remote APIs
+- 🔴 Execute: bash commands, deployments
+
+# Se non ti fidi, non installare!
+\`\`\`
+
+**3. Keep Plugins Updated**
+
+\`\`\`bash
+# Update all plugins monthly
+claude /plugin update --all
+
+# Auto-update (optional)
+claude /plugin auto-update enable
+\`\`\`
+
+**4. Use Version Pinning (Enterprise)**
+
+\`\`\`json
+// .claude/plugins.lock
+{
+  "security-pro": "2.1.0",  // Pinned, won't auto-update
+  "frontend-toolkit": "^1.5.0"  // Semantic versioning
+}
+\`\`\`
+
 ## Capitolo 3: Model Context Protocol (MCP) Fundamentals
 
 ### 3.1 Cos'è MCP?

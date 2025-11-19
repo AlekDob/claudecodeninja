@@ -72,6 +72,48 @@ brew install claude-code
 
 ---
 
+#### VS Code Extension (Beta) 🆕
+
+**Novità 2025**: Claude Code è ora disponibile anche come **estensione nativa per VS Code**!
+
+**Vantaggi**:
+- ✨ **Sidebar panel** integrato con il tuo editor
+- 👀 **Inline diffs** - vedi modifiche di Claude in real-time
+- 🔄 **Real-time code changes** - visualizzazione modifiche mentre Claude lavora
+- 🎯 **No terminal switching** - tutto nell'IDE
+
+**Installazione**:
+
+1. **Via VS Code Marketplace**:
+   \`\`\`bash
+   # Apri VS Code e vai a:
+   # View → Extensions (o CTRL+SHIFT+X / CMD+SHIFT+X)
+   # Cerca "Claude Code" e clicca Install
+   \`\`\`
+
+2. **Via Command Line**:
+   \`\`\`bash
+   code --install-extension anthropic-ai.claude-code
+   \`\`\`
+
+**Quando usare VS Code Extension vs Terminal**:
+
+📝 **VS Code Extension** - Migliore per:
+- Lavorare su file aperti nell'editor
+- Visualizzare modifiche inline
+- Integration con VS Code workflow
+- Progetti piccoli/medi
+
+💻 **Terminal CLI** - Migliore per:
+- Automation e scripting
+- CI/CD integration
+- Progetti grandi con molti file
+- Headless environments
+
+💡 **Tip**: Puoi usare ENTRAMBI! Installa l'extension per UI-driven tasks e usa la CLI per automation.
+
+---
+
 ### 2.2 Autenticazione con Claude Code
 
 Claude Code offre due modalità di autenticazione per adattarsi alle tue esigenze:
