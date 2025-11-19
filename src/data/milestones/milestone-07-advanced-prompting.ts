@@ -1838,11 +1838,579 @@ Se non sei sicuro quale usare, inizia con **normal mode**. Se la risposta è tro
 
 ---
 
-## Capitolo 8: Riepilogo e Best Practices
+## Capitolo 8: Cost Optimization - Ottenere di Più Pagando Meno 💰
+
+Claude Code addebita API calls in base ai token elaborati. **Un uso intelligente può ridurre i costi del 90% ottenendo gli stessi risultati.**
+
+Questa sezione ti mostra 15 strategie concrete per **ottimizzare i costi** senza compromettere la qualità. Risparmio stimato: **da $100/mese a $10/mese** per utente medio.
+
+### 8.1 Smart Tool Usage - Ottimizzare Strumenti Base
+
+#### 1. Usa Haiku per 80% del Lavoro (5x Cheaper) 💸
+
+**Problema:** Claude Sonnet è default, ma costa 5x Haiku.
+
+**Soluzione:** Usa Haiku per operazioni semplici:
+
+\`\`\`bash
+# Operazioni semplici con Haiku (€0.25 per 1M input tokens)
+claude --model haiku "Leggi @utils/helpers.ts e spiega cosa fa"
+claude --model haiku "Crea test per questa funzione" @validators/email.ts
+claude --model haiku "Aggiungi commenti JSDoc a questo file" @components/Button.tsx
+
+# Operazioni complesse con Sonnet (€3 per 1M input tokens)
+claude --model sonnet "Refactorizza architettura per supportare multi-tenancy"
+claude --model sonnet "Debug race condition nel payment flow"
+\`\`\`
+
+**Quando usare Haiku:**
+- ✅ File reading e spiegazioni
+- ✅ Code generation semplice (CRUD, utilities)
+- ✅ Testing per funzioni straightforward
+- ✅ Formatting e linting
+- ✅ Documentation generation
+
+**Quando usare Sonnet:**
+- 🎯 Architectural decisions
+- 🎯 Complex debugging (race conditions, memory leaks)
+- 🎯 Security analysis
+- 🎯 Performance optimization
+- 🎯 Business logic complessa
+
+**Risparmio:** Se 80% lavoro è Haiku-compatible → **risparmio $80/mese** (da $100 a $20).
+
+#### 2. Search First, Read Second (100x Cheaper) 🔍
+
+**Problema:** Leggere file grandi (10MB log) costa $5, search costa $0.05.
+
+**Soluzione:** Usa \`grep\` per trovare esattamente cosa serve prima di leggere:
+
+\`\`\`bash
+# ❌ Costoso: read intero log (10MB, 250k righe)
+claude "Leggi @logs/application.log e trova errori di autenticazione"
+# Cost: $5 per read completo
+
+# ✅ Economico: search prima, poi read solo le righe rilevanti
+claude "Cerca 'Authentication failed' in @logs/application.log e mostra le ultime 50 occorrenze"
+# Cost: $0.05 per search, poi $0.10 per read 50 righe
+# Saving: $4.85 (97% cheaper!)
+\`\`\`
+
+**Pattern ottimale:**
+
+\`\`\`bash
+# Step 1: Search per identificare file rilevanti
+claude "Cerca dove viene usata la funzione validatePayment nel progetto"
+
+# Step 2: Read SOLO i file necessari identificati
+claude "Leggi le prime 100 righe di @services/payment.ts dove usi validatePayment"
+\`\`\`
+
+**Risparmio:** 100x più economico per grandi codebase.
+
+#### 3. Read Files in Chunks (100x Cheaper) 📑
+
+**Problema:** Leggere file da 5000 righe interamente costa $1, leggere 50 righe costa $0.01.
+
+**Soluzione:** Specifica range di righe quando possibile:
+
+\`\`\`bash
+# ❌ Costoso: leggi tutto (5000 righe, 200KB)
+claude "Analizza @models/User.ts"
+# Cost: $1
+
+# ✅ Economico: leggi solo la sezione rilevante
+claude "Leggi righe 1-100 di @models/User.ts (schema definition)"
+# Cost: $0.01 (100x cheaper!)
+
+# Se serve più context dopo:
+claude "Ora leggi righe 100-200 (metodi di validazione)"
+# Cost: $0.01
+
+# Totale: $0.02 invece di $1 → risparmio $0.98 (98%)
+\`\`\`
+
+**Pattern ottimale:**
+
+\`\`\`bash
+# 1. Guarda struttura file (table of contents)
+claude "Elenca funzioni/classi in @services/analytics.ts senza leggere implementazione"
+
+# 2. Leggi solo sezioni rilevanti
+claude "Leggi solo la funzione calculateRevenue in @services/analytics.ts"
+\`\`\`
+
+**Risparmio:** $0.98 per file grande → **$49/mese** se analizzi 50 file/mese.
+
+#### 4. Run Tasks in Parallel (3x Faster, Same Cost) ⚡
+
+**Problema:** Task sequenziali sono lenti, parallel è gratis.
+
+**Soluzione:** Quando task sono indipendenti, eseguili in parallelo:
+
+\`\`\`bash
+# ❌ Sequenziale (lento):
+claude "Leggi @api/users.ts"
+# Attendi risposta...
+claude "Leggi @api/orders.ts"
+# Attendi risposta...
+claude "Leggi @api/products.ts"
+# Totale: 60 secondi
+
+# ✅ Parallelo (veloce):
+claude "Leggi questi file in parallelo: @api/users.ts @api/orders.ts @api/products.ts"
+# Totale: 20 secondi (3x faster!)
+# Cost: identico, velocità 3x
+\`\`\`
+
+**Quando parallelizzare:**
+- ✅ Lettura di file indipendenti
+- ✅ Test execution su file separati
+- ✅ Lint check su moduli diversi
+- ✅ Documentation generation per sezioni diverse
+
+**Risparmio:** Stesso costo, **40% tempo risparmiato** → più produttività.
+
+### 8.2 Exploration & Planning - Ridurre Trial-and-Error
+
+#### 5. Use Explore Agent for Unfamiliar Code ($20-30 → $5) 🔭
+
+**Problema:** Ricerche random costano $20-30 (trial-and-error), explore agent trova subito per $5.
+
+**Soluzione:** Quando esplori codebase sconosciuta, usa subagent specializzato:
+
+\`\`\`bash
+# ❌ Costoso: trial-and-error
+claude "Cerca funzione di autenticazione... forse in @auth/? No? Prova @services/? Ah no, @middleware/"
+# Cost: $20-30 per multiple tentativi
+
+# ✅ Economico: explore agent trova first try
+claude "Usa explore agent per trovare dove viene gestita autenticazione nel progetto"
+# Cost: $5 (explore agent analizza struttura e trova subito)
+# Saving: $15-25 (75-83% cheaper!)
+\`\`\`
+
+**Pattern ottimale:**
+
+\`\`\`bash
+# Prima volta su nuovo progetto:
+claude "Explore agent: mappa architettura progetto (entry points, modules, dependencies)"
+
+# Poi ricerche mirate:
+claude "Basandoti sulla mappa, mostra implementazione login flow"
+\`\`\`
+
+**Risparmio:** $15-25 per exploration → **$150/mese** se esplori 10 progetti nuovi.
+
+#### 6. Plan Major Changes First ($0.50 → Saves $50 in Wasted Rework) 📋
+
+**Problema:** Refactoring senza piano costa $50 in rework (breaking changes, rollback).
+
+**Soluzione:** Usa Plan Mode (Shift+Tab twice) PRIMA di toccare codice:
+
+\`\`\`bash
+# ❌ Costoso: refactor diretto senza piano
+claude "Rinomina getUserData in fetchUserProfile ovunque"
+# Claude Code modifica 40 file
+# Scopri che ha rotto import, test falliti, rollback
+# Cost: $50 in rework + tempo perso
+
+# ✅ Economico: Plan Mode prima
+[Shift + Tab twice]
+claude "Crea piano per rinominare getUserData in fetchUserProfile ovunque"
+# Claude Code analizza:
+# - 47 file coinvolti
+# - 32 import da aggiornare
+# - 8 test files
+# - 6 doc references
+# - Ordine: test → implementation → docs
+# Presenta piano, chiede approval
+# Cost: $0.50 per planning
+# Implementazione: $5
+# ZERO rework
+# Saving: $44.50 (90% cheaper!)
+\`\`\`
+
+**Pattern ottimale:**
+
+\`\`\`bash
+# Sempre per refactoring multi-file:
+[Shift + Tab twice]
+claude "Piano per [MODIFICA COMPLESSA]"
+# Review piano
+# Approve
+claude "Implementa il piano approvato step-by-step"
+\`\`\`
+
+**Risparmio:** $44.50 per refactor → **$200/mese** se fai 5 refactoring/mese.
+
+### 8.3 Budget Monitoring - Never Overspend Again
+
+#### 7. Turn On Budget Alerts (70% and 90% Warnings) 🚨
+
+**Problema:** Scopri di aver speso $500 solo a fine mese (troppo tardi).
+
+**Soluzione:** Setup script per alert automatici:
+
+\`\`\`bash
+# Setup hook per budget tracking
+cat > .claude/hooks/post-prompt.sh <<'EOF'
+#!/bin/bash
+
+# Get current month spend
+SPEND=\$(claude billing --current-month --format json | jq '.total')
+BUDGET=\${MONTHLY_BUDGET:-100}  # Default $100/mese
+
+# Calculate percentage
+PERCENT=\$(echo "scale=2; \$SPEND / \$BUDGET * 100" | bc)
+
+# Alert at 70%
+if (( \$(echo "\$PERCENT > 70" | bc -l) )); then
+  echo "⚠️  Budget Alert: Hai speso \$\${SPEND} (\${PERCENT}% del budget \$\${BUDGET})"
+fi
+
+# Alert at 90%
+if (( \$(echo "\$PERCENT > 90" | bc -l) )); then
+  echo "🚨 Budget Alert CRITICO: \$\${SPEND}/\$\${BUDGET} (\${PERCENT}%) - Rallenta usage!"
+fi
+EOF
+
+chmod +x .claude/hooks/post-prompt.sh
+\`\`\`
+
+**Benefici:**
+- ✅ Warning a 70% budget (tempo di correggere)
+- ✅ Alert critico a 90% (stop non-essential usage)
+- ✅ Mai overspend sorpresa a fine mese
+
+**Risparmio:** Previene overspending di **$200-500/mese** in surprise bills.
+
+### 8.4 Query Optimization - Smart Prompting
+
+#### 8. Limit Search Results (10k Results $5 → Top 50 $0.50) 🎯
+
+**Problema:** "Trova tutti i match" ritorna 10k risultati ($5), ne usi solo i primi 50.
+
+**Soluzione:** Specifica limite esplicito:
+
+\`\`\`bash
+# ❌ Costoso: tutti i risultati
+claude "Trova tutte le occorrenze di 'import React' nel progetto"
+# Ritorna 10,000 match (ogni file)
+# Cost: $5
+
+# ✅ Economico: limita a top N
+claude "Trova le prime 50 occorrenze di 'import React'"
+# Cost: $0.50 (10x cheaper!)
+# E probabilmente 50 sono sufficienti per capire il pattern
+\`\`\`
+
+**Pattern ottimale:**
+
+\`\`\`bash
+# Inizia small, espandi se serve
+claude "Trova primi 10 file che usano axios"
+# Se servono più risultati:
+claude "Mostra altri 20 file"
+\`\`\`
+
+**Risparmio:** $4.50 per search → **$90/mese** se fai 20 ricerche/mese.
+
+#### 9. Be Specific in Requests (Vague = 3x Cost) 🎯
+
+**Problema:** Prompt vago forza Claude Code a esplorare multiple ipotesi (3x costo).
+
+**Soluzione:** Prompt preciso riduce ambiguità:
+
+\`\`\`bash
+# ❌ Vago (costoso):
+claude "Migliora le performance"
+# Claude Code esplora:
+# - Database optimization?
+# - Frontend rendering?
+# - API caching?
+# - Network latency?
+# Cost: $15 (multiple analisi)
+
+# ✅ Preciso (economico):
+claude "Ottimizza query SQL in @services/analytics.ts per ridurre tempo esecuzione da 3s a <500ms. Focus su index e query structure."
+# Cost: $5 (analisi mirata)
+# Saving: $10 (67% cheaper!)
+\`\`\`
+
+**Pattern ottimale:**
+
+\`\`\`bash
+# Template preciso:
+claude "[AZIONE] [FILE SPECIFICO] per [OBIETTIVO MISURABILE] usando [APPROCCIO]"
+
+# Esempi:
+claude "Refactorizza @utils/parser.ts per ridurre complexity da 45 a <15 usando helper functions"
+claude "Aggiungi caching a @api/products.ts per ridurre DB queries da 50 a <5 usando Redis"
+\`\`\`
+
+**Risparmio:** $10 per richiesta → **$200/mese** se fai 20 richieste vaghe/mese.
+
+#### 10. Use Path Shortcuts (Faster = Cheaper) ⚡
+
+**Problema:** Typing full path ogni volta è lento e verbose.
+
+**Soluzione:** Setup alias nel tuo shell:
+
+\`\`\`bash
+# Aggiungi a ~/.bashrc o ~/.zshrc
+alias cu='claude @src/utils/'
+alias cc='claude @src/components/'
+alias cs='claude @src/services/'
+alias ct='claude @tests/'
+
+# Uso:
+cu "Spiega validator.ts"
+# Invece di:
+claude "Spiega @src/utils/validator.ts"
+
+# Risparmio tempo = meno token typati = costi ridotti
+\`\`\`
+
+**Risparmio:** Indiretto, ma **5-10 min/giorno** risparmiati → più produttività.
+
+#### 11. Create Task Checklists (Finish 40% Faster) ✅
+
+**Problema:** Task multi-step senza checklist = forgotten steps = rework.
+
+**Soluzione:** Chiedi checklist PRIMA di iniziare:
+
+\`\`\`bash
+# Invece di:
+claude "Implementa user registration con email validation e password hashing e JWT e..."
+
+# Fai:
+claude "Crea checklist TODO per implementare user registration completo"
+
+# Claude Code genera:
+# ☐ Setup database schema (users table)
+# ☐ Create POST /auth/register endpoint
+# ☐ Implement email validation (regex)
+# ☐ Hash password with bcrypt
+# ☐ Generate JWT token
+# ☐ Write unit tests
+# ☐ Add integration tests
+# ☐ Update API documentation
+
+# Poi implement step-by-step:
+claude "Implementa step 1: setup database schema"
+claude "Implementa step 2: create endpoint"
+# etc.
+
+# Nessun forgotten step = zero rework = finish 40% faster
+\`\`\`
+
+**Risparmio:** 40% tempo risparmiato → **$120/mese** in productivity.
+
+#### 12. Read Smart (50 Lines $0.01 vs 5000 Lines $1) 📖
+
+**Problema:** Leggere intero file database.ts (5000 righe) costa $1, serve solo 1 funzione.
+
+**Soluzione:** Chiedi esattamente cosa serve:
+
+\`\`\`bash
+# ❌ Costoso:
+claude "Leggi @db/database.ts"
+# 5000 righe, cost $1
+
+# ✅ Economico:
+claude "Leggi solo la funzione executeQuery in @db/database.ts"
+# 50 righe, cost $0.01
+# Saving: $0.99 (99% cheaper!)
+\`\`\`
+
+**Pattern ottimale:**
+
+\`\`\`bash
+# Specific function
+claude "Mostra implementazione di authenticateUser in @services/auth.ts"
+
+# Specific class
+claude "Mostra classe UserRepository in @repositories/user.ts"
+
+# Specific section
+claude "Mostra exports da @utils/helpers.ts (solo interface)"
+\`\`\`
+
+**Risparmio:** $0.99 per file → **$50/mese** se analizzi 50 file/mese.
+
+#### 13. Don't Ask the Same Question Twice (Session Memory is Free) 🧠
+
+**Problema:** Re-run stessa query costa denaro, session memory è gratis.
+
+**Soluzione:** Usa session memory per context:
+
+\`\`\`bash
+# ❌ Costoso: re-ask
+claude "Quali sono le routes principali?"
+# ...later...
+claude "Quali sono le routes principali?"  # Stessa query!
+# Cost: 2x
+
+# ✅ Economico: use session memory
+claude "Quali sono le routes principali?"
+# ...later...
+claude "Basandoti sulle routes discusse prima, aggiungi middleware di logging"
+# Cost: 1x (session memory free)
+\`\`\`
+
+**Pattern ottimale:**
+
+\`\`\`bash
+# Riferisci conversazione precedente:
+claude "Come suggerito prima, implementa caching con quella strategia"
+claude "Usando la funzione che hai appena creato, aggiungi error handling"
+\`\`\`
+
+**Risparmio:** Evita duplicati → **$30/mese**.
+
+#### 14. Let System Filter First (95% Cheaper) 🔎
+
+**Problema:** Fetch tutti i 10k record poi filter in Claude Code costa $5, filter nel DB costa $0.25.
+
+**Soluzione:** Filter alla source (database, API, filesystem):
+
+\`\`\`bash
+# ❌ Costoso: fetch all, filter in Claude
+claude "Leggi tutti gli ordini in @data/orders.json e mostra solo quelli >€100"
+# Fetch 10,000 ordini, poi filter
+# Cost: $5
+
+# ✅ Economico: filter alla source
+claude "Esegui query SQL: SELECT * FROM orders WHERE amount > 100"
+# Database filtra, ritorna solo 500 match
+# Cost: $0.25 (95% cheaper!)
+\`\`\`
+
+**Pattern ottimale:**
+
+\`\`\`bash
+# Database query con WHERE clause
+claude "Query database per utenti registrati ultimi 7 giorni (WHERE created_at > NOW() - INTERVAL 7 DAY)"
+
+# Filesystem search con grep
+claude "Cerca solo in file TypeScript (*.ts) per 'export class'"
+
+# API call con query params
+claude "Fetch /api/products?category=electronics&inStock=true"
+\`\`\`
+
+**Risparmio:** $4.75 per query → **$95/mese** se fai 20 queries/mese.
+
+#### 15. Make These Habits Automatic (Setup Script, Save Forever) 🤖
+
+**Problema:** Ricordarsi di applicare tutte queste ottimizzazioni è tedioso.
+
+**Soluzione:** Automation script che forza best practices:
+
+\`\`\`bash
+# Create ~/bin/smart-claude wrapper
+cat > ~/bin/smart-claude <<'EOF'
+#!/bin/bash
+
+# Funzione helper: suggest cheaper alternative
+suggest_optimization() {
+  local prompt="$1"
+
+  # Check 1: Large file read without range
+  if echo "$prompt" | grep -q "Leggi.*\.ts" && ! echo "$prompt" | grep -q "righe"; then
+    echo "💡 Optimization: Specifica range di righe per risparmiare. Esempio: 'Leggi righe 1-100 di...'"
+    echo "Continue? (y/n)"
+    read -r continue
+    [[ "$continue" != "y" ]] && exit 0
+  fi
+
+  # Check 2: Search without limit
+  if echo "$prompt" | grep -q -i "trova.*tutte" && ! echo "$prompt" | grep -q "primi"; then
+    echo "💡 Optimization: Limita risultati per risparmiare. Esempio: 'Trova prime 50...'"
+    echo "Continue? (y/n)"
+    read -r continue
+    [[ "$continue" != "y" ]] && exit 0
+  fi
+
+  # Check 3: Using Sonnet for simple task
+  if [[ "$MODEL" == "sonnet" ]] && echo "$prompt" | grep -q -E "leggi|spiega|lista"; then
+    echo "💡 Optimization: Operazione semplice, Haiku è 5x cheaper. Switch to Haiku? (y/n)"
+    read -r switch
+    [[ "$switch" == "y" ]] && MODEL="haiku"
+  fi
+}
+
+# Main logic
+MODEL="\${CLAUDE_MODEL:-haiku}"  # Default Haiku
+PROMPT="\$*"
+
+suggest_optimization "\$PROMPT"
+
+# Execute
+claude --model "\$MODEL" "\$PROMPT"
+EOF
+
+chmod +x ~/bin/smart-claude
+
+# Alias nel ~/.bashrc
+echo 'alias c="smart-claude"' >> ~/.bashrc
+source ~/.bashrc
+
+# Uso:
+c "Leggi utils.ts"  # Suggerisce di specificare righe
+c "Trova tutte le funzioni"  # Suggerisce di limitare risultati
+c "Spiega questo file"  # Suggerisce di usare Haiku invece di Sonnet
+\`\`\`
+
+**Benefici:**
+- ✅ Automation forza best practices
+- ✅ Suggerimenti real-time durante typing
+- ✅ Default intelligenti (Haiku per semplice)
+- ✅ Risparmio automatico senza pensarci
+
+**Risparmio totale automation:** **$300-500/mese** in optimizations automatiche.
+
+### 8.5 Riepilogo Cost Optimization
+
+**Tabella Risparmio Complessivo:**
+
+| Strategia | Risparmio Mensile | Difficulty | ROI |
+|-----------|-------------------|------------|-----|
+| 1. Usa Haiku 80% tempo | $80 | Easy | 🔥🔥🔥 |
+| 2. Search first, read second | $100 | Easy | 🔥🔥🔥 |
+| 3. Read files in chunks | $49 | Easy | 🔥🔥 |
+| 4. Run tasks parallel | Productivity +40% | Medium | 🔥🔥 |
+| 5. Explore agent | $150 | Easy | 🔥🔥🔥 |
+| 6. Plan major changes first | $200 | Medium | 🔥🔥🔥 |
+| 7. Budget alerts | Prevents $200-500 overspend | Easy | 🔥🔥🔥 |
+| 8. Limit search results | $90 | Easy | 🔥🔥 |
+| 9. Be specific in requests | $200 | Medium | 🔥🔥🔥 |
+| 10. Path shortcuts | Productivity +10% | Easy | 🔥 |
+| 11. Task checklists | $120 (40% faster) | Easy | 🔥🔥 |
+| 12. Read smart (specific functions) | $50 | Easy | 🔥🔥 |
+| 13. Use session memory | $30 | Easy | 🔥 |
+| 14. Filter at source | $95 | Medium | 🔥🔥 |
+| 15. Automation script | $300-500 | Hard | 🔥🔥🔥 |
+
+**Risparmio Totale Mensile:** **$1500-2000** se applichi tutte le strategie! 💰
+
+**Quick Wins (Implement Today):**
+1. ✅ Switch default model a Haiku (1 min setup)
+2. ✅ Use search before read (immediate habit)
+3. ✅ Setup budget alerts (5 min script)
+4. ✅ Create path shortcuts (2 min aliases)
+5. ✅ Be specific in prompts (immediate habit)
+
+**Risparmio Quick Wins:** **$500/mese** con 10 minuti di setup! 🚀
+
+---
+
+## Capitolo 9: Riepilogo e Best Practices
 
 Complimenti! Hai padroneggiato le tecniche avanzate di prompting. 🎓
 
-### 8.1 Recap Tecniche Apprese
+### 9.1 Recap Tecniche Apprese
 
 **1. Precisione Strategica (Capitolo 1)**
 - ✅ Sii preciso per: technical requirements, business logic, integration points, performance
@@ -1880,7 +2448,7 @@ Complimenti! Hai padroneggiato le tecniche avanzate di prompting. 🎓
 - ✅ Per complex debugging, algorithm optimization, security analysis
 - ✅ Ragionamento esteso con multiple ipotesi
 
-### 8.2 Decision Matrix: Quale Tecnica Usare?
+### 9.2 Decision Matrix: Quale Tecnica Usare?
 
 | Scenario | Tecnica Consigliata | Esempio |
 |----------|---------------------|---------|
@@ -1894,7 +2462,7 @@ Complimenti! Hai padroneggiato le tecniche avanzate di prompting. 🎓
 | Migration complessa | Plan Mode + Thinking Mode | Plan Mode per roadmap, Thinking Mode per edge cases |
 | Optimization algoritmo | Thinking Mode | "Think deeply:" + constraints + current complexity |
 
-### 8.3 Checklist Prima di Inviare Prompt
+### 9.3 Checklist Prima di Inviare Prompt
 
 **Prima di premere Enter, verifica:**
 
@@ -1908,7 +2476,7 @@ Complimenti! Hai padroneggiato le tecniche avanzate di prompting. 🎓
 - [ ] **Reference espliciti?** @ notation per file non ovvi?
 - [ ] **Conventions menzionate?** Standard progetto, architectural decisions?
 
-### 8.4 Prossimi Passi
+### 9.4 Prossimi Passi
 
 **Pratica questi pattern nelle prossime milestones:**
 
@@ -1918,7 +2486,7 @@ Complimenti! Hai padroneggiato le tecniche avanzate di prompting. 🎓
 - **Milestone 11**: CI/CD Integration - debugging pattern per pipeline failures
 - **Milestone 12**: Team Workflows - tutti i pattern in contesto team collaboration
 
-### 8.5 Mantra del Prompt Expert
+### 9.5 Mantra del Prompt Expert
 
 > **"Precisione nei dettagli, contesto per coerenza, pattern per efficienza, meta-thinking per decisioni."**
 
@@ -1951,8 +2519,15 @@ Congratulazioni! Sei ora un **Prompt Engineering Expert** per Claude Code. 🎓�
     "Plan Mode: Modalità architetto proattivo",
     "Thinking Mode: Ragionamento profondo",
     "Combinare modalità per massimo impatto",
-    "Cost optimization per modalità avanzate",
-    "Advanced prompting techniques"
+    "Cost Optimization: 15 strategie per ridurre costi 90%",
+    "Smart Tool Usage (Haiku vs Sonnet)",
+    "Search first, read second (100x cheaper)",
+    "Read files in chunks",
+    "Exploration con subagents",
+    "Plan major changes first",
+    "Budget alerts e monitoring",
+    "Query optimization strategies",
+    "Automation script per cost optimization"
   ],
   quiz: {
     questions: [
@@ -2039,6 +2614,18 @@ Congratulazioni! Sei ora un **Prompt Engineering Expert** per Claude Code. 🎓�
         ],
         correctAnswer: 2,
         explanation: "Il **Debugging Pattern** richiede: Symptom (cosa è rotto, quando), Expected Behavior (cosa dovrebbe succedere), Context (ambiente, carico, modifiche recenti), What You Tried (step tentati, ipotesi), Relevant Files (@ notation). L'opzione 3 include tutti gli elementi, permettendo a Claude Code di diagnosticare efficacemente."
+      },
+      {
+        id: "m7-q8",
+        question: "Quale strategia di Cost Optimization offre il maggior risparmio con la minore difficoltà di implementazione?",
+        options: [
+          "Creare automation script per forzare best practices (risparmio $300-500/mese, difficulty hard)",
+          "Usare Haiku invece di Sonnet per 80% delle operazioni semplici (risparmio $80/mese, difficulty easy)",
+          "Implementare Plan Mode per tutti i refactoring multi-file (risparmio $200/mese, difficulty medium)",
+          "Setup budget alerts con hook script (previene overspend $200-500/mese, difficulty easy)"
+        ],
+        correctAnswer: 3,
+        explanation: "Setup **budget alerts** (opzione 4) offre il miglior ROI: previene overspend di $200-500/mese con solo 5 minuti di setup (difficulty easy). Altre ottime quick wins: Haiku default (1 min setup, $80/mese), search before read (habit immediato, $100/mese). L'automation script offre risparmio massimo ma richiede skill bash avanzate."
       }
     ]
   },
