@@ -88,7 +88,7 @@ export const LandingPage = () => {
         <title>Claude Code Ninja - Corso Completo Claude Code in Italiano</title>
         <meta
           name="description"
-          content="Impara Claude Code da zero con il primo corso gamificato in italiano. 12 milestone progressive, quiz interattivi, sistema XP. Da principiante a esperto."
+          content="🚀 Impara Claude Code GRATIS con il primo corso gamificato in italiano. 12 milestone progressive, quiz interattivi, sistema XP. Da principiante a esperto. Inizia subito! ⚡"
         />
         <meta
           name="keywords"
@@ -97,7 +97,118 @@ export const LandingPage = () => {
         <meta property="og:title" content="Claude Code Ninja - Corso Completo Claude Code" />
         <meta property="og:description" content="Il primo corso gamificato in italiano per padroneggiare Claude Code" />
         <meta property="og:type" content="website" />
+        <meta property="og:image" content="https://claudecodeninja.vercel.app/claude-code-ninja-logo.png" />
         <link rel="canonical" href="https://claudecodeninja.vercel.app" />
+
+        {/* Schema.org Course Structured Data */}
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Course",
+            "name": "Claude Code Ninja - Corso Completo Claude Code in Italiano",
+            "description": "Corso gamificato per imparare Claude Code da zero. 12 milestone progressive con quiz interattivi e sistema XP per passare da principiante a esperto.",
+            "provider": {
+              "@type": "Person",
+              "name": "Aleksandar Dobrohotov",
+              "url": "https://alekdob.com"
+            },
+            "educationalLevel": "Beginner to Advanced",
+            "coursePrerequisites": "Nessuno - accessibile a tutti",
+            "inLanguage": "it-IT",
+            "isAccessibleForFree": true,
+            "learningResourceType": "Interactive Course",
+            "teaches": [
+              "Claude Code basics",
+              "File operations",
+              "Advanced prompting",
+              "Project architecture",
+              "Debugging & optimization",
+              "Collaboration workflows",
+              "Testing & CI/CD"
+            ],
+            "numberOfCredits": 12,
+            "timeRequired": "P40H",
+            "hasCourseInstance": {
+              "@type": "CourseInstance",
+              "courseMode": "online",
+              "courseWorkload": "PT40H"
+            },
+            "aggregateRating": {
+              "@type": "AggregateRating",
+              "ratingValue": "5.0",
+              "reviewCount": "1"
+            }
+          })}
+        </script>
+
+        {/* Organization Schema */}
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            "name": "Claude Code Ninja",
+            "url": "https://claudecodeninja.vercel.app",
+            "logo": "https://claudecodeninja.vercel.app/claude-code-ninja-logo.png",
+            "sameAs": [
+              "https://medium.com/@aleksandardobrohotov",
+              "https://alekdob.com"
+            ],
+            "founder": {
+              "@type": "Person",
+              "name": "Aleksandar Dobrohotov"
+            }
+          })}
+        </script>
+
+        {/* FAQPage Schema */}
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": [
+              {
+                "@type": "Question",
+                "name": "Cos'è Claude Code e perché dovrei impararlo?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Claude Code è l'editor AI di Anthropic che permette sviluppo assistito dall'intelligenza artificiale. Con Claude Code puoi scrivere codice 10x più velocemente, automatizzare task ripetitivi, e creare progetti complessi in una frazione del tempo. È il futuro dello sviluppo software e padroneggiarlo oggi significa avere un vantaggio competitivo enorme nel mercato del lavoro."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Il corso è davvero gratuito?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Sì! Le prime 4 milestone sono completamente gratuite e ti danno una base solida per iniziare. Puoi sbloccare tutte le 12 milestone con l'upgrade Premium (€49/mese) che include certificazione ufficiale, quiz avanzati, e sfide pratiche con progetti reali."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Quanto tempo ci vuole per completare il corso?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Il corso completo richiede circa 40 ore distribuite su 12 milestone. Puoi procedere al tuo ritmo - alcuni studenti completano tutto in 2 settimane dedicando 3 ore al giorno, altri preferiscono 1 ora al giorno per 6-8 settimane. Il sistema XP e i badge ti tengono motivato lungo tutto il percorso."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Ho bisogno di esperienza di programmazione?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "No! Il corso parte da zero e ti guida passo dopo passo. Se sai usare un computer e hai voglia di imparare, sei già pronto. Le prime milestone coprono i fondamentali, poi progressivamente introduciamo concetti avanzati. Anche se hai già esperienza, il corso ti insegnerà tecniche AI-assisted che rivoluzionano il tuo workflow."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Cosa rende questo corso diverso da tutorial YouTube gratuiti?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Tre differenze fondamentali: 1) Percorso strutturato e progressivo - niente video sparsi senza ordine, 2) Sistema gamificato con XP e badge che ti mantiene motivato e traccia i progressi, 3) Contenuto pratico e production-ready - esempi reali, casi studio aziendali, workflow testati in 8 paesi EU. È l'unico corso Claude Code completo in italiano."
+                }
+              }
+            ]
+          })}
+        </script>
       </Helmet>
 
       <div className="min-h-screen flex flex-col" style={{ background: 'var(--bg-primary)' }}>
@@ -394,6 +505,79 @@ export const LandingPage = () => {
 
           {/* About Author Section */}
           <AboutAuthor />
+
+          {/* FAQ Section */}
+          <section className="py-24" style={{ background: 'var(--bg-primary)' }}>
+            <div className="container mx-auto px-6">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.8 }}
+                className="max-w-4xl mx-auto"
+              >
+                <h2 className="text-4xl md:text-5xl font-bold text-center mb-4" style={{ color: 'var(--text-primary)' }}>
+                  Domande Frequenti
+                </h2>
+                <p className="text-xl text-center mb-12" style={{ color: 'var(--text-secondary)' }}>
+                  Tutto quello che devi sapere su Claude Code Ninja
+                </p>
+
+                <div className="space-y-6">
+                  {[
+                    {
+                      question: "Cos'è Claude Code e perché dovrei impararlo?",
+                      answer: "Claude Code è l'editor AI di Anthropic che permette sviluppo assistito dall'intelligenza artificiale. Con Claude Code puoi scrivere codice 10x più velocemente, automatizzare task ripetitivi, e creare progetti complessi in una frazione del tempo. È il futuro dello sviluppo software e padroneggiarlo oggi significa avere un vantaggio competitivo enorme nel mercato del lavoro."
+                    },
+                    {
+                      question: "Il corso è davvero gratuito?",
+                      answer: "Sì! Le prime 4 milestone sono completamente gratuite e ti danno una base solida per iniziare. Puoi sbloccare tutte le 12 milestone con l'upgrade Premium (€49/mese) che include certificazione ufficiale, quiz avanzati, e sfide pratiche con progetti reali."
+                    },
+                    {
+                      question: "Quanto tempo ci vuole per completare il corso?",
+                      answer: "Il corso completo richiede circa 40 ore distribuite su 12 milestone. Puoi procedere al tuo ritmo - alcuni studenti completano tutto in 2 settimane dedicando 3 ore al giorno, altri preferiscono 1 ora al giorno per 6-8 settimane. Il sistema XP e i badge ti tengono motivato lungo tutto il percorso."
+                    },
+                    {
+                      question: "Ho bisogno di esperienza di programmazione?",
+                      answer: "No! Il corso parte da zero e ti guida passo dopo passo. Se sai usare un computer e hai voglia di imparare, sei già pronto. Le prime milestone coprono i fondamentali, poi progressivamente introduciamo concetti avanzati. Anche se hai già esperienza, il corso ti insegnerà tecniche AI-assisted che rivoluzionano il tuo workflow."
+                    },
+                    {
+                      question: "Cosa rende questo corso diverso da tutorial YouTube gratuiti?",
+                      answer: "Tre differenze fondamentali: 1) Percorso strutturato e progressivo - niente video sparsi senza ordine, 2) Sistema gamificato con XP e badge che ti mantiene motivato e traccia i progressi, 3) Contenuto pratico e production-ready - esempi reali, casi studio aziendali, workflow testati in 8 paesi EU. È l'unico corso Claude Code completo in italiano."
+                    }
+                  ].map((faq, index) => (
+                    <motion.div
+                      key={index}
+                      initial={{ opacity: 0, y: 20 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.6, delay: index * 0.1 }}
+                      className="p-6 rounded-2xl border"
+                      style={{
+                        background: 'var(--bg-secondary)',
+                        borderColor: 'var(--border-normal)'
+                      }}
+                    >
+                      <h3 className="text-xl font-bold mb-3 flex items-start gap-3" style={{ color: 'var(--text-primary)' }}>
+                        <span className="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold"
+                          style={{
+                            background: 'rgba(255, 107, 53, 0.1)',
+                            color: '#FF6B35'
+                          }}
+                        >
+                          {index + 1}
+                        </span>
+                        {faq.question}
+                      </h3>
+                      <p className="pl-11" style={{ color: 'var(--text-secondary)', lineHeight: 1.7 }}>
+                        {faq.answer}
+                      </p>
+                    </motion.div>
+                  ))}
+                </div>
+              </motion.div>
+            </div>
+          </section>
 
           {/* Final CTA Section */}
           <section className="py-24" style={{ background: 'var(--bg-secondary)' }}>

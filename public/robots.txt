@@ -1,0 +1,47 @@
+# robots.txt per Claude Code Ninja
+# Ottimizzato per indicizzazione SEO completa
+
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://claudecodeninja.vercel.app/sitemap.xml
+
+# Crawl-delay per bot pesanti
+User-agent: AhrefsBot
+Crawl-delay: 10
+
+User-agent: SemrushBot
+Crawl-delay: 10
+
+User-agent: DotBot
+Crawl-delay: 10
+
+# Block AI scrapers che non rispettano il contenuto
+User-agent: GPTBot
+Disallow: /
+
+User-agent: ChatGPT-User
+Disallow: /
+
+User-agent: CCBot
+Disallow: /
+
+User-agent: anthropic-ai
+Disallow: /
+
+User-agent: Claude-Web
+Disallow: /
+
+# Consenti tutti gli altri bot standard
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Yahoo! Slurp
+Allow: /
+
+User-agent: DuckDuckBot
+Allow: /
