@@ -36,12 +36,16 @@ export const TableOfContents = ({ content }: TableOfContentsProps) => {
   // Extract h2 and h3 headings from markdown content
   useEffect(() => {
     const extractHeadings = (markdown: string): Heading[] => {
+      // First, remove code blocks to avoid extracting headings from example code
+      // Match triple backtick code blocks (```...```)
+      const withoutCodeBlocks = markdown.replace(/```[\s\S]*?```/g, '');
+
       const headingRegex = /^(#{2,3}) (.+)$/gm;
       const extractedHeadings: Heading[] = [];
       const slugger = new GithubSlugger();
       let match;
 
-      while ((match = headingRegex.exec(markdown)) !== null) {
+      while ((match = headingRegex.exec(withoutCodeBlocks)) !== null) {
         const level = match[1].length; // Count # symbols (2 or 3)
         const text = match[2];
         // Use centralized slugify utility for consistent ID generation
