@@ -37,8 +37,23 @@ export const TableOfContents = ({ content }: TableOfContentsProps) => {
   useEffect(() => {
     const extractHeadings = (markdown: string): Heading[] => {
       // First, remove code blocks to avoid extracting headings from example code
-      // Match triple backtick code blocks (```...```)
-      const withoutCodeBlocks = markdown.replace(/```[\s\S]*?```/g, '');
+      // In TypeScript template strings, backticks are escaped. We need to handle:
+      // 1. Triple-escaped backticks: \\\`\\\`\\\` (code blocks shown as examples)
+      // 2. Single-escaped backticks: \`\`\` (actual code blocks)
+      // 3. Normal backticks: ``` (for other milestones without escaping)
+
+      let withoutCodeBlocks = markdown;
+
+      // Remove triple-escaped code blocks first (examples OF code blocks)
+      // Match from opening to closing, ensuring both are at line boundaries
+      withoutCodeBlocks = withoutCodeBlocks.replace(/^\\\\\\`\\\\\\`\\\\\\`.*?\n[\s\S]*?^\\\\\\`\\\\\\`\\\\\\`/gm, '[CODE_BLOCK_NESTED]');
+
+      // Remove single-escaped code blocks (actual code blocks in TS template strings)
+      // Match from line start to ensure we don't accidentally span sections
+      withoutCodeBlocks = withoutCodeBlocks.replace(/^\\`\\`\\`\w*.*?\n[\s\S]*?^\\`\\`\\`$/gm, '[CODE_BLOCK]');
+
+      // Remove normal backticks (for other milestones)
+      withoutCodeBlocks = withoutCodeBlocks.replace(/^```\w*.*?\n[\s\S]*?^```$/gm, '[CODE_BLOCK]');
 
       const headingRegex = /^(#{2,3}) (.+)$/gm;
       const extractedHeadings: Heading[] = [];
