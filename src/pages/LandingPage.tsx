@@ -6,8 +6,32 @@ import { Footer } from '../components/Footer/Footer';
 import { ConsultingSection } from '../components/ConsultingSection/ConsultingSection';
 import { AboutAuthor } from '../components/AboutAuthor/AboutAuthor';
 import { Helmet } from 'react-helmet-async';
+import { useEffect } from 'react';
 
 export const LandingPage = () => {
+  // Scroll-triggered animations with Intersection Observer
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('in-view');
+          }
+        });
+      },
+      {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px',
+      }
+    );
+
+    const elements = document.querySelectorAll('.scroll-animate, .scroll-animate-scale');
+    elements.forEach((el) => observer.observe(el));
+
+    return () => {
+      elements.forEach((el) => observer.unobserve(el));
+    };
+  }, []);
   const milestones = [
     {
       number: '01',
@@ -304,7 +328,7 @@ export const LandingPage = () => {
                   initial={{ opacity: 0, y: 30 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.8, delay: 0.2 }}
-                  className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-bold text-center mb-6 leading-[1.1]"
+                  className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold text-center mb-6 leading-[1.1]"
                   style={{
                     color: 'var(--text-primary)',
                     fontFamily: '"Space Grotesk", system-ui, sans-serif'
@@ -396,30 +420,25 @@ export const LandingPage = () => {
           {/* Features Section */}
           <section className="py-24" style={{ background: 'var(--bg-secondary)' }}>
             <div className="container mx-auto px-6">
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.3 }}
-                transition={{ duration: 0.5 }}
-                className="text-center mb-16"
-              >
+              <div className="text-center mb-16 scroll-animate">
                 <h2 className="text-4xl md:text-5xl font-bold mb-4" style={{ color: 'var(--text-primary)' }}>
                   Perché Claude Code Ninja?
                 </h2>
                 <p className="text-xl max-w-2xl mx-auto" style={{ color: 'var(--text-secondary)' }}>
                   L'unico percorso strutturato in italiano per padroneggiare Claude Code
                 </p>
-              </motion.div>
+              </div>
 
               <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
                 {features.map((feature, index) => (
-                  <motion.div
+                  <div
                     key={index}
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true, amount: 0.2 }}
-                    transition={{ duration: 0.4, delay: index * 0.05 }}
-                    className="p-6 rounded-2xl border group hover:scale-105 transition-all duration-300"
+                    className={`p-6 rounded-2xl border group hover:scale-105 transition-all duration-300 scroll-animate-scale ${
+                      index === 0 ? 'animate-delay-100' :
+                      index === 1 ? 'animate-delay-200' :
+                      index === 2 ? 'animate-delay-300' :
+                      'animate-delay-400'
+                    }`}
                     style={{
                       background: 'var(--bg-primary)',
                       borderColor: 'var(--border-normal)'
@@ -435,7 +454,7 @@ export const LandingPage = () => {
                     <p style={{ color: 'var(--text-secondary)' }}>
                       {feature.description}
                     </p>
-                  </motion.div>
+                  </div>
                 ))}
               </div>
             </div>
@@ -444,33 +463,24 @@ export const LandingPage = () => {
           {/* Milestones Preview Section */}
           <section id="milestones" className="py-24" style={{ background: 'var(--bg-primary)' }}>
             <div className="container mx-auto px-6">
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.3 }}
-                transition={{ duration: 0.5 }}
-                className="text-center mb-16"
-              >
+              <div className="text-center mb-16 scroll-animate">
                 <h2 className="text-4xl md:text-5xl font-bold mb-4" style={{ color: 'var(--text-primary)' }}>
                   Il Tuo Percorso di Apprendimento
                 </h2>
                 <p className="text-xl max-w-2xl mx-auto" style={{ color: 'var(--text-secondary)' }}>
                   12 milestone complete e disponibili. Progressione da Bronze a Platinum.
                 </p>
-              </motion.div>
+              </div>
 
               <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto mb-12">
                 {milestones.map((milestone, index) => (
-                  <motion.div
+                  <div
                     key={index}
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true, amount: 0.1 }}
-                    transition={{ duration: 0.3, delay: index * 0.02 }}
-                    className="group relative overflow-hidden rounded-2xl border p-6 hover:scale-105 transition-all duration-300"
+                    className="group relative overflow-hidden rounded-2xl border p-6 hover:scale-105 transition-all duration-300 scroll-animate"
                     style={{
                       background: 'var(--bg-secondary)',
-                      borderColor: 'var(--border-normal)'
+                      borderColor: 'var(--border-normal)',
+                      transitionDelay: `${index * 0.05}s`
                     }}
                   >
                     {/* Number */}
@@ -498,18 +508,12 @@ export const LandingPage = () => {
                       <Zap className="w-3 h-3" />
                       {milestone.xp} XP
                     </div>
-                  </motion.div>
+                  </div>
                 ))}
               </div>
 
               {/* CTA */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.5 }}
-                transition={{ duration: 0.5 }}
-                className="text-center"
-              >
+              <div className="text-center scroll-animate-scale animate-delay-100">
                 <Link
                   to="/milestones"
                   className="inline-flex items-center gap-2 px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-300 hover:scale-105 hover:shadow-2xl"
@@ -521,7 +525,7 @@ export const LandingPage = () => {
                   Inizia il Percorso
                   <ArrowRight className="w-5 h-5" />
                 </Link>
-              </motion.div>
+              </div>
             </div>
           </section>
 
@@ -534,19 +538,15 @@ export const LandingPage = () => {
           {/* FAQ Section */}
           <section className="py-24" style={{ background: 'var(--bg-primary)' }}>
             <div className="container mx-auto px-6">
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.3 }}
-                transition={{ duration: 0.5 }}
-                className="max-w-4xl mx-auto"
-              >
-                <h2 className="text-4xl md:text-5xl font-bold text-center mb-4" style={{ color: 'var(--text-primary)' }}>
-                  Domande Frequenti
-                </h2>
-                <p className="text-xl text-center mb-12" style={{ color: 'var(--text-secondary)' }}>
-                  Tutto quello che devi sapere su Claude Code Ninja
-                </p>
+              <div className="max-w-4xl mx-auto">
+                <div className="scroll-animate">
+                  <h2 className="text-4xl md:text-5xl font-bold text-center mb-4" style={{ color: 'var(--text-primary)' }}>
+                    Domande Frequenti
+                  </h2>
+                  <p className="text-xl text-center mb-12" style={{ color: 'var(--text-secondary)' }}>
+                    Tutto quello che devi sapere su Claude Code Ninja
+                  </p>
+                </div>
 
                 <div className="space-y-6">
                   {[
@@ -571,16 +571,13 @@ export const LandingPage = () => {
                       answer: "Tre differenze fondamentali: 1) Percorso strutturato e progressivo - niente video sparsi senza ordine, 2) Sistema gamificato con XP e badge che ti mantiene motivato e traccia i progressi, 3) Contenuto pratico e production-ready - esempi reali, casi studio aziendali, workflow testati in 8 paesi EU. È l'unico corso Claude Code completo in italiano."
                     }
                   ].map((faq, index) => (
-                    <motion.div
+                    <div
                       key={index}
-                      initial={{ opacity: 0, y: 20 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      viewport={{ once: true, amount: 0.3 }}
-                      transition={{ duration: 0.4, delay: index * 0.05 }}
-                      className="p-6 rounded-2xl border"
+                      className="p-6 rounded-2xl border scroll-animate"
                       style={{
                         background: 'var(--bg-secondary)',
-                        borderColor: 'var(--border-normal)'
+                        borderColor: 'var(--border-normal)',
+                        transitionDelay: `${index * 0.1}s`
                       }}
                     >
                       <h3 className="text-xl font-bold mb-3 flex items-start gap-3" style={{ color: 'var(--text-primary)' }}>
@@ -597,23 +594,17 @@ export const LandingPage = () => {
                       <p className="pl-11" style={{ color: 'var(--text-secondary)', lineHeight: 1.7 }}>
                         {faq.answer}
                       </p>
-                    </motion.div>
+                    </div>
                   ))}
                 </div>
-              </motion.div>
+              </div>
             </div>
           </section>
 
           {/* Final CTA Section */}
           <section className="py-24" style={{ background: 'var(--bg-secondary)' }}>
             <div className="container mx-auto px-6">
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.5 }}
-                transition={{ duration: 0.5 }}
-                className="max-w-4xl mx-auto text-center"
-              >
+              <div className="max-w-4xl mx-auto text-center scroll-animate-scale">
                 <h2 className="text-4xl md:text-5xl font-bold mb-6" style={{ color: 'var(--text-primary)' }}>
                   Pronto a Diventare un Claude Code Ninja?
                 </h2>
@@ -634,7 +625,7 @@ export const LandingPage = () => {
                 <p className="mt-6 text-sm" style={{ color: 'var(--text-secondary)' }}>
                   🎓 Certificazione inclusa al completamento · 💯 Soddisfatto o rimborsato
                 </p>
-              </motion.div>
+              </div>
             </div>
           </section>
         </main>
