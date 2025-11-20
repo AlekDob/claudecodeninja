@@ -248,32 +248,33 @@ export const LandingPage = () => {
               backgroundSize: '60px 60px'
             }} />
 
-            {/* Gradient Orbs */}
+            {/* Gradient Orbs - Reduced animation for performance */}
             <motion.div
               className="absolute top-20 right-20 w-96 h-96 rounded-full blur-3xl opacity-20"
-              style={{ background: '#FF6B35' }}
+              style={{ background: '#FF6B35', willChange: 'transform' }}
               animate={{
-                scale: [1, 1.2, 1],
-                opacity: [0.2, 0.3, 0.2]
+                scale: [1, 1.1, 1],
+                opacity: [0.15, 0.2, 0.15]
               }}
               transition={{
-                duration: 8,
+                duration: 12,
                 repeat: Infinity,
-                ease: 'easeInOut'
+                ease: 'linear',
+                repeatType: 'loop'
               }}
             />
             <motion.div
               className="absolute bottom-20 left-20 w-96 h-96 rounded-full blur-3xl opacity-15"
-              style={{ background: '#00D9FF' }}
+              style={{ background: '#00D9FF', willChange: 'transform' }}
               animate={{
-                scale: [1, 1.3, 1],
-                opacity: [0.15, 0.25, 0.15]
+                scale: [1, 1.15, 1],
+                opacity: [0.1, 0.15, 0.1]
               }}
               transition={{
-                duration: 10,
+                duration: 15,
                 repeat: Infinity,
-                ease: 'easeInOut',
-                delay: 1
+                ease: 'linear',
+                repeatType: 'loop'
               }}
             />
 
@@ -303,7 +304,7 @@ export const LandingPage = () => {
                   initial={{ opacity: 0, y: 30 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.8, delay: 0.2 }}
-                  className="text-6xl md:text-7xl lg:text-8xl font-bold text-center mb-6 leading-[1.1]"
+                  className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-bold text-center mb-6 leading-[1.1]"
                   style={{
                     color: 'var(--text-primary)',
                     fontFamily: '"Space Grotesk", system-ui, sans-serif'
@@ -398,8 +399,8 @@ export const LandingPage = () => {
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.8 }}
+                viewport={{ once: true, amount: 0.3 }}
+                transition={{ duration: 0.5 }}
                 className="text-center mb-16"
               >
                 <h2 className="text-4xl md:text-5xl font-bold mb-4" style={{ color: 'var(--text-primary)' }}>
@@ -416,8 +417,8 @@ export const LandingPage = () => {
                     key={index}
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.6, delay: index * 0.1 }}
+                    viewport={{ once: true, amount: 0.2 }}
+                    transition={{ duration: 0.4, delay: index * 0.05 }}
                     className="p-6 rounded-2xl border group hover:scale-105 transition-all duration-300"
                     style={{
                       background: 'var(--bg-primary)',
@@ -446,8 +447,8 @@ export const LandingPage = () => {
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.8 }}
+                viewport={{ once: true, amount: 0.3 }}
+                transition={{ duration: 0.5 }}
                 className="text-center mb-16"
               >
                 <h2 className="text-4xl md:text-5xl font-bold mb-4" style={{ color: 'var(--text-primary)' }}>
@@ -462,10 +463,10 @@ export const LandingPage = () => {
                 {milestones.map((milestone, index) => (
                   <motion.div
                     key={index}
-                    initial={{ opacity: 0, y: 30 }}
+                    initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.6, delay: index * 0.05 }}
+                    viewport={{ once: true, amount: 0.1 }}
+                    transition={{ duration: 0.3, delay: index * 0.02 }}
                     className="group relative overflow-hidden rounded-2xl border p-6 hover:scale-105 transition-all duration-300"
                     style={{
                       background: 'var(--bg-secondary)',
@@ -505,8 +506,8 @@ export const LandingPage = () => {
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.8 }}
+                viewport={{ once: true, amount: 0.5 }}
+                transition={{ duration: 0.5 }}
                 className="text-center"
               >
                 <Link
@@ -536,8 +537,8 @@ export const LandingPage = () => {
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.8 }}
+                viewport={{ once: true, amount: 0.3 }}
+                transition={{ duration: 0.5 }}
                 className="max-w-4xl mx-auto"
               >
                 <h2 className="text-4xl md:text-5xl font-bold text-center mb-4" style={{ color: 'var(--text-primary)' }}>
@@ -574,8 +575,8 @@ export const LandingPage = () => {
                       key={index}
                       initial={{ opacity: 0, y: 20 }}
                       whileInView={{ opacity: 1, y: 0 }}
-                      viewport={{ once: true }}
-                      transition={{ duration: 0.6, delay: index * 0.1 }}
+                      viewport={{ once: true, amount: 0.3 }}
+                      transition={{ duration: 0.4, delay: index * 0.05 }}
                       className="p-6 rounded-2xl border"
                       style={{
                         background: 'var(--bg-secondary)',
@@ -607,10 +608,10 @@ export const LandingPage = () => {
           <section className="py-24" style={{ background: 'var(--bg-secondary)' }}>
             <div className="container mx-auto px-6">
               <motion.div
-                initial={{ opacity: 0, y: 30 }}
+                initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.8 }}
+                viewport={{ once: true, amount: 0.5 }}
+                transition={{ duration: 0.5 }}
                 className="max-w-4xl mx-auto text-center"
               >
                 <h2 className="text-4xl md:text-5xl font-bold mb-6" style={{ color: 'var(--text-primary)' }}>
