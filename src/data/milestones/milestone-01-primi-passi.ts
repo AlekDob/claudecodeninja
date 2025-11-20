@@ -583,15 +583,15 @@ Congratulazioni! 🎉 Hai completato la prima milestone. Ora sai:
       },
       {
         id: "m1-q2",
-        question: "Dove viene salvata la API key dopo aver eseguito 'claude auth' su macOS?",
+        question: "Come si configura l'autenticazione in Claude Code?",
         options: [
-          "~/.claude/config.json",
-          "~/.config/claude/auth.json",
-          "~/Library/Claude/auth.json",
-          "/etc/claude/auth.json"
+          "Eseguendo 'claude auth'",
+          "Eseguendo 'claude /login' in modalità interattiva",
+          "Modificando manualmente ~/.config/claude/auth.json",
+          "Usando il flag --api-key ogni volta"
         ],
         correctAnswer: 1,
-        explanation: "Su macOS e Linux, Claude Code salva l'API key in ~/.config/claude/auth.json con permessi restrittivi (600) per sicurezza."
+        explanation: "In Claude Code 2025, l'autenticazione si configura con 'claude /login' che guida attraverso la scelta tra API Key e Subscription. Claude gestisce automaticamente i permessi dei file di autenticazione."
       },
       {
         id: "m1-q3",
@@ -637,7 +637,7 @@ Congratulazioni! 🎉 Hai completato la prima milestone. Ora sai:
     instructions: [
       "Verifica che Node.js 18+ sia installato: esegui 'node --version' nel terminale",
       "Installa Claude Code globalmente: 'npm install -g @anthropic-ai/claude-code'",
-      "Configura l'API key: esegui 'claude auth' e incolla la tua key da console.anthropic.com",
+      "Configura autenticazione: avvia 'claude' in modalità interattiva e usa '/login' per configurare API Key o Subscription",
       "Verifica l'installazione: esegui 'claude --version' e controlla che mostri la versione",
       "Avvia modalità interattiva: esegui 'claude' e premi Invio",
       "Fai una domanda tecnica (es. 'Spiega la differenza tra let e const in JavaScript')",

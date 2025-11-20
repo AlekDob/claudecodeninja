@@ -606,15 +606,15 @@ L'architettura è la base. Ora costruiamo sopra! 🚀
       },
       {
         id: "m5-q5",
-        question: "Come incolli uno screenshot per analisi in Claude Code (su macOS)?",
+        question: "Quale sintassi usi in ~/.claude/settings.json per permettere automaticamente comandi npm test e build?",
         options: [
-          "Fai screenshot con Cmd+Shift+4, poi incolla con Cmd+V",
-          "Fai screenshot con Cmd+Shift+4, poi incolla con Control-V",
-          "Trascini l'immagine nel terminale",
-          "Usi il comando 'claude --screenshot path/to/image.png'"
+          "ignorePatterns: [\"npm run test:*\", \"npm run build\"]",
+          "allowCommands: [\"npm test\", \"npm build\"]",
+          "permissions.allow: [\"Bash(npm run test:*)\", \"Bash(npm run build)\"]",
+          "autoApprove: { bash: [\"npm test\", \"npm build\"] }"
         ],
-        correctAnswer: 1,
-        explanation: "Su macOS devi usare **Control-V** (non Cmd-V!) per incollare screenshot in Claude Code. Il sistema rileva l'immagine e chiama il tool 'analyze_screenshot' per permettere all'LLM di analizzare visivamente il contenuto."
+        correctAnswer: 2,
+        explanation: "La sintassi ufficiale di Claude Code 2025 usa l'array 'permissions.allow' con pattern come \"Bash(npm run test:*)\" per permettere automaticamente specifici comandi shell. Questo evita di dover approvare manualmente test e build ripetitivi."
       }
     ]
   },
@@ -629,8 +629,8 @@ L'architettura è la base. Ora costruiamo sopra! 🚀
       "Quando Claude Code chiede permesso per scrivere, scegli 'v' (se disponibile) per vedere il diff completo",
       "Approva con 'y' e osserva il tool result che conferma il successo",
       "Verifica il file modificato: 'cat calc.js'",
-      "Crea ~/.claude/settings.json con: {\"permissions\": {\"allow\": [\"Write(*.js)\"]}}",
-      "Ripeti l'operazione su un altro file e osserva che non chiede più conferma per file .js"
+      "Crea ~/.claude/settings.json con permissions.allow per file .js: {\"permissions\": {\"allow\": [\"Write(*.js)\"]}}",
+      "Ripeti l'operazione su un altro file e osserva che Claude Code non chiede più conferma per modifiche a file .js"
     ],
     verificationSteps: [
       "✅ Hai visto nel terminale le tool requests per calc.js",
