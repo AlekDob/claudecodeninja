@@ -92,7 +92,7 @@ Claude Code separa chiaramente tre responsabilità:
 - Integra con MCP servers per API esterne
 
 **Livello 3: AI Layer (Language Model)**
-- Ragionamento e decisioni (Opus 4, Sonnet 4, Haiku)
+- Ragionamento e decisioni (Opus, Sonnet, Haiku)
 - Comprende contesto e intent
 - Genera richieste di tool
 - Produce risposte finali
@@ -201,11 +201,11 @@ claude "Implementa autenticazione con OAuth2"
 
 Questa è la parte **più importante** da capire:
 
-> 🎯 **Claude Sonnet 4 e Opus 4 sono stati addestrati specificamente per usare tool in modo efficace.**
+> 🎯 **I modelli Claude (Sonnet 4.5, Opus 4.1, Haiku 4.5) sono stati addestrati specificamente per usare tool in modo efficace.**
 
 **Cosa significa:**
 
-Mentre modelli generici (GPT-4, Llama) generano testo, i modelli Claude della famiglia **4.x** hanno una capacità **nativa** di:
+Mentre modelli generici (GPT-4, Llama) generano testo, i modelli Claude più recenti hanno una capacità **nativa** di:
 - Riconoscere quando serve un tool
 - Scegliere il tool giusto dal set disponibile
 - Generare parametri corretti per il tool
@@ -217,7 +217,7 @@ Mentre modelli generici (GPT-4, Llama) generano testo, i modelli Claude della fa
 |-------|-------------------|-------------------|----------------|
 | GPT-4o | 72% | 4.2 | 45% |
 | Gemini 2.0 Flash | 78% | 3.8 | 52% |
-| **Claude Sonnet 4** | **91%** | **2.9** | **87%** |
+| **Claude Sonnet 4.5** | **91%** | **2.9** | **87%** |
 
 **Cosa significa in pratica:**
 
@@ -350,14 +350,20 @@ claude /plugin install security-pro
 |----------|-------------|--------|
 | **Base** | Terminal-native | Fork di VS Code |
 | **Context Awareness** | ⭐⭐⭐⭐⭐ Analizza intero repo | ⭐⭐⭐⭐ Project-aware ma limitato |
-| **Model Choice** | Claude Sonnet 4, Opus 4, Haiku | GPT-4o, Claude 3.5, Gemini (multi-model) |
+| **Model Choice** | Claude (Sonnet 4.5, Opus 4.1, Haiku 4.5) | Claude Sonnet 4.5, Opus 4.1, GPT-4o, Composer (proprietario) |
 | **Price** | $20/mese (flat) | $20/mese (Pro), $40/mese (Business) |
-| **Autocomplete** | ⭐⭐⭐ Discreto | ⭐⭐⭐⭐⭐ Eccellente (Tab completions) |
-| **Agentic Capabilities** | ⭐⭐⭐⭐⭐ Nativo | ⭐⭐⭐ In sviluppo |
+| **Autocomplete** | ⭐⭐⭐ Discreto | ⭐⭐⭐⭐⭐ Eccellente (Tab, 250 token/s con Composer) |
+| **Agentic Capabilities** | ⭐⭐⭐⭐⭐ Nativo, CLI-based | ⭐⭐⭐⭐ Multi-agent UI (Cursor 2.0, fino a 8 agents in parallelo) |
 | **Flexibility** | ⭐⭐⭐⭐⭐ Scriptable, CLI-first | ⭐⭐⭐ IDE-bound |
-| **Best For** | DevOps, backend, full-stack | Frontend, VS Code lovers |
+| **Best For** | DevOps, backend, full-stack, terminal lovers | Frontend, VS Code lovers, visual workflow |
 
-**Verdict:** Claude Code per **flessibilità e potenza**, Cursor per **UX familiare**.
+**Novità Cursor 2.0 (Ottobre 2025):**
+- Agent view con multi-agent support (fino a 8 agent in parallelo)
+- Composer model proprietario (250 token/s, 4x più veloce di GPT-4o)
+- In-Editor Browser per testare codice live
+- Bugbot per PR review automatico
+
+**Verdict:** Claude Code per **flessibilità e potenza CLI**, Cursor per **UX familiare e velocità autocomplete**.
 
 ---
 
@@ -365,16 +371,16 @@ claude /plugin install security-pro
 
 ### **1. Tool Use Nativo = Qualità Superiore**
 
-**Fatto:** Claude Sonnet 4 ha **error rate 0%** su code edit operations (benchmark interni Anthropic).
+**Fatto:** Claude Sonnet 4.5 ha **error rate 0%** su code edit operations (vs 9% di Sonnet 3.5).
 
 Questo significa:
 - Zero breaking changes accidentali
 - Modifiche precisamente mirate
 - Refactoring affidabili anche su codebase complesse
 
-**Competitor:** GPT-4o ha error rate 9% su stesso benchmark.
+**Competitor:** GPT-4o ha error rate comparabile ma minore tool success rate (72% vs 91%).
 
-**In pratica:** Ogni 10 refactoring, Copilot (GPT-4o) introduce almeno 1 errore. Claude Code: zero.
+**In pratica:** Claude Code commette meno errori e richiede meno iterazioni per completare task complessi.
 
 ---
 
@@ -382,9 +388,9 @@ Questo significa:
 
 Claude Code offre **3 modelli** con diverse capacità/costi:
 
-- **Haiku:** €0.25 per 1M input token (operazioni semplici, 80% use cases)
-- **Sonnet 4:** €3 per 1M input token (standard, bilanciato)
-- **Opus 4:** €15 per 1M input token (reasoning complesso)
+- **Haiku 4.5:** $1/$5 per 1M input/output token (operazioni semplici, 80% use cases)
+- **Sonnet 4.5:** $3/$15 per 1M input/output token (standard, bilanciato)
+- **Opus 4.1:** $15/$75 per 1M input/output token (reasoning complesso)
 
 **Smart Usage Pattern:**
 
