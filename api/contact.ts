@@ -23,7 +23,7 @@ export default async function handler(
     // Send email using Resend
     const data = await resend.emails.send({
       from: 'ClaudeCodeNinja <onboarding@resend.dev>',
-      to: ['gmail@alekdob.com'],
+      to: ['alekdobrohotov@gmail.com'],
       replyTo: email,
       subject: `[ClaudeCodeNinja] Nuova richiesta: ${tipo}`,
       html: `
