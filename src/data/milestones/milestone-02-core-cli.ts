@@ -3,7 +3,7 @@ import { Milestone } from '../../types';
 export const milestone02: Milestone = {
   id: 2,
   title: "Core CLI Commands",
-  subtitle: "Master i comandi essenziali: claude, -p, -c, -r",
+  subtitle: "Master i comandi essenziali: claude, -p, -c, -r, checkpoints",
   description: `
 # Milestone 2: Core CLI Commands
 
@@ -21,16 +21,30 @@ claude "Crea una funzione TypeScript per validare email"
 
 ## Flag Essenziali
 
-### -p (--project)
-Lavora nel contesto di un progetto esistente:
+### -p (--print)
+Modalità **print mode** per scripting e piping - stampa l'output e esce:
 
 \`\`\`bash
-# Analizza il progetto nella directory corrente
-claude -p "Analizza l'architettura di questo progetto"
+# Stampa risposta e esce (utile per script)
+claude -p "Genera un UUID random"
 
-# Claude leggerà automaticamente file rilevanti
-claude -p "Aggiungi validazione input al form di login"
+# Piping con altri comandi
+claude -p "Converti questo JSON in CSV" < data.json > output.csv
+
+# Automation in script bash
+RESULT=\$(claude -p "Calcola checksum di questi file" @*.js)
+echo \$RESULT
 \`\`\`
+
+💡 **Quando usarlo:**
+- Script automation (Bash, CI/CD)
+- Output da processare con altri tool
+- Evita modalità interattiva
+
+⚠️ **Nota**: Il contesto di progetto viene dalla **directory corrente** dove lanci \`claude\`, non da un flag specifico. Claude legge automaticamente:
+- File \`CLAUDE.md\` nella root del progetto
+- Configurazione in \`.claude/settings.json\`
+- File referenziati con \`@\` (es. \`@src/**/*.ts\`)
 
 ### -c (--continue)
 Continua la conversazione precedente:
@@ -44,27 +58,41 @@ claude -c "Ora aggiungi varianti primary e secondary"
 claude -c "Fallo responsive per mobile"
 \`\`\`
 
-### -r (--review)
-Modalità review per code review e feedback:
+### -r (--resume)
+Riprendi una conversazione specifica (non l'ultima, ma una a tua scelta):
 
 \`\`\`bash
-# Review di un file specifico
-claude -r "Rivedi src/components/Button.tsx"
+# Mostra lista conversazioni e scegli quale riprendere
+claude -r
 
-# Review di modifiche recenti
-claude -r "Controlla le ultime modifiche per bug potenziali"
+# Riprendi sessione specifica se conosci l'ID
+claude -r abc123-session-id
+\`\`\`
+
+💡 **Differenza con -c:**
+- \`-c\` = continua **ultima** conversazione automaticamente
+- \`-r\` = riprendi una conversazione **specifica** dalla cronologia
+
+💡 **Code Review**: Per review del codice, usa modalità interattiva normale e chiedi esplicitamente:
+\`\`\`bash
+claude "Fai code review di questo file" @src/components/Button.tsx
+# oppure
+claude "Analizza questi cambi per bug" @git:diff
 \`\`\`
 
 ## Combinare i Flag
 
 \`\`\`bash
-# Project mode + Continue
-claude -p "Inizia refactoring auth service"
-claude -c -p "Continua con i test"
+# Print mode + Continue (script automation)
+claude -c "Crea helper function"
+OUTPUT=\$(claude -c -p "Ora stampa solo la signature")
+echo \$OUTPUT
 
-# Review + Project
-claude -r -p "Rivedi tutto il modulo di autenticazione"
+# Resume + Print (riprendere sessione in script)
+claude -r session-123 -p "Finalizza implementazione"
 \`\`\`
+
+💡 **Best Practice**: I flag \`-p\`, \`-c\`, e \`-r\` sono compatibili, ma verifica sempre con \`claude --help\` per combinazioni specifiche supportate.
 
 ## Checkpoints & Rewind (Nov 2025) 🆕
 
@@ -113,20 +141,28 @@ ESC ESC  # Rollback immediato, tutto come prima
 
 ## Best Practices
 
-1. **Usa -p** quando Claude deve avere contesto dell'intero progetto
-2. **Usa -c** per conversazioni iterative lunghe
-3. **Usa -r** quando vuoi feedback costruttivo sul codice
-4. **Combina** i flag quando ha senso per il tuo workflow
+1. **Usa -p (print)** per scripting e automation - output pulito senza interazione
+2. **Usa -c (continue)** per conversazioni iterative lunghe - mantiene contesto
+3. **Usa -r (resume)** per riprendere una sessione specifica dalla cronologia
+4. **Contesto progetto**: Lancia \`claude\` dalla root del progetto - legge automaticamente \`CLAUDE.md\` e \`.claude/settings.json\`
 5. **Usa ESC ESC** liberamente per esplorare alternative senza paura 🆕
 
 ## Esempi Pratici
 
 \`\`\`bash
-# Sviluppo feature completa
-claude -p "Crea sistema di autenticazione JWT"
+# Sviluppo feature completa (modalità interattiva)
+cd my-project  # Il contesto viene da qui + CLAUDE.md
+claude "Crea sistema di autenticazione JWT" @src/auth/**
 claude -c "Aggiungi refresh token"
 claude -c "Implementa logout sicuro"
-claude -r "Review completo della feature auth"
+claude -c "Fai code review della feature auth"
+
+# Automation in script
+#!/bin/bash
+RESULT=\$(claude -p "Analizza test coverage" @coverage/*)
+if [[ \$RESULT == *"below 80%"* ]]; then
+  echo "Warning: Low coverage!"
+fi
 \`\`\`
 
 Padroneggiare questi comandi ti rende 10x più produttivo! 🚀
@@ -134,15 +170,20 @@ Padroneggiare questi comandi ti rende 10x più produttivo! 🚀
   xp: 100,
   badge: "⌨️ CLI Master",
   estimatedTime: "30 minuti",
-  topics: ["CLI Commands", "Flags", "Project Mode", "Continue", "Review"],
+  topics: ["CLI Commands", "Flags", "Print Mode", "Continue", "Resume", "Checkpoints"],
   quiz: {
     questions: [
       {
         id: "m2-q1",
-        question: "Quale flag usi per lavorare nel contesto di un intero progetto?",
-        options: ["-c", "-r", "-p", "-a"],
-        correctAnswer: 2,
-        explanation: "Il flag -p (--project) dice a Claude Code di analizzare e lavorare nel contesto dell'intero progetto."
+        question: "Cosa fa il flag -p (--print)?",
+        options: [
+          "Apre modalità progetto per analizzare tutto il codebase",
+          "Stampa l'output e esce (utile per scripting)",
+          "Abilita modalità planning per task complessi",
+          "Mostra i permessi file richiesti"
+        ],
+        correctAnswer: 1,
+        explanation: "Il flag -p (--print) stampa l'output di Claude e esce immediatamente, senza aprire modalità interattiva. È perfetto per scripting, piping e automation."
       },
       {
         id: "m2-q2",
@@ -155,6 +196,30 @@ Padroneggiare questi comandi ti rende 10x più produttivo! 🚀
         ],
         correctAnswer: 1,
         explanation: "Il flag -c (--continue) permette di continuare la conversazione precedente mantenendo il contesto."
+      },
+      {
+        id: "m2-q3",
+        question: "Qual è la differenza tra -c e -r?",
+        options: [
+          "-c continua l'ultima conversazione, -r riprende una conversazione specifica dalla cronologia",
+          "-c è per code, -r è per review",
+          "-c è per conversazioni, -r è per refactoring",
+          "Sono identici, solo alias diversi"
+        ],
+        correctAnswer: 0,
+        explanation: "-c (--continue) continua automaticamente l'ultima conversazione. -r (--resume) ti permette di scegliere una sessione specifica dalla cronologia per riprenderla."
+      },
+      {
+        id: "m2-q4",
+        question: "Come ottiene Claude Code il contesto del tuo progetto?",
+        options: [
+          "Con il flag --project",
+          "Dalla directory corrente dove lanci 'claude' + file CLAUDE.md + .claude/settings.json",
+          "Solo dai file che referenzi con @",
+          "Analizza automaticamente tutto il filesystem"
+        ],
+        correctAnswer: 1,
+        explanation: "Claude Code ottiene il contesto dalla directory corrente dove lo lanci, leggendo automaticamente CLAUDE.md (se presente) e la configurazione in .claude/settings.json. Non esiste un flag --project."
       }
     ]
   },
@@ -162,15 +227,19 @@ Padroneggiare questi comandi ti rende 10x più produttivo! 🚀
     title: "Master dei Comandi CLI",
     description: "Usa tutti i comandi base in una sessione di sviluppo",
     instructions: [
-      "Crea una cartella test-cli-mastery",
-      "Usa `claude -p` per creare un mini progetto (es: TODO app)",
-      "Usa `claude -c` per iterare e migliorare",
-      "Usa `claude -r` per fare review del risultato"
+      "Crea una cartella test-cli-mastery e cd dentro",
+      "Usa `claude` in modalità interattiva per creare un mini progetto (es: TODO app)",
+      "Usa `claude -c` per iterare e aggiungere features",
+      "Usa `claude -p` per generare un README da script: `claude -p 'Genera README.md' > README.md`",
+      "Prova ESC ESC per fare rewind e esplorare alternative",
+      "Usa `claude -r` per riprendere una conversazione precedente dalla lista"
     ],
     verificationSteps: [
-      "✅ Hai usato almeno 3 comandi diversi",
-      "✅ Hai capito quando usare ogni flag",
-      "✅ Hai un mini progetto funzionante"
+      "✅ Hai usato modalità interattiva base",
+      "✅ Hai usato -c per continuare conversazione",
+      "✅ Hai usato -p per output non-interattivo",
+      "✅ Hai provato ESC ESC per rewind",
+      "✅ Hai capito quando usare ogni flag"
     ]
   }
 };
