@@ -1,4 +1,5 @@
 // Export individual milestones
+export { milestone00 } from './milestone-00-prefazione';
 export { milestone01 } from './milestone-01-primi-passi';
 export { milestone02 } from './milestone-02-core-cli';
 export { milestone03 } from './milestone-03-permissions';
@@ -14,6 +15,7 @@ export { milestone12 } from './milestone-12-hooks-mcp';
 
 // Aggregate milestones array
 import { Milestone } from '../../types';
+import { milestone00 } from './milestone-00-prefazione';
 import { milestone01 } from './milestone-01-primi-passi';
 import { milestone02 } from './milestone-02-core-cli';
 import { milestone03 } from './milestone-03-permissions';
@@ -28,6 +30,7 @@ import { milestone11 } from './milestone-11-subagents-skills';
 import { milestone12 } from './milestone-12-hooks-mcp';
 
 export const milestones: Milestone[] = [
+  milestone00,  // Prefazione: Perché Scegliere Claude Code
   milestone01,  // Primi Passi
   milestone02,  // Core CLI
   milestone03,  // Permissions
