@@ -369,25 +369,26 @@ claude --model opus "Analisi architetturale completa"
 
 ---
 
-### 4.4 --project / -P (Modalità Progetto)
+### 4.4 Lavorare con Progetti
 
-Carica automaticamente il contesto del progetto:
+Quando lavori su un progetto, Claude Code può comprendere il contesto completo:
 
 \`\`\`bash
 cd my-react-app
-claude --project "Come posso ottimizzare le performance?"
+# Claude Code comprende automaticamente il contesto della directory corrente
+claude "Come posso ottimizzare le performance?"
 \`\`\`
 
 **Cosa fa**:
-- Legge tutti i file nel progetto (rispettando \`.claudeignore\`)
-- Invia struttura directory e contenuti
-- Permette a Claude di comprendere l'intero contesto
+- Legge file referenziati con @ (es. @src/**/*.ts)
+- Rispetta \`.claudeignore\` per escludere file non necessari
+- Permette di fornire contesto specifico senza sovraccaricare
 
-> ⚠️ **Attenzione ai costi**: modalità project può inviare molti file. Usa \`.claudeignore\` per escludere node_modules, build, etc.
+> ⚠️ **Attenzione ai costi**: referenziare molti file può aumentare i costi. Usa \`.claudeignore\` per escludere node_modules, build, etc.
 
 **Best practice**:
 \`\`\`bash
-# Crea .claudeignore prima di usare --project
+# Crea .claudeignore PRIMA di iniziare
 echo "node_modules/
 dist/
 build/
@@ -502,13 +503,13 @@ build/
 coverage/" > .claudeignore
 
 # Prima interazione con contesto progetto
-claude --project "Analizza struttura e suggerisci miglioramenti"
+claude "Analizza struttura e suggerisci miglioramenti"
 \`\`\`
 
 **Workflow quotidiano**:
 1. **Quick questions**: One-shot mode
 2. **Debugging**: Interactive mode con \`@file\`
-3. **Refactoring**: \`--project\` per contesto completo
+3. **Refactoring**: Referenzia file con \`@\` per contesto completo
 4. **Review**: Sonnet per check standard, Opus per analisi profonde
 
 ## Riepilogo
@@ -521,7 +522,7 @@ Congratulazioni! 🎉 Hai completato la prima milestone. Ora sai:
 ✅ Scegliere il modello giusto (Opus 4.1 / Sonnet 4.5 / Haiku 4.5)
 ✅ Usare modalità interattiva e one-shot
 ✅ Referenziare file con \`@\` e wildcard
-✅ Padroneggiare CLI flags essenziali (\`--print\`, \`--verbose\`, \`--model\`, \`--project\`)
+✅ Padroneggiare CLI flags essenziali (\`--print\`, \`--verbose\`, \`--model\`)
 ✅ Navigare con slash commands (\`/help\`, \`/model\`, \`/clear\`, \`/exit\`)
 ✅ Gestire controlli ESC per interrompere o uscire
 ✅ Risolvere problemi comuni (PATH, auth, performance)
