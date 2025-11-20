@@ -79,13 +79,16 @@ export const MilestonePage = () => {
   }
 
   if (!isUnlocked) {
+    const prevMilestoneId = milestoneId - 1;
+    const prevMilestoneName = prevMilestoneId === 0 ? 'la Prefazione' : `la Milestone ${prevMilestoneId}`;
+
     return (
       <div className="min-h-screen bg-[var(--bg-primary)] flex items-center justify-center">
         <div className="text-center max-w-md px-6">
           <div className="text-6xl mb-6">🔒</div>
           <h2 className="text-3xl font-bold mb-3" style={{ color: 'var(--text-primary)' }}>Milestone Bloccata</h2>
           <p className="mb-8 text-base" style={{ color: 'var(--text-secondary)' }}>
-            Completa la Milestone {milestoneId - 1} per sbloccare questa!
+            Completa {prevMilestoneName} per sbloccare questa!
           </p>
           <button
             onClick={() => navigate('/milestones')}
@@ -263,7 +266,7 @@ export const MilestonePage = () => {
               <div className="pt-4 border-t" style={{ borderColor: 'var(--border-subtle)' }}>
                 <h3 className="font-semibold text-xs uppercase tracking-wide mb-3" style={{ color: 'var(--text-tertiary)' }}>Navigazione</h3>
                 <div className="space-y-2 text-sm">
-                  {milestone.id > 1 && (
+                  {milestone.id > 0 && (
                     <button
                       onClick={() => navigate(`/milestone/${milestone.id - 1}`)}
                       className="block transition-colors text-left"
@@ -271,7 +274,7 @@ export const MilestonePage = () => {
                       onMouseEnter={(e) => e.currentTarget.style.color = 'var(--text-primary)'}
                       onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-secondary)'}
                     >
-                      ← Milestone Precedente
+                      ← {milestone.id === 1 ? 'Prefazione' : 'Milestone Precedente'}
                     </button>
                   )}
                   {milestone.id < 12 && (
@@ -282,7 +285,7 @@ export const MilestonePage = () => {
                       onMouseEnter={(e) => e.currentTarget.style.color = 'var(--text-primary)'}
                       onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-secondary)'}
                     >
-                      Milestone Successiva →
+                      {milestone.id === 0 ? 'Milestone 1 →' : 'Milestone Successiva →'}
                     </button>
                   )}
                 </div>

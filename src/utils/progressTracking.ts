@@ -85,6 +85,11 @@ export const getMilestoneStatus = (milestoneId: number): MilestoneStatus => {
     return 'in-progress';
   }
 
+  // Milestone 0 e 1 sono sempre sbloccate
+  if (milestoneId === 0 || milestoneId === 1) {
+    return 'in-progress';
+  }
+
   // Locked (prerequisite not completed)
   if (milestoneId > 1) {
     const prevCompleted = progress.completedMilestones.includes(milestoneId - 1);
@@ -99,7 +104,8 @@ export const getMilestoneStatus = (milestoneId: number): MilestoneStatus => {
 
 // Check if milestone is unlocked
 export const isMilestoneUnlocked = (milestoneId: number): boolean => {
-  if (milestoneId === 1) return true;
+  // Milestone 0 (prefazione) e Milestone 1 sono sempre accessibili
+  if (milestoneId === 0 || milestoneId === 1) return true;
 
   const progress = loadProgress();
   return progress.completedMilestones.includes(milestoneId - 1);
@@ -108,7 +114,7 @@ export const isMilestoneUnlocked = (milestoneId: number): boolean => {
 // Get progress percentage
 export const getProgressPercentage = (): number => {
   const progress = loadProgress();
-  const totalMilestones = 12;
+  const totalMilestones = 13; // Milestone 0-12 (13 totali)
   return (progress.completedMilestones.length / totalMilestones) * 100;
 };
 
