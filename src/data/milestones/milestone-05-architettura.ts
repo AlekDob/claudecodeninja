@@ -139,29 +139,33 @@ Claude Code riceve questa richiesta, la valida e:
 
 ### 2.2 Tool Disponibili in Claude Code
 
-Claude Code fornisce questi tool all'LLM:
+Claude Code fornisce questi tool all'LLM (categorie generali):
 
 #### File Operations
-- \`read_file\`: Legge contenuto di un file
-- \`write_file\`: Scrive o sovrascrive un file
-- \`edit_file\`: Modifica porzioni di file esistente
-- \`delete_file\`: Elimina un file
-- \`create_directory\`: Crea una directory
-- \`list_directory\`: Lista contenuti di una directory
+Claude Code espone tool per operazioni su file come:
+- Lettura contenuto file
+- Scrittura/sovrascrittura file
+- Modifica porzioni di file esistenti
+- Creazione/eliminazione directory
+- Lista contenuti directory
+
+> 💡 **Nota**: I nomi esatti dei tool (\`read_file\`, \`write_file\`, etc.) possono variare tra versioni. Gli esempi JSON in questo milestone sono pseudocodice illustrativo, non API stabili garantite.
 
 #### Code Navigation
-- \`search_files\`: Cerca pattern in file (regex)
-- \`find_definition\`: Trova definizione di simbolo (TypeScript/Python)
-- \`find_references\`: Trova tutti gli usi di un simbolo
+Tool per navigazione codice:
+- Ricerca pattern in file (regex/glob)
+- Definizioni simboli (TypeScript/Python)
+- Riferimenti a funzioni/classi
 
 #### Execution Tools
-- \`execute_command\`: Esegue comandi shell (npm, git, etc.)
-- \`run_tests\`: Esegue test suite
-- \`start_dev_server\`: Avvia server di sviluppo
+Tool per esecuzione comandi:
+- Esecuzione comandi shell (npm, git, build scripts)
+- Test runner integration
+- Dev server management
 
-#### Visual Integration
-- \`analyze_screenshot\`: Analizza immagini incollate con Control-V
-- \`generate_diagram\`: Crea diagrammi Mermaid
+#### Visual Integration (dipende da interfaccia)
+- Analisi screenshot/immagini (supporto varia per terminale/IDE)
+- Generazione diagrammi (Mermaid, etc.)
 
 ### 2.3 Esempio di Tool Chain
 
@@ -198,11 +202,12 @@ Claude Code implementa tre livelli di protezione:
 **1. Permission System**:
 - Prima volta che l'LLM richiede un tool, Claude Code chiede conferma
 - Puoi approvare per sempre (\`a\`), solo una volta (\`y\`), o rifiutare (\`n\`)
-- Configurabile in \`~/.config/claude/settings.json\`
+- Configurabile in \`~/.claude/settings.json\` tramite \`permissions.allow\` e \`permissions.deny\`
 
 **2. File Watching**:
 - Solo file nel progetto corrente sono accessibili
-- Rispetta \`.claudeignore\` per esclusioni
+- Claude Code rispetta \`.gitignore\` automaticamente
+- Usa \`permissions.deny\` in settings per escludere file sensibili (es. \`.env\`, config files)
 - No accesso a file di sistema critici
 
 **3. Command Validation**:
@@ -305,7 +310,7 @@ Scrive il file su disco.
 ### 3.4 Cosa Imparare da Questo Esempio
 
 1. **L'LLM non "vede" il file** finché non lo richiede via tool
-2. **Ogni modifica richiede conferma** (a meno che non usi \`--always-allow\`)
+2. **Ogni modifica richiede conferma** (a meno che non sia in \`permissions.allow\`)
 3. **Il processo è trasparente**: vedi ogni step
 4. **Tool use è sequenziale**: read → reason → write → confirm
 
@@ -347,66 +352,68 @@ claude "Explain how authentication works" @auth/*.ts @middleware/auth.ts
 
 ### 4.3 Configura Permessi per Workflow Ripetitivi
 
-Per task ripetitivi (es. test automation), configura \`always_allow\`:
+Per task ripetitivi (es. test automation), configura permessi persistenti:
 
 \`\`\`json
-// ~/.config/claude/settings.json
+// ~/.claude/settings.json (path corretto 2025)
 {
   "permissions": {
-    "execute_command": {
-      "npm test": "always",
-      "npm run build": "always"
-    },
-    "write_file": {
-      "src/generated/**": "always"
-    }
+    "allow": [
+      "Bash(npm run test:*)",
+      "Bash(npm run build)",
+      "Write(src/generated/**)"
+    ],
+    "deny": [
+      "Read(./.env)",
+      "Read(**/*.key)",
+      "WebFetch"
+    ]
   }
 }
 \`\`\`
 
-### 4.4 Sfrutta Screenshot Integration
+> ⚠️ **Nota**: La sintassi \`permissions.allow\` e \`permissions.deny\` è quella ufficiale di Claude Code 2025. I vecchi formati (\`ignorePatterns\`, etc.) sono deprecati.
 
-Claude Code può analizzare screenshot incollati con **Control-V** (non Command-V su macOS!):
+### 4.4 Sfrutta Screenshot Integration (dipende da interfaccia)
+
+> ⚠️ **Attenzione**: Il supporto screenshot varia tra interfacce (CLI, VS Code Extension, etc.). Verifica la tua versione specifica.
+
+Alcune interfacce di Claude Code supportano l'analisi di screenshot:
 
 \`\`\`bash
 # Avvia modalità interattiva
 claude
 
-# Fai uno screenshot (macOS: Cmd+Shift+4)
-# Incolla con Control-V (non Cmd-V!)
-# Claude Code chiama tool analyze_screenshot
+# Fai screenshot (metodo dipende da OS)
+# Incolla (shortcut varia: Control-V, Cmd-V, drag&drop dipende da terminale/IDE)
+# Claude Code può chiamare tool per analisi visiva
 \`\`\`
 
-Usa questo per:
+Possibili use case (se supportati):
 - Replicare UI da mockup
 - Debuggare rendering issues
-- Implementare design esatti
+- Implementare design da wireframe
 
 ### 4.5 Debugging Tool Use Issues
 
 Se Claude Code sembra "bloccato", probabilmente un tool request è fallito:
 
-**Abilita verbose mode**:
+**Verifica con la tua CLI**:
 \`\`\`bash
-claude --verbose "Your command"
+# Controlla flag disponibili
+claude --help
+
+# Alcune versioni espongono verbose logging
+# (il flag esatto dipende dalla versione, es. --verbose, --debug, etc.)
 \`\`\`
 
-Vedrai:
-- Ogni tool request
-- Input/output di ogni tool
-- Errori dettagliati
+**Opzioni comuni di debugging**:
+- Controlla log/output dettagliato se disponibile
+- Verifica permessi in \`~/.claude/settings.json\`
+- Rivedi le tool requests nel terminale
+- Consulta documentazione della tua versione specifica
 
-**Comandi diagnostici**:
-\`\`\`bash
-# Check permessi correnti
-claude /config permissions
-
-# Reset permessi per un path
-claude /config reset-permissions src/
-
-# View tool use history
-claude --debug
-\`\`\`
+> 💡 **Nota**: Comandi come \`claude /config permissions\` e \`claude --debug\` sono esempi concettuali. Verifica sempre con \`claude --help\` i comandi reali disponibili nella tua installazione.
 
 ---
 
@@ -428,14 +435,14 @@ claude --debug
 ✅ **Vero**: Cambiare modello cambia solo "intelligenza" e velocità, non capacità.
 
 ### Misconception 4: "Claude Code salva codice nel cloud"
-❌ **Falso**: Tutto rimane locale. Claude Code salva conversazioni in \`~/.config/claude/conversations/\` sul tuo computer.
+❌ **Falso**: I file del tuo progetto rimangono locali. Le conversazioni sono salvate localmente (la posizione esatta dipende dalla piattaforma, tipicamente \`~/.claude/\`).
 
-✅ **Vero**: Solo i prompt e le risposte vengono inviati all'API di Anthropic. Il codice generato è scritto localmente.
+✅ **Vero**: Porzioni di testo/codice usate come contesto vengono inviate all'API LLM nel rispetto delle policy di privacy di Anthropic. Il codice generato è scritto localmente su tuo filesystem.
 
 ### Misconception 5: "Devo essere online per usare Claude Code"
-❌ **Parzialmente vero**: Claude Code richiede connessione per comunicare con l'API LLM.
+❌ **Parzialmente vero**: Claude Code richiede connessione per comunicare con l'API LLM di Anthropic.
 
-✅ **Futuro**: Con self-hosted models (via Ollama/LMStudio) potrai usare Claude Code offline.
+✅ **Scenario futuro/sperimentale**: L'uso di modelli self-hosted (Ollama, LM Studio, etc.) è in sperimentazione in alcune build, ma non è una feature ufficiale garantita di tutte le versioni di Claude Code. Controlla la roadmap ufficiale per aggiornamenti.
 
 ---
 
@@ -447,10 +454,10 @@ L'architettura a tre livelli è estensibile tramite:
 
 MCP ti permette di aggiungere **nuovi tool custom** senza modificare Claude Code.
 
-Esempio: tool per accedere a database Postgres:
+Esempio concettuale: configurazione MCP per database Postgres:
 
 \`\`\`json
-// .mcp.json
+// Esempio pseudocodice (verifica docs MCP ufficiali per sintassi precisa)
 {
   "mcpServers": {
     "postgres": {
@@ -464,30 +471,39 @@ Esempio: tool per accedere a database Postgres:
 }
 \`\`\`
 
-Ora l'LLM può usare tool come \`query_database\`, \`list_tables\`, etc.
+> ⚠️ **Nota**: Questo è un esempio per illustrare il concetto. La struttura esatta del file di config MCP e i nomi dei campi dipendono dal server MCP specifico che usi. Consulta sempre la documentazione del server MCP che stai integrando.
 
 ### 6.2 Agent SDK (Python/TypeScript)
 
-Per integrazioni programmatiche:
+Per integrazioni programmatiche (esempio concettuale):
 
 \`\`\`typescript
-import { ClaudeClient } from '@anthropic-ai/claude-sdk';
+// Pseudocodice illustrativo - verifica pacchetti ufficiali Anthropic
+import { AnthropicClient } from '@anthropic-ai/sdk';
 
-const client = new ClaudeClient({ apiKey: process.env.ANTHROPIC_API_KEY });
+const client = new AnthropicClient({
+  apiKey: process.env.ANTHROPIC_API_KEY
+});
 
-const result = await client.chat({
-  model: 'sonnet',
-  messages: [{ role: 'user', content: 'Analyze @app.ts' }],
-  tools: ['read_file', 'write_file']
+const result = await client.messages.create({
+  model: 'claude-sonnet-4-5',
+  messages: [{ role: 'user', content: 'Analyze code' }],
+  // Tool use configuration dipende da SDK specifico
 });
 \`\`\`
 
-Userai questo per:
-- GitHub Actions (CI/CD automation)
-- Custom dashboard
-- Batch processing
+> ⚠️ **Nota**: Gli snippet SDK sono pseudocodice per illustrare il concetto. Per codice reale, fai riferimento ai pacchetti ufficiali Anthropic per la tua lingua:
+> - **TypeScript/JavaScript**: \`@anthropic-ai/sdk\`
+> - **Python**: \`anthropic\`
+>
+> Consulta la documentazione ufficiale per API, parametri e best practices aggiornate.
 
-**Approfondimento**: Milestone 9 (SDKs & Automation) e Milestone 7 (MCP Integration)
+**Use cases** (con SDK reali):
+- GitHub Actions (CI/CD automation)
+- Custom dashboard e monitoring
+- Batch processing di file
+
+**Approfondimento**: Milestone 10 (Hooks & MCP) e Milestone 12 (GitLab/GitHub CI/CD)
 
 ---
 
@@ -608,20 +624,20 @@ L'architettura è la base. Ora costruiamo sopra! 🚀
     instructions: [
       "Crea una directory di test: 'mkdir ~/claude-test && cd ~/claude-test'",
       "Crea un file con bug intenzionale: 'echo \"function divide(a, b) { return a / b; }\" > calc.js'",
-      "Avvia Claude Code in verbose mode: 'claude --verbose \"Fix divide by zero bug in @calc.js\"'",
-      "Osserva nel terminale la sequenza di tool requests (read_file → write_file)",
-      "Quando Claude Code chiede permesso per write_file, scegli 'v' (view full) per vedere il diff completo",
+      "Avvia Claude Code: 'claude \"Fix divide by zero bug in @calc.js\"'",
+      "Osserva nel terminale la sequenza di tool requests (file read → file write)",
+      "Quando Claude Code chiede permesso per scrivere, scegli 'v' (se disponibile) per vedere il diff completo",
       "Approva con 'y' e osserva il tool result che conferma il successo",
       "Verifica il file modificato: 'cat calc.js'",
-      "Esegui 'claude /config permissions' per vedere i permessi correnti",
-      "Ripeti l'operazione su un altro file, questa volta approva con 'a' (always) e osserva come non chiede più conferma"
+      "Crea ~/.claude/settings.json con: {\"permissions\": {\"allow\": [\"Write(*.js)\"]}}",
+      "Ripeti l'operazione su un altro file e osserva che non chiede più conferma per file .js"
     ],
     verificationSteps: [
-      "✅ Hai visto nel verbose mode la tool request 'read_file' per calc.js",
-      "✅ Hai visto la tool request 'write_file' con il nuovo contenuto",
-      "✅ Hai usato 'v' per visualizzare il diff completo prima di approvare",
+      "✅ Hai visto nel terminale le tool requests per calc.js",
+      "✅ Hai visto la richiesta di modifica file con il nuovo contenuto",
+      "✅ Hai approvato la modifica e verificato il successo",
       "✅ Il file calc.js ora contiene un check per divisione per zero",
-      "✅ Hai visualizzato i permessi con 'claude /config permissions'",
+      "✅ Hai configurato permissions.allow in ~/.claude/settings.json",
       "✅ Comprendi che l'LLM richiede tool, Claude Code li esegue dopo conferma"
     ]
   }
