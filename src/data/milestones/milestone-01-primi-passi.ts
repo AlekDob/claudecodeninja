@@ -381,20 +381,34 @@ claude "Come posso ottimizzare le performance?"
 
 **Cosa fa**:
 - Legge file referenziati con @ (es. @src/**/*.ts)
-- Rispetta \`.claudeignore\` per escludere file non necessari
+- Rispetta \`.gitignore\` per escludere file comuni (node_modules, etc.)
+- Usa \`ignorePatterns\` in \`.claude/settings.json\` per controllo preciso
 - Permette di fornire contesto specifico senza sovraccaricare
 
-> ⚠️ **Attenzione ai costi**: referenziare molti file può aumentare i costi. Usa \`.claudeignore\` per escludere node_modules, build, etc.
+> ⚠️ **Attenzione ai costi**: referenziare molti file può aumentare i costi. Configura \`ignorePatterns\` per escludere file non necessari.
 
-**Best practice**:
+**Best practice - Configurazione ignorePatterns**:
 \`\`\`bash
-# Crea .claudeignore PRIMA di iniziare
-echo "node_modules/
-dist/
-build/
-.git/
-*.log" > .claudeignore
+# Crea directory config se non esiste
+mkdir -p .claude
+
+# Crea file di configurazione progetto
+cat > .claude/settings.json <<EOF
+{
+  "ignorePatterns": [
+    "node_modules/**",
+    "dist/**",
+    "build/**",
+    ".git/**",
+    "*.log",
+    ".env*",
+    "coverage/**"
+  ]
+}
+EOF
 \`\`\`
+
+> 💡 **Nota**: Claude Code rispetta anche \`.gitignore\`, ma \`ignorePatterns\` offre controllo più preciso e garantisce che i file siano completamente invisibili.
 
 ## Capitolo 5: Slash Commands
 
@@ -439,7 +453,9 @@ Disponibili in modalità interattiva per controllo rapido:
 1. Usa il nuovo comando di login: \`claude /login\`
 2. Se usi API key, verifica su [console.anthropic.com](https://console.anthropic.com)
 3. Controlla che la key sia valida e non scaduta
-4. Verifica permessi file config: \`chmod 600 ~/.config/claude/auth.json\`
+4. Riavvia il terminale per ricaricare le variabili d'ambiente
+
+> 💡 **Nota**: Claude Code gestisce automaticamente i permessi dei file di autenticazione. Non è necessario modificarli manualmente.
 
 ---
 
@@ -447,7 +463,7 @@ Disponibili in modalità interattiva per controllo rapido:
 
 **Soluzioni**:
 1. Riduci contesto - evita file grandi o troppi file
-2. Usa \`.claudeignore\` per escludere node_modules, .git, dist
+2. Configura \`ignorePatterns\` in \`.claude/settings.json\` per escludere node_modules, .git, dist
 3. Prova modello più veloce: \`--model haiku\`
 4. Verifica connessione internet
 5. Usa \`/clear\` in modalità interattiva per resettare il contesto
@@ -473,7 +489,7 @@ Disponibili in modalità interattiva per controllo rapido:
 
 💡 **Tips per risparmiare**:
 - **Scegli il modello giusto**: Usa Haiku per task semplici, Sonnet per la maggior parte, Opus solo quando necessario
-- **Riduci contesto**: Usa \`.claudeignore\` per escludere file non necessari
+- **Riduci contesto**: Configura \`ignorePatterns\` in \`.claude/settings.json\` per escludere file non necessari
 - **Gestisci sessioni**: Usa \`/clear\` in conversazioni lunghe per resettare il contesto
 - **Sii specifico**: Referenzia solo i file strettamente necessari con \`@\`
 - **Monitora uso**: Controlla dashboard su console.anthropic.com
@@ -493,14 +509,23 @@ Per progetti nuovi:
 cd my-new-project
 git init
 
-# Crea .claudeignore PRIMA di usare --project
-echo "node_modules/
-dist/
-build/
-.git/
-.env
-*.log
-coverage/" > .claudeignore
+# Crea directory config Claude Code
+mkdir -p .claude
+
+# Configura ignorePatterns per ottimizzare contesto e costi
+cat > .claude/settings.json <<EOF
+{
+  "ignorePatterns": [
+    "node_modules/**",
+    "dist/**",
+    "build/**",
+    ".git/**",
+    ".env*",
+    "*.log",
+    "coverage/**"
+  ]
+}
+EOF
 
 # Prima interazione con contesto progetto
 claude "Analizza struttura e suggerisci miglioramenti"
@@ -509,7 +534,7 @@ claude "Analizza struttura e suggerisci miglioramenti"
 **Workflow quotidiano**:
 1. **Quick questions**: One-shot mode
 2. **Debugging**: Interactive mode con \`@file\`
-3. **Refactoring**: Referenzia file con \`@\` per contesto completo
+3. **Refactoring**: Referenzia file con \`@\` e wildcard (es. @src/**/*.ts)
 4. **Review**: Sonnet per check standard, Opus per analisi profonde
 
 ## Riepilogo
