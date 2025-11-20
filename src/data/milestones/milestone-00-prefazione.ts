@@ -560,22 +560,16 @@ Questo corso ti guiderà attraverso **12 milestone progressive** che ti trasform
 
 ## Inizia Subito! 🚀
 
-Sei pronto per trasformare il tuo modo di sviluppare software?
+Ora che conosci **perché Claude Code è diverso**, sei pronto per iniziare il percorso pratico.
 
 **Prossimo Step:**
 - Clicca "Completa Milestone" qui sotto
 - Passerai direttamente al **Milestone 1: Primi Passi**
-- Nessun quiz, nessun ostacolo - iniziamo a codificare! 💻
+- Nessun quiz, nessun ostacolo - iniziamo subito! 💻
 
-**Tempo Totale Corso:** ~15 ore di contenuti (pratici, non teorici)
+**Tempo Totale Corso:** ~15 ore di contenuti pratici distribuiti su 12 milestone.
 
-**Investimento:** Il tuo tempo per imparare uno strumento che ti farà risparmiare 10-20 ore/settimana per il resto della tua carriera.
-
-**ROI:** Se guadagni $50/h e risparmi 10h/settimana → $500/settimana = **$26,000/anno** di valore generato.
-
----
-
-> 💡 **Ricorda:** Claude Code non è "un tool in più da imparare" - è un **force multiplier** che amplifica le tue capacità esistenti. Gli sviluppatori che lo adottano early hanno un vantaggio competitivo enorme.
+> 💡 **Ricorda:** Claude Code non è "un tool in più da imparare" - è un **force multiplier** che amplifica le tue capacità esistenti.
 
 Benvenuto nel futuro dello sviluppo software. Iniziamo! 🥷✨
   `,
