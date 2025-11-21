@@ -654,5 +654,240 @@ Congratulazioni! 🎉 Hai completato la prima milestone. Ora sai:
       "✅ Hai usato /clear per resettare il contesto",
       "✅ Sei uscito correttamente dalla modalità interattiva"
     ]
-  }
+  },
+  resources: [
+    {
+      id: 'aitmpl-marketplace',
+      type: 'link',
+      title: 'Claude Code Templates',
+      description: 'Marketplace di agenti, comandi e skills per Claude Code',
+      url: 'https://aitmpl.com/'
+    },
+    {
+      id: 'claude-docs',
+      type: 'link',
+      title: 'Claude Code Docs',
+      description: 'Documentazione ufficiale completa di Claude Code',
+      url: 'https://code.claude.com/docs/en/overview'
+    },
+    {
+      id: 'skillsmp-marketplace',
+      type: 'link',
+      title: 'Skills Marketplace',
+      description: 'Marketplace dedicato alle skills per Claude Code',
+      url: 'https://skillsmp.com/'
+    },
+    {
+      id: 'claude-md-starter',
+      type: 'template',
+      title: 'Template CLAUDE.md Starter',
+      description: 'Template base per creare il tuo primo CLAUDE.md con tutte le sezioni essenziali',
+      filename: 'CLAUDE.md',
+      language: 'markdown',
+      content: `# CLAUDE.md
+
+## 📋 Project Name
+[Il nome del tuo progetto]
+
+## 🎯 Overview
+Descrizione breve del progetto e del suo scopo principale.
+
+**Tipo di progetto**: [Web App / Mobile App / Library / CLI Tool / etc.]
+**Target audience**: [Chi userà questo progetto]
+**Problema risolto**: [Quale problema risolve]
+
+## 🛠 Tech Stack
+
+**Core**:
+- Framework principale e versione
+- Runtime/Language e versione
+- Package manager
+
+**Frontend** (se applicabile):
+- UI Framework
+- Styling solution
+- State management
+
+**Backend** (se applicabile):
+- Server framework
+- Database
+- Auth solution
+
+**Tools**:
+- Build tool
+- Testing framework
+- Deployment platform
+
+## 📂 Project Structure
+
+**⚠️ CRITICAL: Organize by Domain, Not by Type**
+
+❌ **WRONG (Technical Organization)**:
+\\\`\\\`\\\`
+src/
+  ├── components/    # 150+ components mixed
+  ├── services/      # 40+ services mixed
+  ├── utils/         # 30+ utility files
+  └── hooks/         # 35+ hooks mixed
+\\\`\\\`\\\`
+
+✅ **CORRECT (Domain Organization)**:
+\\\`\\\`\\\`
+src/
+  ├── features/
+  │   ├── products/
+  │   │   ├── components/
+  │   │   ├── services/
+  │   │   ├── hooks/
+  │   │   └── types/
+  │   ├── orders/
+  │   │   ├── components/
+  │   │   ├── services/
+  │   │   ├── hooks/
+  │   │   └── types/
+  │   └── customers/
+  │       ├── components/
+  │       ├── services/
+  │       ├── hooks/
+  │       └── types/
+  └── shared/
+      ├── components/  # Actually shared (buttons, modals)
+      ├── hooks/       # Actually shared (useApi, useAuth)
+      └── utils/       # Actually shared (date, validation)
+\\\`\\\`\\\`
+
+### The 4 Sacred Rules:
+
+**1️⃣ The 20-Line Rule**
+- Files under 20 lines should be consolidated
+- Exception: Config files and type definitions
+- Small files create navigation overhead for AI
+
+**2️⃣ The 300-Line Rule**
+- Files over 300 lines are doing too much
+- Split by responsibility or domain
+- Large files overwhelm AI context window
+
+**3️⃣ The Domain Rule** (Most Important!)
+- **Files that change together live together**
+- Group by feature/domain, NOT by technical type
+- When adding a cart feature, you touch: cart components, cart service, cart types
+- Keep them together in \\\`features/cart/\\\`
+
+**4️⃣ The Name Rule**
+- If you can't tell what a file does from its name, the name sucks
+- Be specific: \\\`productPriceCalculator.ts\\\` not \\\`utils.ts\\\`
+- Avoid: \\\`helpers.ts\\\`, \\\`utils.ts\\\`, \\\`index.ts\\\`, \\\`data.ts\\\`
+
+## 📐 Code Style
+
+**Naming Conventions**:
+- \\\`PascalCase\\\`: Components, Types, Interfaces
+- \\\`camelCase\\\`: Functions, variables
+- \\\`UPPER_SNAKE_CASE\\\`: Constants, env variables
+
+**Function Rules**:
+- Max 20 lines per function
+- Max 300 lines per file
+- Single Responsibility Principle
+- Explicit return types (TypeScript)
+
+**TypeScript**:
+- Strict mode enabled
+- No \\\`any\\\` types allowed
+- Explicit interface exports
+
+## 🧪 Testing
+
+**Test Strategy**:
+- [Unit tests / Integration tests / E2E tests]
+- Test coverage target: [XX%]
+
+**Testing Tools**:
+- [Jest / Vitest / Playwright / etc.]
+
+**How to run tests**:
+\\\`\\\`\\\`bash
+npm run test
+\\\`\\\`\\\`
+
+## 🔧 Development
+
+**Setup**:
+\\\`\\\`\\\`bash
+npm install
+npm run dev
+\\\`\\\`\\\`
+
+**Environment Variables**:
+\\\`\\\`\\\`bash
+# .env.example
+VITE_API_URL=
+VITE_API_KEY=
+\\\`\\\`\\\`
+
+**Common Commands**:
+\\\`\\\`\\\`bash
+npm run dev      # Start dev server
+npm run build    # Build for production
+npm run preview  # Preview production build
+npm run test     # Run tests
+\\\`\\\`\\\`
+
+## 🚀 Deployment
+
+**Platform**: [Vercel / Netlify / Railway / etc.]
+**URL**: [Production URL]
+
+**Deploy process**:
+1. [Step 1]
+2. [Step 2]
+3. [Step 3]
+
+## 📚 Detailed Documentation
+
+All detailed documentation has been organized into focused files:
+
+### 📂 **Core Documentation**
+👉 **\\\`/docs/architecture.md\\\`** - System architecture and design decisions
+👉 **\\\`/docs/api.md\\\`** - API documentation and endpoints
+👉 **\\\`/docs/deployment.md\\\`** - Deployment guide and production setup
+
+### 🎯 **Feature Documentation**
+👉 **\\\`/docs/features/\\\`** - Feature-specific documentation by domain
+👉 **\\\`/docs/testing.md\\\`** - Testing strategy and guidelines
+👉 **\\\`/docs/troubleshooting.md\\\`** - Common issues and solutions
+
+### 🚀 **Development**
+👉 **\\\`/docs/setup.md\\\`** - Development environment setup
+👉 **\\\`/docs/contributing.md\\\`** - Contributing guidelines
+👉 **\\\`/docs/changelog.md\\\`** - Version history and changes
+
+**Note**: Keeping documentation in separate files follows the **300-line rule** and makes it easier for AI to find relevant context.
+
+## 🧠 Context for AI
+
+**Project Philosophy**:
+[Spiega la filosofia del progetto, le decisioni architetturali, i trade-off]
+
+**Code Patterns**:
+[Pattern ricorrenti nel codice, convenzioni specifiche del progetto]
+
+**Common Tasks**:
+- Adding new component: [workflow]
+- Adding new route: [workflow]
+- Adding new API endpoint: [workflow]
+
+**Known Issues**:
+- [Issue 1 e soluzione]
+- [Issue 2 e soluzione]
+
+---
+
+**Last Updated**: [Date]
+**Version**: 1.0.0
+**Author**: [Your Name]
+`
+    }
+  ]
 };

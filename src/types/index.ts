@@ -13,7 +13,32 @@ export interface Milestone {
   topics: string[];
   quiz?: Quiz;
   challenge?: CodingChallenge;
+  resources?: Resource[];
 }
+
+export type ResourceType = 'link' | 'template';
+
+export interface BaseResource {
+  id: string;
+  title: string;
+  description?: string;
+  type: ResourceType;
+}
+
+export interface LinkResource extends BaseResource {
+  type: 'link';
+  url: string;
+  icon?: string;
+}
+
+export interface TemplateResource extends BaseResource {
+  type: 'template';
+  content: string;
+  filename: string;
+  language?: string;
+}
+
+export type Resource = LinkResource | TemplateResource;
 
 export interface Quiz {
   questions: QuizQuestion[];

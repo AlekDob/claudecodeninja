@@ -176,18 +176,11 @@ All detailed documentation has been organized into focused files following the 3
 - Security (CSP, HTTPS)
 - Analytics recommendations
 
-## 🎯 Quick Start for AI Agents
+### 📊 **Project Status & Changes**
+👉 **[Project Status](.claude/docs/project-status.md)** - Current status, metrics, next steps
+👉 **[Changelog](.claude/docs/changelog.md)** - Recent changes and version history
 
-**Current Status:**
-- ✅ Milestones 1-4 complete with full Italian content (refactored into separate files)
-- ⏳ Milestones 5-12 pending (ready for content-enricher agent)
-- ✅ Progress tracking with LocalStorage working
-- ✅ Badge system implemented
-- ✅ Light/Dark mode fully implemented
-- ✅ Nextra-style minimal design applied
-- ✅ content-enricher agent created for milestone expansion
-- ⏳ Quiz functionality (data ready, UI pending)
-- ⏳ Coding challenges (pending)
+## 🎯 Quick Start for AI Agents
 
 **When adding new content:**
 1. Use the **content-enricher agent** (`.claude/agents/content-enricher.md`)
@@ -244,34 +237,6 @@ First comprehensive Italian learning path for Claude Code. Captures underserved 
 
 ---
 
-**Last Updated**: 2025-01-17 by Claude Code (Agent Soo-yeon)
-**Status**: Milestones 1-4 complete (refactored), 5-12 ready for enrichment
-**Next Steps**:
-1. Use content-enricher agent to generate milestones 5-12 from Kindle notes
-2. Test full learning path with enriched content
-3. Deploy to Vercel
-
-**Recent Changes**:
-- ✅ Refactored milestone data into separate files (300-line rule compliance)
-- ✅ Created content-enricher agent for milestone expansion
-- ✅ Implemented full light/dark mode support
-- ✅ Applied Nextra-style minimal design
-- ✅ Updated Design Style Guide with Rule #1 (inline Tailwind only)
-- ✅ Integrated Motion.dev for animations
-
-**📖 Full Documentation Index:**
-- [File Organization](.claude/docs/file-organization.md)
-- [Code Style](.claude/docs/code-style.md)
-- [Gamification System](.claude/docs/gamification-system.md)
-- [Milestone Content](.claude/docs/milestone-content.md)
-- [Development Workflow](.claude/docs/development-workflow.md)
-- [Testing Guidelines](.claude/docs/testing-guidelines.md)
-- [AI Agent Instructions](.claude/docs/ai-agent-instructions.md)
-- [Brand Identity](.claude/docs/brand-identity.md)
-- [Deployment Guide](.claude/docs/deployment.md)
-- [Design Style Guide](.claude/DESIGN_STYLE_GUIDE.md) ⭐ NEW
-
-**🤖 Specialized Agents:**
-- [content-enricher](.claude/agents/content-enricher.md) ⭐ NEW - Enriches milestone content from Kindle/PDF sources
-- [frontend-specialist](.claude/agents/frontend-specialist.md) ⭐ NEW - UI/UX specialist following Design Style Guide
-- [nextsteps-manager](.claude/agents/nextsteps-manager.md) - Tracks project progress
+**Last Updated**: 2025-01-21
+**For current status, see**: [Project Status](.claude/docs/project-status.md)
+**For recent changes, see**: [Changelog](.claude/docs/changelog.md)

@@ -3,6 +3,7 @@ import { milestones } from '../data/milestones';
 import { MilestoneCard } from '../components/LearningPath/MilestoneCard';
 import { ProgressTracker } from '../components/LearningPath/ProgressTracker';
 import { BadgeDisplay } from '../components/Gamification/BadgeDisplay';
+import { ResourceView } from '../components/Resources/ResourceView';
 import { Header } from '../components/Header/Header';
 import { Footer } from '../components/Footer/Footer';
 import { useNavigate } from 'react-router-dom';
@@ -10,7 +11,7 @@ import { useTheme } from '../contexts/ThemeContext';
 
 export const HomePage = () => {
   const { theme } = useTheme();
-  const [view, setView] = useState<'milestones' | 'badges'>('milestones');
+  const [view, setView] = useState<'milestones' | 'badges' | 'resources'>('milestones');
   const [language, setLanguage] = useState<'it' | 'en'>('it');
   const navigate = useNavigate();
 
@@ -47,7 +48,7 @@ export const HomePage = () => {
               <div className="flex gap-2">
                 <button
                   onClick={() => setView('milestones')}
-                  className="flex-1 py-2 px-4 rounded-lg font-medium text-sm transition-colors"
+                  className="flex-1 py-2 px-3 rounded-lg font-medium text-sm transition-colors"
                   style={{
                     backgroundColor: view === 'milestones' ? '#FF6B35' : (theme === 'dark' ? 'rgba(255, 255, 255, 0.1)' : 'rgba(15, 23, 42, 0.05)'),
                     color: view === 'milestones' ? '#ffffff' : 'var(--text-secondary)'
@@ -69,7 +70,7 @@ export const HomePage = () => {
                 </button>
                 <button
                   onClick={() => setView('badges')}
-                  className="flex-1 py-2 px-4 rounded-lg font-medium text-sm transition-colors"
+                  className="flex-1 py-2 px-3 rounded-lg font-medium text-sm transition-colors"
                   style={{
                     backgroundColor: view === 'badges' ? '#FF6B35' : (theme === 'dark' ? 'rgba(255, 255, 255, 0.1)' : 'rgba(15, 23, 42, 0.05)'),
                     color: view === 'badges' ? '#ffffff' : 'var(--text-secondary)'
@@ -88,6 +89,28 @@ export const HomePage = () => {
                   }}
                 >
                   Badge
+                </button>
+                <button
+                  onClick={() => setView('resources')}
+                  className="flex-1 py-2 px-3 rounded-lg font-medium text-sm transition-colors"
+                  style={{
+                    backgroundColor: view === 'resources' ? '#FF6B35' : (theme === 'dark' ? 'rgba(255, 255, 255, 0.1)' : 'rgba(15, 23, 42, 0.05)'),
+                    color: view === 'resources' ? '#ffffff' : 'var(--text-secondary)'
+                  }}
+                  onMouseEnter={(e) => {
+                    if (view !== 'resources') {
+                      e.currentTarget.style.backgroundColor = theme === 'dark' ? 'rgba(255, 255, 255, 0.15)' : 'rgba(15, 23, 42, 0.08)';
+                      e.currentTarget.style.color = 'var(--text-primary)';
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (view !== 'resources') {
+                      e.currentTarget.style.backgroundColor = theme === 'dark' ? 'rgba(255, 255, 255, 0.1)' : 'rgba(15, 23, 42, 0.05)';
+                      e.currentTarget.style.color = 'var(--text-secondary)';
+                    }
+                  }}
+                >
+                  Risorse
                 </button>
               </div>
             </div>
@@ -112,8 +135,10 @@ export const HomePage = () => {
                   </div>
                 ))}
               </div>
-            ) : (
+            ) : view === 'badges' ? (
               <BadgeDisplay />
+            ) : (
+              <ResourceView />
             )}
           </div>
         </div>

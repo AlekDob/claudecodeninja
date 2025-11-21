@@ -347,41 +347,187 @@ Context Needed:
 
 > 💡 **PRO TIP**: I commands sono committable su Git = tutto il team usa gli stessi prompt!
 
-### 3.3 Domain-Driven Organization
+### 3.3 The Great Component Soup Disaster
 
-**❌ VECCHIO MODO (per tipo):**
+Parliamo del **più grande errore** che vedo in progetti enterprise. E sì, l'ho fatto anch'io con Flow v1.
+
+Ho organizzato i file "come un developer professionista" — per tipo tecnico:
+
+**❌ THE NIGHTMARE (Technical Organization):**
 \`\`\`
-/src/
-  /components/     # TUTTI i componenti mischiati
-  /hooks/          # TUTTI gli hooks mischiati
-  /utils/          # TUTTE le utility mischiate
-  /services/       # TUTTI i servizi mischiati
+/src
+├── components/
+│   ├── ProductCard.vue
+│   ├── ProductList.vue
+│   ├── ProductFilter.vue
+│   ├── OrderSummary.vue
+│   ├── OrderDetails.vue
+│   ├── OrderHistory.vue
+│   ├── CustomerProfile.vue
+│   ├── CustomerList.vue
+│   ├── CustomerSearch.vue
+│   └── [...147 more components]
+├── services/
+│   ├── productService.ts
+│   ├── orderService.ts
+│   ├── customerService.ts
+│   └── [...43 more services]
+├── utils/
+│   ├── formatters.ts
+│   ├── validators.ts
+│   ├── helpers.ts
+│   └── [...28 more utility files]
+└── hooks/
+    ├── useProducts.ts
+    ├── useOrders.ts
+    └── [...35 more hooks]
 \`\`\`
 
-**✅ NUOVO MODO (per dominio):**
+Questa struttura sembra organizzata. Segue convenzioni comuni. Ogni developer la riconosce.
+
+**È anche completamente inutile per AI agents.**
+
+**Ecco cosa è successo**: Ho chiesto a Claude "aggiungi filtro per categorie prodotto". Richiesta semplice, giusto?
+
+Claude ha passato **15 minuti** a:
+1. Cercare tra 147 componenti quali erano relativi ai prodotti
+2. Cross-reference con 43 services per trovare il product service
+3. Caccia attraverso 35 hooks per il product hook
+4. Scavare in utils per il formatter giusto
+
+Quando Claude finalmente aveva abbastanza contesto, aveva caricato così tanto codice **irrilevante** che iniziava a fare decisioni strane — come usare pattern dal customer service quando lavorava sui prodotti, perché "sembravano simili".
+
+**Il problema non è Claude. Il problema è che l'organizzazione tecnica oscura i confini di dominio.**
+
+Così ho ristrutturato Flow completamente:
+
+**✅ THE SOLUTION (Domain Organization):**
 \`\`\`
-/src/
-  /features/
-    /authentication/
-      LoginForm.tsx
-      useAuth.hook.ts
-      auth.service.ts
-      auth.test.ts
-
-    /checkout/
-      CheckoutFlow.tsx
-      usePayment.hook.ts
-      payment.service.ts
-      checkout.test.ts
+/src
+├── features/
+│   ├── products/
+│   │   ├── components/
+│   │   │   ├── ProductCard.vue
+│   │   │   ├── ProductList.vue
+│   │   │   └── ProductFilter.vue
+│   │   ├── services/
+│   │   │   └── productService.ts
+│   │   ├── composables/
+│   │   │   └── useProducts.ts
+│   │   ├── types/
+│   │   │   └── product.types.ts
+│   │   └── CLAUDE.md
+│   ├── orders/
+│   │   ├── components/
+│   │   ├── services/
+│   │   ├── composables/
+│   │   └── types/
+│   ├── customers/
+│   │   ├── components/
+│   │   ├── services/
+│   │   ├── composables/
+│   │   └── types/
+│   └── inventory/
+│       ├── components/
+│       ├── services/
+│       ├── composables/
+│       └── types/
+└── shared/
+    ├── components/  # Actually shared (buttons, modals, layouts)
+    ├── composables/ # Actually shared (useApi, useAuth)
+    └── utils/       # Actually shared (date formatting, validation)
 \`\`\`
 
-**Perché Claude Code preferisce Domain-Driven?**
+**Stesso codice. Organizzazione diversa. Efficacia AI completamente diversa.**
 
-Quando chiedi "migliora il checkout", Claude Code:
-- **Con struttura per tipo**: Deve cercare in 10 directory diverse
-- **Con Domain-Driven**: Tutto è in /features/checkout/
+Ora quando chiedo a Claude di lavorare sui prodotti, apre la cartella \`/features/products/\` e ha **immediatamente TUTTO il contesto** necessario. Componenti. Services. Types. Composables. Tutto relativo ai prodotti in un posto.
 
-È come organizzare una libreria per argomento invece che per colore della copertina!
+**Il risultato?** Quel task "aggiungi filtro categorie prodotto" è passato da **15 minuti a 3 minuti**. E Claude non ha fatto errori cross-domain perché non stava nuotando in contesto irrilevante.
+
+### Le 4 Regole Sacre per CLAUDE.md
+
+Dopo aver ristrutturato 6 progetti e gestito team di sviluppo in tutta Europa, ho distillato l'organizzazione file in **quattro regole**. Queste vanno direttamente in ogni CLAUDE.md che scrivo:
+
+**1️⃣ The 20-Line Rule**
+
+File sotto 20 righe dovrebbero probabilmente essere consolidati.
+
+**Eccezione**: File di configurazione e definizioni di tipi.
+
+**Perché conta**: File piccoli creano overhead di navigazione per l'AI. Claude deve costantemente cambiare contesto tra file, perdendo il filo di ciò che sta cercando di fare.
+
+❌ **Bad:**
+\`\`\`
+/utils/formatDate.ts          // 8 lines
+/utils/formatCurrency.ts      // 6 lines
+/utils/formatPhoneNumber.ts   // 9 lines
+\`\`\`
+
+✅ **Good:**
+\`\`\`
+/utils/formatters.ts          // 35 lines - all formatters together
+\`\`\`
+
+---
+
+**2️⃣ The 300-Line Rule**
+
+File oltre 300 righe stanno facendo troppo. Dividi per responsabilità o dominio.
+
+**Perché conta**: File grandi sovraccaricano la context window di Claude. Inizia a perdere dettagli sepolti nel mezzo, facendo errori perché sta cercando di tenere troppo in memoria.
+
+Quando ho diviso un \`orderService.ts\` di 600 righe in:
+- \`orderService.ts\` (core CRUD operations)
+- \`orderValidation.ts\` (validation logic)
+- \`orderCalculations.ts\` (price calculations, tax, etc.)
+
+L'accuratezza di Claude su task relativi agli ordini è passata dal **70% al 95%**. Poteva ora comprendere completamente ogni pezzo invece di confondersi con un service massiccio.
+
+---
+
+**3️⃣ The Domain Rule** (LA PIÙ IMPORTANTE!)
+
+**Files that change together live together.** Raggruppa per feature/domain, NON per tipo tecnico.
+
+Questa è la grande. Quella che ha cambiato tutto.
+
+Quando aggiungi una feature shopping cart, toccherai:
+- Cart components (UI)
+- Cart service (API calls)
+- Cart types (TypeScript definitions)
+- Cart composables (reusable logic)
+
+Se questi sono sparsi tra \`/components/\`, \`/services/\`, \`/types/\`, e \`/hooks/\`, stai facendo archeologia ogni volta che fai una modifica. E lo stesso vale per Claude.
+
+**Raggruppa per domain. Sempre.**
+
+---
+
+**4️⃣ The Name Rule**
+
+Se non riesci a capire cosa fa un file dal suo nome, il nome fa schifo. Sii specifico.
+
+❌ **Bad names:**
+\`\`\`
+helpers.ts           (helper per cosa?)
+utils.ts            (utility per cosa?)
+index.ts            (il nome di file più malvagio nella programmazione)
+data.ts             (che dati?)
+\`\`\`
+
+✅ **Good names:**
+\`\`\`
+productPriceCalculator.ts
+customerEmailValidator.ts
+orderStatusFormatter.ts
+supabaseAuthClient.ts
+\`\`\`
+
+Claude non deve aprire un file per sapere cosa fa. **Il nome racconta la storia.**
+
+> 💡 **Concetto Chiave**: L'organizzazione dei file è comunicazione. Non stai organizzando per te stesso in questo momento. Stai organizzando per il tuo futuro self, il tuo team, e i tuoi AI agents. La struttura domain-driven comunica "cosa va insieme" a colpo d'occhio.
+
+Usa questo quando decidi dove dovrebbe vivere nuovo codice!
 
 ## Capitolo 4: Database Schema Documentation
 
