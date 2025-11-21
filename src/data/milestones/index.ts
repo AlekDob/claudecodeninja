@@ -36,11 +36,11 @@ export const milestones: Milestone[] = [
   milestone03,  // Permissions
   milestone04,  // Settings & CLAUDE.md
   milestone05,  // Architettura
+  milestone09,  // Project Setup (inserito dopo Architettura)
   milestone06,  // Prompt Engineering
   milestone07,  // Advanced Prompting
-  milestone09,  // Project Setup (spostato prima)
-  milestone11,  // Subagents & Skills (spostato prima)
-  milestone12,  // Hooks & MCP (spostato prima)
-  milestone08,  // Testing Workflow (spostato dopo)
+  milestone11,  // Subagents & Skills
+  milestone12,  // Hooks & MCP
+  milestone08,  // Testing Workflow
   milestone10   // GitLab/GitHub CI/CD (ultimo)
 ];

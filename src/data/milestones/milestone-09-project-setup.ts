@@ -1,7 +1,7 @@
 import { Milestone } from '../../types';
 
 export const milestone09: Milestone = {
-  id: 8,
+  id: 6,
   title: "Project Setup & Architecture",
   subtitle: "Struttura progetti enterprise con CLAUDE.md, ADR, feature specs e organizzazione ottimale",
   description: `

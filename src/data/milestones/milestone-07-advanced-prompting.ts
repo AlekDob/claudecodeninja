@@ -1,7 +1,7 @@
 import { Milestone } from '../../types';
 
 export const milestone07: Milestone = {
-  id: 7,
+  id: 8,
   title: "Tecniche Avanzate di Prompting",
   subtitle: "Padroneggia precisione, pattern, meta-prompting, Plan Mode e Thinking Mode per risultati professionali",
   description: `

@@ -1,7 +1,7 @@
 import { Milestone } from '../../types';
 
 export const milestone06: Milestone = {
-  id: 6,
+  id: 7,
   title: "Prompt Engineering per Claude Code",
   subtitle: "Impara l'arte di scrivere prompt efficaci che generano codice di qualità e risposte precise",
   description: `

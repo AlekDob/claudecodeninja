@@ -65,21 +65,21 @@ export const LandingPage = () => {
     },
     {
       number: '06',
+      title: 'Project Setup',
+      description: 'CLAUDE.md di progetto, ADR, feature specs, architettura',
+      xp: 400
+    },
+    {
+      number: '07',
       title: 'Prompt Engineering',
       description: 'Anatomia prompt efficaci, precisione, contesto',
       xp: 200
     },
     {
-      number: '07',
+      number: '08',
       title: 'Advanced Prompting',
       description: 'Plan Mode, Thinking Mode, meta-prompting avanzato',
       xp: 350
-    },
-    {
-      number: '08',
-      title: 'Project Setup',
-      description: 'CLAUDE.md di progetto, ADR, feature specs, architettura',
-      xp: 400
     },
     {
       number: '09',
