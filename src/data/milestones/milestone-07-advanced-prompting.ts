@@ -3,7 +3,7 @@ import { Milestone } from '../../types';
 export const milestone07: Milestone = {
   id: 8,
   title: "Tecniche Avanzate di Prompting",
-  subtitle: "Padroneggia precisione, pattern, meta-prompting, Plan Mode e Thinking Mode per risultati professionali",
+  subtitle: "Padroneggia precisione, pattern, meta-prompting, Plan Mode, Thinking Mode e best practices specifiche per Claude 4.x (Sonnet 4.5 & Haiku 4.5)",
   description: `
 # Milestone 7: Tecniche Avanzate di Prompting
 
@@ -21,6 +21,7 @@ Questa milestone si basa sui fondamentali della Milestone 6 e introduce:
 - **Meta-prompting** - Far ragionare Claude Code sul problema prima di risolverlo
 - **Plan Mode** - Modalità architetto per visione d'insieme e pianificazione multi-file
 - **Thinking Mode** - Modalità ragionamento profondo per problemi complessi
+- **Best Practices Claude 4.x** - Tecniche specifiche per Claude Sonnet 4.5 e Haiku 4.5
 
 Al termine di questa milestone sarai in grado di:
 - ✅ Scrivere prompt precisi che riducono iterazioni del 70%
@@ -30,6 +31,7 @@ Al termine di questa milestone sarai in grado di:
 - ✅ Riconoscere quale pattern usare per ogni scenario
 - ✅ Attivare Plan Mode per refactoring e architetture complesse
 - ✅ Usare Thinking Mode per debugging avanzato e ottimizzazioni
+- ✅ Sfruttare le capacità specifiche di Claude 4.x (context awareness, extended thinking, orchestrazione subagenti)
 
 ---
 
@@ -2406,11 +2408,1698 @@ c "Spiega questo file"  # Suggerisce di usare Haiku invece di Sonnet
 
 ---
 
-## Capitolo 9: Riepilogo e Best Practices
+## Capitolo 9: Best Practices per Claude 4.x (Sonnet 4.5 & Haiku 4.5)
+
+Benvenuto nell'ultimo capitolo avanzato! 🚀
+
+Hai imparato tutte le tecniche fondamentali di prompt engineering nei capitoli precedenti. Ora è il momento di scoprire le **best practices specifiche per i modelli Claude 4.x**, in particolare **Claude Sonnet 4.5** e **Claude Haiku 4.5**.
+
+**Perché un capitolo dedicato a Claude 4.x?**
+
+I modelli Claude 4.x rappresentano un salto evolutivo significativo rispetto alle generazioni precedenti:
+- **Precisione nelle istruzioni**: Seguono le direttive in modo più letterale e accurato
+- **Ragionamento a lungo termine**: Capacità eccezionali di tracciamento dello stato su sessioni estese
+- **Consapevolezza del contesto**: Comprendono il budget di token rimanente e gestiscono il contesto in modo intelligente
+- **Orchestrazione nativa**: Delegano proattivamente a subagenti specializzati quando appropriato
+- **Stile comunicativo**: Più conciso, diretto e orientato all'azione
+
+**Cosa imparerai:**
+- ✅ Principi generali per Claude 4.x (esplicitezza, contesto, esempi)
+- ✅ Ragionamento a lungo termine e tracciamento dello stato
+- ✅ Gestione flussi multi-finestra di contesto
+- ✅ Controllo verbosità e stile di comunicazione
+- ✅ Pattern di utilizzo strumenti (azione vs suggerimento)
+- ✅ Controllo formato output e markdown
+- ✅ Ricerca agentiva e raccolta informazioni
+- ✅ Orchestrazione subagenti
+- ✅ Capacità di pensiero esteso (Extended Thinking)
+- ✅ Creazione documenti e UI creative
+- ✅ Ottimizzazione chiamate parallele
+- ✅ Minimizzare allucinazioni nel codice
+
+---
+
+### 9.1 Principi Generali per Claude 4.x
+
+I modelli Claude 4.x rispondono eccezionalmente bene a istruzioni chiare ed esplicite. Tuttavia, la loro precisione richiede alcuni accorgimenti specifici.
+
+#### 9.1.1 Sii Esplicito con le Tue Istruzioni
+
+**Problema comune con Claude 4.x:**
+Se vuoi un comportamento "oltre le aspettative", devi **richiederlo esplicitamente**. I modelli precedenti inferivano più aggressivamente; Claude 4.x segue letteralmente le istruzioni.
+
+**Esempio pratico:**
+
+\`\`\`bash prompt-vague
+# ❌ Meno efficace (Claude 4.x creerà il minimo necessario)
+claude "Crea una dashboard di analisi"
+\`\`\`
+
+**Cosa succede:**
+- Claude 4.x genera una dashboard base con grafici standard
+- Mancano interazioni avanzate, animazioni, stati caricamento
+- Layout generico senza personalità
+
+\`\`\`bash prompt-explicit
+# ✅ Più efficace (Claude 4.x creerà implementazione ricca)
+claude "Crea una dashboard di analisi. Includi il maggior numero possibile di
+funzionalità e interazioni rilevanti. Vai oltre le basi per creare
+un'implementazione completamente funzionante con:
+- Grafici interattivi con drill-down
+- Filtri real-time e date pickers
+- Export data (CSV, PDF)
+- Stati di caricamento e skeleton screens
+- Animazioni fluide per transizioni
+- Responsive design per mobile e tablet"
+\`\`\`
+
+**Cosa succede:**
+- ✅ Dashboard completa con tutte le feature richieste
+- ✅ Interazioni polished e user experience curata
+- ✅ Codice production-ready con error handling
+
+**Regola chiave:**
+> Con Claude 4.x, **esplicitare è meglio che implicare**. Se vuoi qualcosa, dichiaralo chiaramente.
+
+#### 9.1.2 Aggiungi Contesto e Motivazione
+
+Spiegare **perché** un comportamento è importante aiuta Claude 4.x a comprendere meglio i tuoi obiettivi e fornire risposte più mirate.
+
+**Esempio: Preferenze di formattazione**
+
+\`\`\`bash prompt-no-context
+# ❌ Senza contesto
+claude "NON usare mai i puntini di sospensione nel codice generato"
+\`\`\`
+
+**Problema:** Claude 4.x seguirà la regola, ma potrebbe non capire il contesto più ampio.
+
+\`\`\`bash prompt-with-context
+# ✅ Con contesto e motivazione
+claude "La tua risposta sarà letta ad alta voce da un motore di sintesi vocale
+per utenti non vedenti, quindi non usare mai i puntini di sospensione (...)
+poiché il motore TTS non saprà come pronunciarli. Usa invece frasi complete
+con punteggiatura standard."
+\`\`\`
+
+**Vantaggio:** Claude 4.x è abbastanza intelligente da **generalizzare dalla spiegazione**:
+- ✅ Eviterà anche altri pattern problematici per TTS (emoji complesse, ASCII art)
+- ✅ Userà linguaggio chiaro e pronunciabile
+- ✅ Strutturerà frasi per lettura fluida
+
+**Casi d'uso comuni:**
+
+**1. Security Requirements**
+\`\`\`bash
+# ✅ Con motivazione
+claude "Implementa validazione input con whitelist strict.
+Motivazione: Questa API è esposta pubblicamente e ha subito attacchi SQL injection
+nel passato. La validazione deve bloccare QUALSIASI carattere non alphanumerico
+per prevenire ulteriori exploit."
+\`\`\`
+
+**2. Performance Requirements**
+\`\`\`bash
+# ✅ Con motivazione
+claude "Ottimizza questa query per <100ms di risposta.
+Motivazione: Questa query alimenta la dashboard principale vista da 5000+ utenti
+simultanei. Ogni 10ms di latenza aggiuntivo costa €500/mese in server scaling."
+\`\`\`
+
+**3. Architecture Decisions**
+\`\`\`bash
+# ✅ Con motivazione
+claude "Usa Redis per session storage invece di in-memory.
+Motivazione: Stiamo migrando a Kubernetes con auto-scaling, quindi le sessioni
+devono essere condivise tra pod. Redis offre persistence e failover,
+requisiti critici per la nostra SLA 99.9%."
+\`\`\`
+
+#### 9.1.3 Sii Vigile con Esempi e Dettagli
+
+**Verità fondamentale:** Claude 4.x presta **estrema attenzione** ai dettagli e agli esempi.
+
+**Problema:** Se fornisci esempi con comportamenti indesiderati, Claude 4.x potrebbe replicarli pensando che siano intenzionali.
+
+**Esempio: Documentazione API**
+
+\`\`\`bash prompt-bad-example
+# ❌ Esempio con comportamento indesiderato
+claude "Genera documentazione per endpoint REST seguendo questo esempio:
+
+GET /users
+Returns: All users (no pagination)
+
+Ora documenta tutti gli endpoint in @routes/api.js"
+\`\`\`
+
+**Problema:** L'esempio mostra "no pagination", quindi Claude 4.x potrebbe:
+- ❌ Documentare altri endpoint senza pagination
+- ❌ Pensare che pagination non sia importante nel progetto
+- ❌ Non menzionare limiti, offset, o cursors negli altri endpoint
+
+\`\`\`bash prompt-good-example
+# ✅ Esempio con best practices
+claude "Genera documentazione per endpoint REST seguendo questo esempio:
+
+GET /users?limit=50&offset=0
+Returns: Paginated list of users (max 100 per page)
+Headers: X-Total-Count, Link (prev/next)
+
+Ora documenta tutti gli endpoint in @routes/api.js usando lo stesso livello
+di dettaglio: parametri query, limiti, headers, status codes."
+\`\`\`
+
+**Vantaggio:**
+- ✅ Ogni endpoint documentato includerà pagination
+- ✅ Headers e status codes saranno consistenti
+- ✅ Best practices replicate in tutta la documentazione
+
+**Regola d'oro:**
+> I tuoi esempi sono un **template implicito**. Claude 4.x li seguirà fedelmente.
+
+**Checklist Esempi:**
+- ✅ Gli esempi mostrano SOLO comportamenti che vuoi replicare?
+- ✅ Includono tutti gli elementi importanti (error handling, edge cases)?
+- ✅ Seguono le convenzioni del progetto?
+- ✅ Non contengono shortcuts o semplificazioni che non vuoi nel codice finale?
+
+---
+
+### 9.2 Ragionamento a Lungo Termine e Tracciamento dello Stato
+
+Una delle capacità più impressionanti di Claude 4.5 è il **ragionamento a lungo termine** con eccezionale **tracciamento dello stato**.
+
+**Cosa significa:**
+- Claude 4.5 mantiene l'orientamento durante sessioni estese (multi-finestra)
+- Si concentra su **progresso incrementale** (poche cose alla volta, ben fatte)
+- Può salvare stato e continuare da una finestra di contesto nuova senza perdere il filo
+
+**Quando è utile:**
+- Refactoring complessi che richiedono ore di lavoro
+- Implementazione feature multi-file con testing iterativo
+- Debugging session lunghe con ipotesi da verificare
+- Progetti che richiedono pianificazione → implementazione → testing → deployment
+
+#### 9.2.1 Consapevolezza del Contesto (Context Awareness)
+
+Claude 4.5 ha una capacità unica: **sa quanto budget di token gli rimane**.
+
+**Cosa significa:**
+- Traccia la finestra di contesto rimanente durante la conversazione
+- Può decidere autonomamente quando salvare stato prima che il contesto si esaurisca
+- Ottimizza il lavoro in base allo spazio disponibile
+
+**Esempio pratico:**
+
+\`\`\`bash
+# Claude 4.5 in azione
+User: "Refactora l'intero modulo di autenticazione per usare JWT invece di sessions"
+
+Claude: "Okay, questo è un refactoring complesso. Procederò in modo incrementale:
+1. Prima creo i test per comportamento corrente (così non perdiamo funzionalità)
+2. Implemento JWT auth in parallelo a sessions (backwards compatibility)
+3. Migro routes uno alla volta
+4. Rimuovo sessions solo quando tutti i test passano
+
+Ho ~180k token rimanenti, quindi posso completare step 1-2 in questa finestra.
+Salverò lo stato in progress.md prima di procedere allo step 3."
+\`\`\`
+
+**Come sfruttare questa capacità:**
+
+\`\`\`bash prompt-context-aware
+# ✅ Prompt per sfruttare context awareness
+claude "Questo è un task lungo (refactor completo auth system).
+
+La tua finestra di contesto verrà automaticamente compattata mentre si avvicina
+al suo limite, permettendoti di continuare a lavorare indefinitamente.
+
+IMPORTANTE:
+- Non interrompere i task in anticipo per preoccupazioni sul budget token
+- Man mano che ti avvicini al limite, salva progresso e stato in progress.md
+- Sii persistente e autonomo: completa i task completamente
+- Non interrompere mai artificialmente nessun task indipendentemente dal contesto rimanente
+
+Procedi con il refactoring sistematicamente."
+\`\`\`
+
+**Cosa succede:**
+- ✅ Claude 4.5 lavorerà fino a completamento (anche se richiede multiple finestre)
+- ✅ Salverà stato automaticamente quando necessario
+- ✅ Riprenderà da dove ha lasciato senza perdere contesto
+
+#### 9.2.2 Flussi di Lavoro Multi-Finestra di Contesto
+
+Per task che si estendono su **più finestre di contesto**, segui queste best practices:
+
+**1. Usa un prompt diverso per la prima finestra**
+
+\`\`\`bash prompt-first-window
+# ✅ Prima finestra: Setup framework
+claude "Questo è un task multi-session: implementare dashboard analytics completa.
+
+PRIMA FINESTRA (setup):
+1. Crea suite di test completa (tests.json) per tracciare progresso
+2. Setup script di configurazione (init.sh) per:
+   - Avviare dev server
+   - Eseguire test suite
+   - Linting e type checking
+3. Crea progress.md per tracciare stato e next steps
+4. Pianifica l'implementazione in milestones incrementali
+
+NON iniziare l'implementazione ancora. Focus su framework di qualità della vita."
+\`\`\`
+
+**2. Fai scrivere test in formato strutturato**
+
+\`\`\`bash
+# ✅ Chiedi test strutturati PRIMA di iniziare
+claude "Prima di iniziare l'implementazione, crea tests.json con:
+- Lista di tutti i test necessari (functional, integration, e2e)
+- Status: not_started | in_progress | passing | failing
+- Priority: critical | high | medium | low
+
+IMPORTANTE: È inaccettabile rimuovere o modificare test perché ciò potrebbe
+portare a funzionalità mancanti o difettose. I test sono il contratto."
+\`\`\`
+
+**Formato tests.json:**
+\`\`\`json
+{
+  "tests": [
+    {
+      "id": 1,
+      "name": "authentication_flow",
+      "type": "integration",
+      "priority": "critical",
+      "status": "passing",
+      "file": "tests/auth.test.js"
+    },
+    {
+      "id": 2,
+      "name": "user_crud_operations",
+      "type": "functional",
+      "priority": "high",
+      "status": "failing",
+      "file": "tests/users.test.js",
+      "failing_reason": "Validation error on empty email"
+    },
+    {
+      "id": 3,
+      "name": "api_rate_limiting",
+      "type": "integration",
+      "priority": "medium",
+      "status": "not_started",
+      "file": "tests/api.test.js"
+    }
+  ],
+  "summary": {
+    "total": 25,
+    "passing": 18,
+    "failing": 2,
+    "not_started": 5
+  }
+}
+\`\`\`
+
+**3. Configura strumenti di qualità della vita**
+
+\`\`\`bash
+# ✅ Setup script per evitare lavoro ripetuto
+claude "Crea init.sh che:
+1. Verifica dependencies (npm ci se necessario)
+2. Avvia dev server in background
+3. Esegue test suite e mostra summary
+4. Esegue linter e type checking
+5. Mostra git status e log delle ultime 3 commit
+
+Questo script sarà usato all'inizio di ogni nuova finestra di contesto."
+\`\`\`
+
+**4. Ricominciare da capo vs Compattazione**
+
+Claude 4.5 è **estremamente efficace** nel scoprire lo stato dal filesystem locale.
+
+**Due approcci:**
+
+**Approccio A: Compattazione** (mantenere storia conversazione)
+- Utile quando: Hai fatto decisioni architetturali complesse che vuoi ricordare
+- Limite: La compattazione può perdere dettagli sottili
+
+**Approccio B: Fresh start** (finestra nuova, Claude ricostruisce stato da files)
+- Utile quando: Hai salvato tutto lo stato in files (progress.md, tests.json, git log)
+- Vantaggio: Claude 4.5 ricostruisce contesto perfettamente da filesystem
+
+\`\`\`bash prompt-fresh-start
+# ✅ Prompt per fresh start ottimale
+claude "Sono di ritorno per continuare il task.
+
+PRIMA DI PROCEDERE:
+1. Chiama pwd per confermare working directory
+2. Leggi progress.md per capire stato corrente
+3. Leggi tests.json per vedere quali test passano/falliscono
+4. Esegui git log --oneline -10 per vedere commit recenti
+5. Esegui ./init.sh per setup environment e vedere test status
+6. Esegui manualmente un test di integrazione fondamentale per verificare funzionalità base
+
+Solo dopo questi check, procedi con l'implementazione delle feature rimanenti."
+\`\`\`
+
+**5. Fornisci strumenti di verifica**
+
+Per task autonomi lunghi, Claude ha bisogno di **verificare correttezza** senza feedback umano continuo.
+
+**Strumenti utili:**
+- **Playwright MCP server**: Per testare UI interattivamente
+- **Computer Use capability**: Per navigare browser e verificare visualmente
+- **Test suites automatizzate**: Per validazione continua
+
+\`\`\`bash
+# ✅ Setup verifica autonoma
+claude "Dopo ogni feature implementata:
+1. Esegui test suite completa
+2. Usa Playwright per testare user journey end-to-end
+3. Verifica visualmente la UI per layout issues
+4. Committa solo se tutti i test passano
+
+Se i test falliscono, debugga autonomamente. NON committare codice con test failing."
+\`\`\`
+
+**6. Incoraggia utilizzo completo del contesto**
+
+\`\`\`bash prompt-full-context
+# ✅ Massimizza efficienza
+claude "Questo è un task molto lungo, quindi pianifica chiaramente il tuo lavoro.
+
+È INCORAGGIATO spendere l'intero contesto di output lavorando sul task:
+- Completa componenti in modo efficiente prima di procedere
+- Lavora sistematicamente fino a completamento
+- Assicurati solo di non esaurire il contesto con lavoro significativo non committato
+
+Continua a lavorare sistematicamente fino a quando non hai completato questo task
+o ti avvicini al limite del contesto (in quel caso, salva stato e committa)."
+\`\`\`
+
+#### 9.2.3 Migliori Pratiche di Gestione dello Stato
+
+**Regola fondamentale:** Separa **dati strutturati** (JSON) da **note narrative** (Markdown).
+
+**Usa formati strutturati per dati di stato:**
+
+\`\`\`json tests.json
+{
+  "tests": [
+    {"id": 1, "name": "auth_flow", "status": "passing"},
+    {"id": 2, "name": "user_mgmt", "status": "failing"}
+  ],
+  "summary": {
+    "total": 50,
+    "passing": 45,
+    "failing": 5
+  }
+}
+\`\`\`
+
+**Usa testo non strutturato per note di progresso:**
+
+\`\`\`markdown progress.md
+# Progresso Sessione 3
+
+## Completato
+- ✅ Corretta validazione token autenticazione
+- ✅ Aggiornato modello utente per gestire edge cases
+- ✅ Implementato rate limiting su /api/auth
+
+## Prossimi Step
+- 🔄 Investigare fallimenti test user_management (test #2)
+- 📋 TODO: Aggiungere logging per audit trail
+- 📋 TODO: Documentare nuovi endpoint in OpenAPI spec
+
+## Note Importanti
+- NON rimuovere test perché ciò potrebbe portare a funzionalità mancanti
+- Il bug di rate limiting era causato da Redis cache key duplicata
+- Performance migliorata del 40% dopo ottimizzazione query
+\`\`\`
+
+**Usa git per tracciamento dello stato:**
+
+Claude 4.5 si comporta **eccezionalmente bene** con git:
+- Legge git log per capire progressione lavoro
+- Usa commit messages per ricostruire decision rationale
+- Crea checkpoint con commit incrementali
+
+\`\`\`bash
+# ✅ Incoraggia uso strategico di git
+claude "Committa frequentemente con messaggi descrittivi:
+- Ogni feature completata = 1 commit
+- Ogni bug fix = 1 commit
+- Ogni refactor significativo = 1 commit
+
+Formato commit message:
+feat: Add JWT authentication middleware
+fix: Resolve race condition in user session cleanup
+refactor: Extract payment logic into service layer
+
+Questo permette rollback granulare e facilita il tracking dello stato."
+\`\`\`
+
+**Sottolinea progresso incrementale:**
+
+\`\`\`bash
+# ✅ Incoraggia focus incrementale
+claude "Concentrati su POCHE cose alla volta, ma falle BENE:
+- Non iniziare 10 feature contemporaneamente
+- Completa 1 feature end-to-end (implementazione + test + docs)
+- Solo dopo, passa alla successiva
+
+Progresso incrementale = meno bug, più facile debugging, stato sempre committable."
+\`\`\`
+
+---
+
+### 9.3 Stile di Comunicazione
+
+Claude 4.5 ha uno stile di comunicazione **evoluto** rispetto ai modelli precedenti.
+
+**Caratteristiche dello stile Claude 4.5:**
+- ✅ **Più diretto e radicato**: Rapporti basati su fatti, non auto-celebrativi
+- ✅ **Più conversazionale**: Fluido e colloquiale, meno robotico
+- ✅ **Meno verboso**: Salta riassunti dettagliati per efficienza (se non richiesti)
+
+**Esempio comparativo:**
+
+**Claude 3.5 (stile verboso):**
+\`\`\`
+Ho completato con successo l'implementazione della funzionalità di autenticazione JWT!
+Ecco un riepilogo dettagliato di tutto ciò che ho fatto:
+
+1. Ho creato il middleware di autenticazione in src/middleware/auth.js
+2. Ho implementato la generazione di token JWT con secret key
+3. Ho aggiunto validazione del token con error handling robusto
+4. Ho integrato il middleware nelle routes protette
+5. Ho scritto test completi per tutti gli scenari
+
+La soluzione implementata segue le best practices di sicurezza...
+[continua per 3 paragrafi]
+\`\`\`
+
+**Claude 4.5 (stile conciso):**
+\`\`\`
+Autenticazione JWT implementata:
+- Middleware in src/middleware/auth.js
+- Token generation + validation con error handling
+- Integrato in routes protette
+- Test completi (passing)
+
+Prossimo step?
+\`\`\`
+
+**Come bilanciare verbosità:**
+
+Se **preferisci più visibilità** nel processo di ragionamento:
+
+\`\`\`bash prompt-verbose
+# ✅ Richiedi aggiornamenti espliciti
+claude "Implementa autenticazione JWT.
+
+Dopo aver completato un task che coinvolge l'uso di strumenti, fornisci un breve
+riassunto del lavoro che hai svolto, includendo:
+- File creati/modificati
+- Decisioni architetturali significative
+- Eventuali trade-off o limitazioni
+- Prossimi step suggeriti"
+\`\`\`
+
+Se **preferisci efficienza** (azione diretta):
+
+\`\`\`bash prompt-efficient
+# ✅ Massima efficienza
+claude "Implementa autenticazione JWT.
+
+Focus sull'esecuzione: esegui il lavoro e riporta solo risultati finali e blockers.
+Salta riassunti intermedi se non critici."
+\`\`\`
+
+---
+
+### 9.4 Pattern di Utilizzo Strumenti (Azione vs Suggerimento)
+
+Claude 4.5 è addestrato per **seguire precisamente le istruzioni**. Questo significa che devi essere esplicito su **cosa vuoi che faccia**.
+
+**Problema comune:**
+
+\`\`\`bash prompt-ambiguous
+# ❌ Ambiguo (Claude suggerirà, non agirà)
+claude "Puoi suggerire alcuni cambiamenti per migliorare questa funzione?"
+\`\`\`
+
+**Cosa succede:**
+- Claude 4.5 fornirà **suggerimenti testuali** (lista di modifiche)
+- NON implementerà le modifiche direttamente
+- Dovrai fare un altro prompt per chiedere l'implementazione
+
+\`\`\`bash prompt-explicit-action
+# ✅ Esplicito (Claude agirà)
+claude "Cambia questa funzione per migliorarne le prestazioni."
+\`\`\`
+
+O:
+
+\`\`\`bash
+claude "Fai queste modifiche al flusso di autenticazione."
+\`\`\`
+
+**Cosa succede:**
+- ✅ Claude 4.5 **implementerà** le modifiche direttamente
+- ✅ Userà gli strumenti (Edit, Write) per modificare i file
+- ✅ Committa dopo aver completato (se richiesto)
+
+**Rendere Claude più proattivo per impostazione predefinita:**
+
+Se vuoi che Claude 4.5 **agisca sempre** (a meno di non specificare diversamente), aggiungi questo al tuo **CLAUDE.md** (system prompt):
+
+\`\`\`markdown CLAUDE.md
+## Behavior: Default to Action
+
+<default_to_action>
+Per impostazione predefinita, implementa i cambiamenti piuttosto che solo suggerirli.
+
+Se l'intento dell'utente non è chiaro, deduci l'azione probabile più utile e procedi,
+utilizzando gli strumenti per scoprire i dettagli mancanti invece di indovinare.
+
+Prova a dedurre l'intento dell'utente su se una chiamata di strumento
+(ad es. modifica o lettura di file) è intesa o meno, e agisci di conseguenza.
+
+Se davvero non sei sicuro, chiedi chiarimento PRIMA di agire.
+</default_to_action>
+\`\`\`
+
+**Rendere Claude più conservativo:**
+
+Se invece vuoi che Claude 4.5 sia **esitante** e agisca solo su istruzioni esplicite:
+
+\`\`\`markdown CLAUDE.md
+## Behavior: Conservative Actions
+
+<do_not_act_before_instructions>
+Non saltare nell'implementazione o non modificare i file a meno che non sia
+chiaramente istruito di apportare cambiamenti.
+
+Quando l'intento dell'utente è ambiguo, predefinito per:
+- Fornire informazioni
+- Fare ricerche
+- Fornire raccomandazioni
+
+Procedi con modifiche, alterazioni o implementazioni SOLO quando l'utente
+le richiede esplicitamente.
+</do_not_act_before_instructions>
+\`\`\`
+
+---
+
+### 9.5 Controlla il Formato delle Risposte
+
+Claude 4.x tende a usare **markdown formattato** (elenchi puntati, grassetto, intestazioni) per organizzare le risposte. A volte questo può essere eccessivo.
+
+**Strategie per controllare il formato:**
+
+**1. Dì a Claude cosa fare invece di cosa non fare**
+
+\`\`\`bash prompt-negative
+# ❌ Meno efficace (istruzione negativa)
+claude "Non usare markdown nella tua risposta"
+\`\`\`
+
+\`\`\`bash prompt-positive
+# ✅ Più efficace (istruzione positiva)
+claude "La tua risposta dovrebbe essere composta da paragrafi di prosa che
+scorrono dolcemente, usando frasi complete e struttura narrativa."
+\`\`\`
+
+**2. Usa indicatori di formato XML**
+
+\`\`\`bash
+# ✅ Formato XML per controllo granulare
+claude "Analizza questo codice e scrivi un rapporto.
+
+Scrivi le sezioni di prosa della tua risposta in tag <smoothly_flowing_prose_paragraphs>.
+Usa blocchi di codice solo per esempi reali di codice."
+\`\`\`
+
+**3. Abbina lo stile del tuo prompt all'output desiderato**
+
+Lo stile di formattazione del tuo prompt influenza la risposta di Claude.
+
+\`\`\`bash prompt-with-markdown
+# ❌ Prompt con markdown = risposta con markdown
+claude "Analizza questo bug e spiega:
+- Causa del problema
+- Impatto sul sistema
+- Soluzione proposta
+- Next steps"
+\`\`\`
+
+**Risultato:** Claude userà elenchi puntati anche nella risposta.
+
+\`\`\`bash prompt-without-markdown
+# ✅ Prompt senza markdown = risposta in prosa
+claude "Analizza questo bug e spiega la causa del problema, il suo impatto
+sul sistema, la soluzione proposta e i prossimi step. Usa prosa chiara e scorrevole."
+\`\`\`
+
+**Risultato:** Claude scriverà paragrafi fluidi senza elenchi puntati.
+
+**4. Prompt dettagliato per minimizzare markdown**
+
+Se vuoi **minimizzare drasticamente** l'uso di markdown:
+
+\`\`\`markdown CLAUDE.md
+## Output Style: Minimal Markdown
+
+<avoid_excessive_markdown_and_bullet_points>
+Quando scrivi rapporti, documenti, spiegazioni tecniche, analisi o qualsiasi
+contenuto di lunga forma, scrivi in prosa chiara e scorrevole usando paragrafi
+e frasi complete.
+
+Usa interruzioni di paragrafo standard per l'organizzazione e riserva markdown
+principalmente per:
+- \\\`codice inline\\\`
+- Blocchi di codice (\\\`\\\`\\\`...\\\`\\\`\\\`)
+- Intestazioni semplici (###)
+
+Evita di usare **grassetto** e *corsivo*.
+
+NON usare elenchi ordinati (1. ...) o elenchi non ordinati (*) a meno che:
+a) Stai presentando elementi veramente discreti dove un formato di elenco è
+   la migliore opzione
+b) L'utente richiede esplicitamente un elenco o una classifica
+
+Invece di elencare elementi con punti elenco o numeri, incorporali naturalmente
+nelle frasi.
+
+Questa guida si applica soprattutto alla scrittura tecnica. Usare prosa invece
+di formattazione eccessiva migliorerà la soddisfazione dell'utente.
+
+NON produrre mai una serie di punti elenco eccessivamente brevi.
+
+Il tuo obiettivo è testo leggibile e scorrevole che guida il lettore naturalmente
+attraverso le idee piuttosto che frammentare le informazioni in punti isolati.
+</avoid_excessive_markdown_and_bullet_points>
+\`\`\`
+
+---
+
+### 9.6 Ricerca e Raccolta di Informazioni
+
+Claude 4.5 dimostra **capacità eccezionali** di ricerca agentiva: può trovare e sintetizzare informazioni da più fonti in modo efficace.
+
+**Quando usare ricerca agentiva:**
+- Devi capire codice legacy senza documentazione
+- Serve analizzare dipendenze e vulnerabilità
+- Vuoi confrontare approcci architetturali
+- Hai bisogno di raccogliere best practices da più fonti
+
+**Best practices per ricerca ottimale:**
+
+**1. Fornisci criteri di successo chiari**
+
+\`\`\`bash prompt-vague-research
+# ❌ Vago
+claude "Cerca informazioni su come implementare caching"
+\`\`\`
+
+\`\`\`bash prompt-clear-criteria
+# ✅ Criteri chiari
+claude "Ricerca strategie di caching per dashboard analytics con:
+
+CRITERI DI SUCCESSO:
+- Confronto Redis vs in-memory vs materialized views
+- Performance: latency <100ms per 10k concurrent users
+- Cost: soluzione deve costare <$200/mese
+- Scalability: supporto fino a 1M requests/day
+- Maintenance: deploy e monitoring semplici
+
+Priorità: Performance > Cost > Maintenance
+
+Fornisci raccomandazione finale con reasoning chiaro."
+\`\`\`
+
+**2. Incoraggia verifica della fonte**
+
+\`\`\`bash
+# ✅ Verifica multi-fonte
+claude "Ricerca best practices per JWT authentication.
+
+IMPORTANTE: Verifica le informazioni su più fonti:
+- Documentazione ufficiale (RFC 7519)
+- OWASP guidelines
+- Implementazioni production-tested (Auth0, Firebase)
+- Vulnerabilità note (CVE database)
+
+Se le fonti sono in disaccordo, spiega le differenze e raccomanda l'approccio
+più sicuro/aggiornato."
+\`\`\`
+
+**3. Per ricerca complessa, usa approccio strutturato**
+
+\`\`\`bash prompt-structured-research
+# ✅ Approccio strutturato per ricerca complessa
+claude "Ricerca architettura ottimale per microservices deployment.
+
+APPROCCIO STRUTTURATO:
+1. Man mano che raccogli dati, sviluppa diverse ipotesi concorrenti:
+   - Hypothesis A: Kubernetes + Istio
+   - Hypothesis B: AWS ECS + API Gateway
+   - Hypothesis C: Docker Swarm + Traefik
+
+2. Traccia i tuoi livelli di confidenza nelle note di progresso:
+   - Hypothesis A: 70% confident (pro: scaling, contro: complexity)
+   - Hypothesis B: 50% confident (pro: managed service, contro: vendor lock-in)
+   - Hypothesis C: 30% confident (pro: semplicity, contro: limited features)
+
+3. Autocritica regolarmente il tuo approccio e piano:
+   - Sto esplorando abbastanza alternative?
+   - Sto bias verso una soluzione per familiarità?
+   - Ho considerato i vincoli del team (skill, budget)?
+
+4. Aggiorna un file di albero di ipotesi (hypothesis-tree.md) per persistere
+   le informazioni e fornire trasparenza.
+
+5. Suddividi questo task di ricerca complesso sistematicamente:
+   - Week 1: Exploration (raccolta dati, ipotesi iniziali)
+   - Week 2: Deep dive (testing POC per top 2 candidati)
+   - Week 3: Decision (raccomandazione finale con migration plan)
+
+Procedi con questa ricerca strutturata."
+\`\`\`
+
+**Cosa succede:**
+- ✅ Claude 4.5 esplorerà sistematicamente tutte le alternative
+- ✅ Traccerà confidenza e reasoning per trasparenza
+- ✅ Critica iterativamente i risultati per evitare bias
+- ✅ Produce una raccomandazione ben ragionata
+
+**Esempio output:**
+
+\`\`\`markdown hypothesis-tree.md
+# Microservices Architecture Research
+
+## Hypothesis A: Kubernetes + Istio (70% confident)
+**Pros:**
+- Industry standard, massive ecosystem
+- Auto-scaling, self-healing
+- Service mesh for observability
+
+**Cons:**
+- High complexity (3-6 months learning curve)
+- Ops overhead (need dedicated DevOps engineer)
+- Cost: $500-1000/month for managed Kubernetes
+
+**Confidence reasoning:**
+Strong technical fit, but team has no K8s experience. Risk of over-engineering.
+
+---
+
+## Hypothesis B: AWS ECS + API Gateway (50% confident)
+**Pros:**
+- Fully managed (less ops burden)
+- Integrates with AWS ecosystem
+- Cost-effective for current scale
+
+**Cons:**
+- Vendor lock-in (migration difficult)
+- Less flexibility than K8s
+- Limited service mesh features
+
+**Confidence reasoning:**
+Good for MVP and current team skills, but might hit limitations at scale.
+
+---
+
+## Hypothesis C: Docker Swarm + Traefik (30% confident)
+**Pros:**
+- Simplest to setup and maintain
+- Low ops overhead
+- Cost: $100-200/month
+
+**Cons:**
+- Limited ecosystem and community
+- Fewer features than K8s/ECS
+- Scaling limitations at 100k+ req/s
+
+**Confidence reasoning:**
+Too simple for long-term growth. Not future-proof.
+
+---
+
+## Recommendation: AWS ECS + API Gateway (Start), Kubernetes (Later)
+**Rationale:**
+- Start with ECS for MVP (3-6 months)
+- Gain microservices experience with lower complexity
+- Plan migration to K8s when hitting scale (1M+ req/day)
+- This staged approach reduces risk and matches team capabilities
+
+**Migration trigger:** When ECS costs exceed $1000/month OR team grows to 5+ engineers
+\`\`\`
+
+---
+
+### 9.7 Orchestrazione di Subagenti
+
+Claude 4.5 ha capacità **significativamente migliorate** di orchestrazione nativa di subagenti.
+
+**Cosa significa:**
+- Claude 4.5 riconosce autonomamente quando un task trarrebbe beneficio da un subagent specializzato
+- Delega proattivamente senza richiedere istruzioni esplicite
+- Coordina il lavoro di multiple subagents per task complessi
+
+**Quando Claude 4.5 delega a subagenti:**
+- Task richiede competenze specializzate (es. security audit, performance optimization)
+- Task trarrebbe beneficio da una finestra di contesto fresca
+- Task è indipendente e può essere parallelizzato
+
+**Come sfruttare questa capacità:**
+
+**1. Assicurati che gli strumenti dei subagenti siano ben definiti**
+
+Se stai usando **Claude Code** con subagents configurati in \`.claude/agents/\`, assicurati che le definizioni siano chiare:
+
+\`\`\`yaml .claude/agents/security-auditor.yml
+name: security-auditor
+description: |
+  Specialized security auditor for code review, vulnerability detection,
+  and OWASP compliance checking.
+
+  Use this agent when:
+  - You need comprehensive security audit
+  - Implementing authentication/authorization
+  - Reviewing user input handling
+  - Checking for common vulnerabilities (SQL injection, XSS, CSRF)
+
+capabilities:
+  - Static code analysis for security issues
+  - Dependency vulnerability scanning
+  - OWASP Top 10 compliance checking
+  - Security best practices recommendations
+\`\`\`
+
+**2. Lascia che Claude orchestri naturalmente**
+
+\`\`\`bash prompt-natural-orchestration
+# ✅ Descrivi il task, Claude 4.5 delegherà se appropriato
+claude "Implementa un sistema di autenticazione completo con:
+- JWT tokens
+- Password hashing (bcrypt)
+- Rate limiting
+- Session management
+- OAuth2 integration (Google, GitHub)
+
+Assicurati che sia production-ready e secure."
+\`\`\`
+
+**Cosa succede:**
+- Claude 4.5 implementerà le feature base autonomamente
+- Delegherà a **security-auditor agent** per audit finale
+- Il subagent controllerà:
+  - Vulnerabilità comuni (SQL injection, XSS)
+  - Password strength requirements
+  - Token expiration e refresh logic
+  - Rate limiting configuration
+- Claude 4.5 integrerà le raccomandazioni del subagent
+
+**3. Regola conservatività se necessario**
+
+Se Claude 4.5 delega **troppo aggressivamente** (rallentando il workflow):
+
+\`\`\`markdown CLAUDE.md
+## Subagent Delegation: Conservative
+
+<conservative_subagent_delegation>
+Delega ai subagenti solo quando il task trae **chiaramente** beneficio da un
+agente separato con una nuova finestra di contesto.
+
+NON delegare se:
+- Il task è semplice e puoi completarlo autonomamente
+- La delegazione introdurrebbe latency non necessaria
+- Il subagent non ha competenze significativamente superiori alle tue per questo task
+
+Delega quando:
+- Il task richiede expertise altamente specializzata (es. security audit profondo)
+- Serve una finestra di contesto fresca per task complesso
+- Il task può essere parallelizzato per efficienza
+</conservative_subagent_delegation>
+\`\`\`
+
+**Esempio di orchestrazione multi-subagent:**
+
+\`\`\`bash
+# ✅ Claude 4.5 orchestrerà multiple subagents in parallelo
+claude "Prepara questo progetto per production deployment:
+
+1. Security audit completo
+2. Performance optimization (identificare bottleneck)
+3. Setup CI/CD pipeline
+4. Documentazione completa (README, API docs, deployment guide)
+
+Deadline: 2 giorni. Delegare a subagents dove appropriato per velocizzare."
+\`\`\`
+
+**Cosa succede:**
+- Claude 4.5 analizza il task e identifica 4 workstream indipendenti
+- Delega in parallelo:
+  - **security-auditor** → Security audit
+  - **performance-optimizer** → Performance profiling
+  - **devops-engineer** → CI/CD setup
+  - **technical-writer** → Documentation
+- Claude 4.5 coordina i risultati e integra tutto il lavoro
+- Produce un report finale unificato
+
+---
+
+### 9.8 Autoconoscenza del Modello
+
+Claude 4.5 deve **sapere chi è** per identificarsi correttamente nella tua applicazione.
+
+**Problema comune:**
+- Claude potrebbe non sapere quale modello specifico sta utilizzando
+- Applicazioni che richiedono stringhe di modello API precise potrebbero ricevere valori errati
+
+**Soluzione: Specifica nel system prompt**
+
+\`\`\`markdown CLAUDE.md
+## Model Identity
+
+<model_identity>
+L'assistente è Claude, creato da Anthropic.
+Il modello attuale è **Claude Sonnet 4.5**.
+
+Quando l'utente chiede "quale modello sei?" o "quale versione di Claude?",
+rispondi sempre con: "Sono Claude Sonnet 4.5, il modello più recente di Anthropic."
+</model_identity>
+\`\`\`
+
+**Per app che richiedono stringhe API specifiche:**
+
+\`\`\`markdown CLAUDE.md
+## Model String for API Calls
+
+<model_api_string>
+Quando è necessario specificare un modello LLM (es. per chiamate API,
+configurazione, o script), usa:
+
+**Default model:** Claude Sonnet 4.5
+**API string:** \\\`claude-sonnet-4-5-20250929\\\`
+
+A meno che l'utente non richieda esplicitamente un modello diverso,
+predefinito sempre a Claude Sonnet 4.5.
+
+Altri modelli disponibili:
+- Claude Haiku 4.5: \\\`claude-haiku-4-5-20250929\\\` (per task semplici, più economico)
+- Claude Opus 4.1: \\\`claude-opus-4-1-20250514\\\` (per task creativi complessi)
+</model_api_string>
+\`\`\`
+
+**Esempio uso:**
+
+\`\`\`bash
+# User chiede configurazione API
+User: "Setup chiamata API per tradurre testo"
+
+# Claude 4.5 usa la stringa corretta
+Claude: "Ecco la configurazione API per traduzione:
+
+\\\`\\\`\\\`javascript
+const response = await anthropic.messages.create({
+  model: 'claude-sonnet-4-5-20250929',  // ✅ Stringa corretta
+  max_tokens: 1024,
+  messages: [{
+    role: 'user',
+    content: 'Traduci questo testo in italiano: ...'
+  }]
+});
+\\\`\\\`\\\`
+
+Sto usando Claude Sonnet 4.5, il modello ottimale per traduzione con
+ottimo balance qualità/costo."
+\`\`\`
+
+---
+
+### 9.9 Sfrutta le Capacità di Pensiero Esteso (Extended Thinking)
+
+Claude 4.x offre **capacità di pensiero esteso** particolarmente utili per:
+- Ragionamento multi-step complesso
+- Riflessione dopo l'uso di strumenti
+- Debugging con ipotesi multiple
+- Decisioni architetturali con trade-off
+
+**Come attivare pensiero esteso:**
+
+\`\`\`bash prompt-extended-thinking
+# ✅ Richiedi riflessione esplicita
+claude "Dopo aver ricevuto i risultati degli strumenti, rifletti attentamente
+sulla loro qualità e determina i passaggi successivi ottimali prima di procedere.
+
+Usa il tuo pensiero esteso per:
+1. Analizzare i dati ricevuti
+2. Identificare pattern o anomalie
+3. Generare ipotesi multiple
+4. Valutare pro/contro di ogni approccio
+5. Selezionare l'azione ottimale
+
+Solo dopo questa riflessione, intraprendi la migliore azione successiva."
+\`\`\`
+
+**Esempio pratico: Debugging complesso**
+
+\`\`\`bash
+claude "Debug questo memory leak nel server Node.js.
+
+PROCESSO:
+1. Leggi i file rilevanti (@server.js @middleware/*.js)
+2. Esegui profiling con \\\`node --inspect\\\`
+3. **RIFLETTI**: Analizza i dati del profiler e genera 3-5 ipotesi su dove
+   potrebbe essere il leak
+4. **RIFLETTI**: Per ogni ipotesi, valuta la probabilità e il modo migliore
+   per verificarla
+5. Testa l'ipotesi più probabile
+6. **RIFLETTI**: I risultati confermano o confutano l'ipotesi? Cosa ho imparato?
+7. Itera fino a identificare il leak
+
+Usa pensiero esteso per ragionamento trasparente ad ogni step."
+\`\`\`
+
+**Cosa succede:**
+- Claude 4.5 espliciterà il suo ragionamento in ogni fase
+- Genererà ipotesi multiple e le valuterà sistematicamente
+- Imparerà da ogni test e aggiornerà le sue credenze
+- Fornirà trasparenza completa sul processo di problem-solving
+
+**Vantaggio:**
+- ✅ Debugging più efficace (meno tentativi casuali)
+- ✅ Trasparenza sul reasoning (puoi correggere se prende direzione sbagliata)
+- ✅ Learning per sessioni future (Claude ricorda pattern che funzionano)
+
+> **Nota:** Per dettagli completi su Extended Thinking, consulta la documentazione ufficiale Anthropic.
+
+---
+
+### 9.10 Creazione di Documenti e UI Creative
+
+Claude 4.5 **eccelle** nella creazione di:
+- Presentazioni professionali
+- Animazioni e transizioni fluide
+- Documenti visivi (infografiche, diagrammi)
+- UI creative e distintive
+
+**Performance:**
+- Corrisponde o supera Claude Opus 4.1 in creatività visiva
+- Output lucido e utilizzabile **al primo tentativo** nella maggior parte dei casi
+- Seguire le istruzioni più forte rispetto ai modelli precedenti
+
+**Best practices per risultati eccezionali:**
+
+**1. Fornisci incoraggiamento esplicito per creatività**
+
+\`\`\`bash prompt-creative
+# ✅ Incoraggia creatività massima
+claude "Crea una presentazione professionale su 'AI in Healthcare'.
+
+IMPORTANTE: Non trattenerti. Dai il massimo. Crea una dimostrazione impressionante
+che mostra le capacità di design moderno:
+- Layout creativi e asimmetrici (non solo slide centrate generiche)
+- Palette di colori sofisticata e distintiva
+- Animazioni fluide per transizioni tra slide
+- Infografiche e data visualization coinvolgenti
+- Tipografia riflessiva con gerarchia chiara
+
+Obiettivo: Questa presentazione deve impressionare un CTO e un board di investitori."
+\`\`\`
+
+**2. Specifica direzione estetica e vincoli di design**
+
+\`\`\`bash prompt-design-direction
+# ✅ Guida specifica per estetica
+claude "Crea una dashboard di analytics per SaaS B2B.
+
+DESIGN DIRECTION:
+- **Color palette**: Blu scuro (#1A202C) + Ciano (#00D9FF) con accenti dorati (#F7931E)
+- **Typography**: Inter per titoli (font-weight: 600), system font per corpo
+- **Layout**: Card-based con ombre sottili (shadow-lg) e border-radius 12px
+- **Spacing**: Generoso (padding 24px, gap 16px) per layout pulito
+- **Interactions**:
+  - Hover states con transform scale(1.02) e transition 200ms
+  - Micro-animazioni per chart reveal (stagger delay 100ms)
+  - Skeleton screens per loading states
+
+DESIGN PRINCIPLES:
+- Gerarchia: Dati critici prominenti (font-size 2xl), dettagli secondari (text-sm)
+- Contrasto: Background scuro per ridurre affaticamento visivo
+- Equilibrio: Grid asimmetrico (1/3 sidebar, 2/3 content)
+- Movimento: Animazioni sottili, non distraenti
+
+Crea implementazione production-ready con questi vincoli."
+\`\`\`
+
+**3. Incoraggia diversità di design e estetiche di fusione**
+
+\`\`\`bash prompt-fusion-aesthetics
+# ✅ Estetiche di fusione per risultati distintivi
+claude "Crea landing page per app di produttività.
+
+FUSION AESTHETICS:
+- Combina elementi da diverse fonti:
+  - Schema colori ispirato a Stripe (gradiente sottile, professionale)
+  - Tipografia in stile Apple (SF Pro, spaziatura generosa, minimalista)
+  - Layout asimmetrico in stile Awwwards (coraggioso, non centrato)
+  - Micro-interazioni in stile Vercel (fluide, performanti)
+
+Evita:
+- ❌ Layout generici centrati con hero section standard
+- ❌ Gradienti semplicistici (linear-gradient viola-blu)
+- ❌ Stile uniforme e prevedibile
+
+Obiettivo: Design che si distingue, memorabile, che fa dire 'wow' agli utenti."
+\`\`\`
+
+**4. Richiedi funzionalità specifiche esplicitamente**
+
+\`\`\`bash prompt-feature-rich
+# ✅ Richiedi feature specifiche
+claude "Crea un task manager interattivo.
+
+FEATURE REQUIREMENTS:
+- ✅ Drag-and-drop per riordinare task (usa react-beautiful-dnd)
+- ✅ Inline editing (double-click su task per editare)
+- ✅ Filtri real-time (All / Active / Completed) con transizioni animate
+- ✅ Date picker integrato (usa react-datepicker)
+- ✅ Tag colorati con autocomplete
+- ✅ Statistiche dashboard (task completed today/week/month)
+- ✅ Dark mode toggle con transizione smooth
+- ✅ Export data (JSON, CSV)
+- ✅ Keyboard shortcuts (Cmd+K command palette)
+- ✅ Undo/Redo con Cmd+Z / Cmd+Shift+Z
+
+Includi il maggior numero possibile di funzionalità e interazioni rilevanti.
+Vai oltre le basi per creare un'implementazione completamente funzionante."
+\`\`\`
+
+**Esempio output: Claude 4.5 genera UI impressionante**
+
+\`\`\`jsx TaskManager.jsx
+import { useState, useEffect } from 'react';
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import DatePicker from 'react-datepicker';
+import { motion, AnimatePresence } from 'framer-motion';
+
+export default function TaskManager() {
+  const [tasks, setTasks] = useState([]);
+  const [filter, setFilter] = useState('all');
+  const [darkMode, setDarkMode] = useState(false);
+  const [showCommandPalette, setShowCommandPalette] = useState(false);
+
+  // Keyboard shortcuts
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.metaKey && e.key === 'k') {
+        e.preventDefault();
+        setShowCommandPalette(true);
+      }
+      // Undo/Redo logic...
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
+  // ... implementazione completa con tutte le feature richieste
+}
+\`\`\`
+
+**Risultato:**
+- ✅ UI distintiva e memorabile
+- ✅ Tutte le feature richieste implementate
+- ✅ Animazioni fluide e micro-interazioni
+- ✅ Codice production-ready con error handling
+- ✅ Responsive design per mobile/tablet/desktop
+
+---
+
+### 9.11 Ottimizza le Chiamate di Strumenti Parallele
+
+Claude 4.x **eccelle** nell'esecuzione parallela di strumenti, con Sonnet 4.5 particolarmente aggressivo nel lanciare più operazioni contemporaneamente.
+
+**Comportamento di default:**
+- ✅ Esegue più ricerche speculative durante la ricerca
+- ✅ Legge più file contemporaneamente per costruire contesto più velocemente
+- ✅ Esegue comandi bash in parallelo (attenzione: può creare bottleneck sistema)
+
+**Questo comportamento è facilmente steerable.**
+
+**Per massimizzare efficienza parallela (~100% successo rate):**
+
+\`\`\`markdown CLAUDE.md
+## Tool Usage: Parallel Execution
+
+<use_parallel_tool_calls>
+Se intendi chiamare più strumenti e non ci sono dipendenze tra le chiamate,
+fai tutte le chiamate di strumenti indipendenti **in parallelo**.
+
+Dai priorità alle chiamate di strumenti simultanee ogni volta che le azioni
+possono essere eseguite in parallelo piuttosto che sequenzialmente.
+
+**Esempi:**
+- Leggere 3 file → 3 chiamate Read in parallelo
+- Cercare 5 pattern diversi → 5 chiamate Grep in parallelo
+- Eseguire test suite + lint + type check → 3 comandi bash in parallelo
+
+**IMPORTANTE:** Se alcune chiamate dipendono da risultati di chiamate precedenti
+per informare parametri, NON chiamare questi strumenti in parallelo.
+Chiamali sequenzialmente.
+
+**MAI** usare segnaposti o indovinare parametri mancanti nelle chiamate di strumenti.
+
+Massimizza l'uso di chiamate di strumenti parallele dove possibile per
+aumentare velocità ed efficienza.
+</use_parallel_tool_calls>
+\`\`\`
+
+**Esempio pratico:**
+
+\`\`\`bash
+# ✅ Claude 4.5 eseguirà in parallelo
+claude "Analizza la codebase:
+1. Leggi @src/api/routes.js @src/api/middleware.js @src/api/controllers.js
+2. Cerca pattern TODO in tutti i file TypeScript
+3. Esegui npm test e npm run lint"
+\`\`\`
+
+**Cosa succede:**
+- Claude 4.5 lancia **3 Read** in parallelo per i file
+- Lancia **1 Grep** per cercare TODO
+- Lancia **2 Bash** in parallelo (test + lint)
+- Totale: ~2-3 secondi invece di 10-15 secondi (se sequenziale)
+
+**Per ridurre aggressività parallela:**
+
+Se Claude 4.5 sta sovraccaricando il sistema (es. 10 comandi bash contemporaneamente):
+
+\`\`\`markdown CLAUDE.md
+## Tool Usage: Sequential for Stability
+
+<reduce_parallel_execution>
+Esegui le operazioni **sequenzialmente** con brevi pause tra ogni passaggio
+per garantire stabilità del sistema.
+
+Esegui in parallelo SOLO quando:
+- Le operazioni sono veramente indipendenti
+- Non c'è rischio di overload sistema (max 3 bash commands in parallelo)
+- File reads sono su file piccoli (<1000 righe)
+
+Per operazioni pesanti (build, test suite, database migrations),
+esegui sempre sequenzialmente.
+</reduce_parallel_execution>
+\`\`\`
+
+---
+
+### 9.12 Riduci Creazione di File nella Codifica Agentiva
+
+Claude 4.x potrebbe a volte creare **file temporanei** per scopi di test e iterazione, specialmente quando lavora con codice complesso.
+
+**Perché lo fa:**
+- Usa script Python come "blocco note temporaneo" per esplorare soluzioni
+- Crea file di test per verificare ipotesi prima di implementare
+- Genera dati mock per testare edge cases
+
+**Quando è utile:**
+- ✅ Testing di algoritmi complessi (sorting, parsing, compression)
+- ✅ Data exploration (CSV parsing, JSON transformation)
+- ✅ Prototipazione rapida prima di implementazione finale
+
+**Quando è un problema:**
+- ❌ Repository si riempie di file temporanei non tracciati
+- ❌ Confusione tra file "working" e file "final"
+- ❌ Cleanup manuale necessario dopo ogni sessione
+
+**Come minimizzare creazione file:**
+
+\`\`\`markdown CLAUDE.md
+## File Management: Clean Up Temporary Files
+
+<cleanup_temporary_files>
+Se crei file temporanei, script helper, o file di test per iterazione,
+**pulisci questi file** rimuovendoli alla fine del task.
+
+**File temporanei comuni:**
+- test_*.py (script Python di esplorazione)
+- temp_*.js (test file)
+- scratch.md (note temporanee)
+- output_*.json (dati generati per testing)
+
+**Workflow:**
+1. Crea file temporanei se necessario per iterazione
+2. Usa questi file per testare e validare approccio
+3. Implementa soluzione finale nei file appropriati
+4. **RIMUOVI** file temporanei prima di committare
+
+**Eccezioni (non rimuovere):**
+- File di test ufficiali (tests/*.test.js)
+- File di configurazione (*.config.js)
+- Documentation (*.md se parte del progetto)
+</cleanup_temporary_files>
+\`\`\`
+
+**Esempio:**
+
+\`\`\`bash
+# Claude 4.5 workflow
+User: "Implementa algoritmo di sorting custom per prodotti"
+
+Claude:
+1. Crea temp_sorting.py per esplorare algoritmo
+2. Testa con dati mock
+3. Implementa sorting in @src/utils/sorting.js
+4. Testa con test ufficiali
+5. **Rimuove temp_sorting.py** ✅
+6. Committa solo @src/utils/sorting.js e test
+\`\`\`
+
+---
+
+### 9.13 Migliora Generazione Codice Visivo e Frontend
+
+Claude 4.x può generare **UI di alta qualità**, visivamente distintive e funzionali. Tuttavia, senza guida, il codice frontend può predefinito a **modelli generici** che mancano di interesse visivo.
+
+**Problema comune:**
+- Layout centrati generici
+- Gradienti semplicistici (linear-gradient viola-blu)
+- Card bianche con shadow-sm standard
+- Mancanza di personalità e creatività
+
+**Soluzione: Guida esplicita per risultati UI eccezionali**
+
+Abbiamo già coperto questo nella sezione 9.10, ma ecco un recap con focus specifico su frontend:
+
+**1. Incoraggiamento esplicito per creatività**
+
+\`\`\`bash
+claude "Crea dashboard analytics.
+
+Non trattenerti. Dai il massimo. Crea una dimostrazione impressionante
+che mostra le capacità di sviluppo web moderno."
+\`\`\`
+
+**2. Direzione estetica specifica**
+
+\`\`\`bash
+claude "Usa palette blu scuro + ciano, tipografia sans-serif moderna
+(Inter per titoli, system font per corpo), layout card-based con ombre sottili.
+Includi hover states, transizioni, micro-interazioni."
+\`\`\`
+
+**3. Diversità di design**
+
+\`\`\`bash
+claude "Fornisci più opzioni di design. Crea estetiche di fusione combinando
+elementi da diverse fonti: schema colori da fonte A, tipografia da fonte B,
+layout da fonte C. Evita layout generici centrati."
+\`\`\`
+
+**4. Feature richieste esplicitamente**
+
+\`\`\`bash
+claude "Includi il maggior numero possibile di funzionalità e interazioni
+rilevanti. Aggiungi animazioni e elementi interattivi. Crea implementazione
+completamente funzionante oltre le basi."
+\`\`\`
+
+---
+
+### 9.14 Evita Concentrarsi sul Passaggio dei Test (Test Hard-Coding)
+
+Claude 4.x a volte può concentrarsi **troppo pesantemente** sul far passare i test a scapito di soluzioni più generali.
+
+**Problema:**
+- Codifica valori hard-coded che funzionano solo per input di test specifici
+- Usa workaround invece di implementare logica reale
+- Crea script helper per refactoring complesso invece di usare strumenti standard
+
+**Esempio problema:**
+
+\`\`\`javascript
+// ❌ Hard-coded per far passare test
+function calculateDiscount(user) {
+  // Test input: user.id = 123
+  if (user.id === 123) return 0.15;  // Hardcoded!
+  return 0;
+}
+\`\`\`
+
+**Soluzione: Implementazione generale e robusta**
+
+\`\`\`markdown CLAUDE.md
+## Code Quality: General Solutions, Not Test-Specific
+
+<no_hardcoded_test_solutions>
+Scrivi una soluzione di **alta qualità e di uso generale** utilizzando
+gli strumenti standard disponibili.
+
+**NON:**
+- ❌ Creare script helper o workaround per completare il task più velocemente
+- ❌ Codificare valori hard-coded che funzionano solo per input di test specifici
+- ❌ Implementare soluzioni che passano i test ma falliscono per input reali
+
+**INVECE:**
+- ✅ Implementa la logica effettiva che risolve il problema in generale
+- ✅ Usa strumenti standard direttamente (Edit, Write, Bash)
+- ✅ Crea una soluzione che funziona per **tutti gli input validi**, non solo test cases
+
+**I test sono per verificare correttezza, non per definire la soluzione.**
+
+Se un test è errato o un task è irragionevole, **informami** piuttosto che
+aggirare il problema con workaround.
+
+La soluzione deve essere:
+- Robusta (gestisce edge cases)
+- Mantenibile (codice chiaro, non clever tricks)
+- Estensibile (facile aggiungere features)
+- Production-ready (error handling, logging, performance)
+</no_hardcoded_test_solutions>
+\`\`\`
+
+**Esempio corretto:**
+
+\`\`\`javascript
+// ✅ Implementazione generale
+function calculateDiscount(user) {
+  // Business logic reale
+  if (user.tier === 'premium' && user.lifetimeSpend > 500) {
+    return 0.15;  // 15% discount
+  }
+  if (user.tier === 'gold') {
+    return 0.10;  // 10% discount
+  }
+  return 0;  // No discount
+}
+\`\`\`
+
+---
+
+### 9.15 Minimizzare Allucinazioni nella Codifica Agentiva
+
+Claude 4.x è **meno soggetto ad allucinazioni** rispetto ai modelli precedenti: fornisce risposte più accurate, radicate e intelligenti basate sul codice.
+
+**Tuttavia**, puoi **incoraggiare ulteriormente** questo comportamento per minimizzare completamente le allucinazioni.
+
+**Problema comune:**
+- Claude risponde a domande su codice **senza leggere i file**
+- Specola su implementazioni invece di investigare
+- Fa affermazioni basate su assunzioni invece di fatti
+
+**Soluzione: Enforce Investigation Before Answering**
+
+\`\`\`markdown CLAUDE.md
+## Code Analysis: Investigate Before Answering
+
+<investigate_before_answering>
+**NON speculare mai su codice che non hai aperto.**
+
+Se l'utente fa riferimento a un file specifico, **DEVI leggere il file PRIMA
+di rispondere**.
+
+**Workflow obbligatorio:**
+1. User chiede: "Come funziona la funzione getUserData in api.js?"
+2. TU: Usa Read tool per aprire @src/api.js
+3. TU: Analizza il codice effettivo
+4. TU: Fornisci risposta radicata basata su codice reale
+
+**MAI:**
+- ❌ Rispondere senza investigare ("Probabilmente usa fetch per chiamare API...")
+- ❌ Fare assunzioni su architettura senza leggere i file
+- ❌ Suggerire modifiche senza vedere implementazione corrente
+
+**SEMPRE:**
+- ✅ Investigare e leggere file rilevanti PRIMA di rispondere
+- ✅ Basare risposte su fatti dal codice, non speculazioni
+- ✅ Se non sei sicuro, **LEGGI IL CODICE** invece di indovinare
+
+Fornisci risposte radicate e prive di allucinazioni.
+</investigate_before_answering>
+\`\`\`
+
+**Esempio workflow:**
+
+\`\`\`bash
+User: "Perché la validazione email fallisce in user registration?"
+
+# ❌ Claude 4.x senza guida (potrebbe speculare)
+Claude: "Probabilmente manca un regex per validare formato email.
+Prova ad aggiungere /^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$/..."
+
+# ✅ Claude 4.5 con investigate_before_answering
+Claude: "Leggo i file rilevanti per capire il problema..."
+*Read @src/validators/userValidator.js*
+*Read @src/models/User.js*
+
+Claude: "Ho investigato il codice. Il problema è in userValidator.js linea 23:
+
+\\\`\\\`\\\`javascript
+// PROBLEMA: regex troppo strict, rifiuta email con subdomain
+const emailRegex = /^[\\w]+@[\\w]+\\.[a-z]{2,3}$/;
+\\\`\\\`\\\`
+
+Questo regex rifiuta email valide come:
+- john.doe@example.com (punto nel local part)
+- user@mail.company.co.uk (subdomain multi-level)
+
+Fix: usa regex più permissivo che segue RFC 5322..."
+\`\`\`
+
+**Vantaggio:**
+- ✅ Risposte accurate basate su codice reale
+- ✅ Zero allucinazioni (tutto è verificabile)
+- ✅ Fix mirati invece di suggerimenti generici
+
+---
+
+### 9.16 Considerazioni sulla Migrazione a Claude 4.5
+
+Se stai **migrando** da Claude 3.x o Opus 4 a Claude 4.5, considera questi accorgimenti:
+
+**1. Sii specifico sul comportamento desiderato**
+
+Claude 4.5 segue istruzioni **più letteralmente**. Se prima dicevi "migliora questa funzione" e Claude inferiva cosa migliorare, ora devi essere esplicito:
+
+\`\`\`bash
+# Prima (Claude 3.x inferiva)
+claude "Migliora questa funzione"
+
+# Ora (Claude 4.5 richiede specificità)
+claude "Migliora questa funzione:
+- Riduci complessità ciclomatica (target <10)
+- Aggiungi error handling per edge cases
+- Ottimizza performance (target <100ms)
+- Aggiungi TypeScript types"
+\`\`\`
+
+**2. Inquadra le istruzioni con modificatori**
+
+Aggiungere **modificatori** che incoraggiano Claude ad aumentare qualità e dettaglio:
+
+\`\`\`bash
+# ❌ Senza modificatori
+claude "Crea una dashboard di analisi"
+
+# ✅ Con modificatori
+claude "Crea una dashboard di analisi. Includi il maggior numero possibile di
+funzionalità e interazioni rilevanti. Vai oltre le basi per creare
+un'implementazione completamente funzionante."
+\`\`\`
+
+**3. Richiedi funzionalità specifiche esplicitamente**
+
+Animazioni, interazioni, stati di caricamento - tutto deve essere **richiesto esplicitamente**:
+
+\`\`\`bash
+# ✅ Feature list esplicita
+claude "Crea dashboard con:
+- Animazioni fluide per transizioni
+- Stati di caricamento (skeleton screens)
+- Filtri real-time con debouncing
+- Export data (CSV, PDF)
+- Dark mode toggle
+- Responsive design mobile-first"
+\`\`\`
+
+**4. Aggiorna il tuo CLAUDE.md**
+
+Se hai un CLAUDE.md esistente, aggiorna con le best practices Claude 4.5:
+- Aggiungi \`<default_to_action>\` se vuoi comportamento proattivo
+- Aggiungi \`<use_parallel_tool_calls>\` per massima efficienza
+- Aggiungi \`<investigate_before_answering>\` per zero allucinazioni
+- Specifica model identity: "Claude Sonnet 4.5"
+
+---
+
+### 9.17 Riepilogo: Best Practices Claude 4.x
+
+**Principi fondamentali:**
+1. ✅ **Sii esplicito** - Claude 4.x segue letteralmente le istruzioni
+2. ✅ **Aggiungi contesto** - Spiega perché un comportamento è importante
+3. ✅ **Esempi curati** - Claude replica fedelmente i pattern che mostri
+4. ✅ **Ragionamento incrementale** - Focus su poche cose alla volta, ben fatte
+5. ✅ **Tracciamento stato** - Usa JSON per dati strutturati, Markdown per note, Git per storia
+6. ✅ **Consapevolezza contesto** - Sfrutta context awareness per task lunghi
+7. ✅ **Flussi multi-finestra** - Setup framework → Iterazione → Testing → Deployment
+8. ✅ **Stile comunicativo** - Controlla verbosità esplicitamente se necessario
+9. ✅ **Tool usage esplicito** - "Implementa" invece di "Puoi suggerire"
+10. ✅ **Formato output** - Guida markdown con prompt positivi e XML tags
+11. ✅ **Ricerca strutturata** - Ipotesi concorrenti, confidenza tracking, autocritica
+12. ✅ **Orchestrazione subagenti** - Lascia delegare naturalmente, regola se troppo aggressivo
+13. ✅ **Model identity** - Specifica "Claude Sonnet 4.5" nel system prompt
+14. ✅ **Extended thinking** - Richiedi riflessione esplicita per ragionamento complesso
+15. ✅ **UI creative** - Incoraggia creatività, specifica direzione estetica, richiedi feature
+16. ✅ **Parallel tool calls** - Massimizza efficienza con chiamate simultanee
+17. ✅ **Cleanup files** - Rimuovi file temporanei dopo iterazione
+18. ✅ **General solutions** - Evita hard-coding per test, implementa logica reale
+19. ✅ **Investigate first** - Leggi codice prima di rispondere, zero speculazioni
+
+**Prompt template universal per Claude 4.5:**
+
+\`\`\`bash
+claude "[DESCRIZIONE TASK SPECIFICA]
+
+[CONTESTO E MOTIVAZIONE]
+
+[REQUIREMENTS ESPLICITI]
+- Technical: [specifiche tecniche precise]
+- Business: [logica business dettagliata]
+- Integration: [integration points e dependencies]
+- Quality: [standard qualità, performance, security]
+
+[COMPORTAMENTO ATTESO]
+- [Azione 1]: [descrizione specifica]
+- [Azione 2]: [descrizione specifica]
+
+[CONSTRAINTS]
+- [Vincolo 1]: [dettaglio]
+- [Vincolo 2]: [dettaglio]
+
+[SUCCESS CRITERIA]
+- ✅ [Criterio 1]
+- ✅ [Criterio 2]
+
+Vai oltre le basi per creare un'implementazione completamente funzionante."
+\`\`\`
+
+---
+
+## Capitolo 10: Riepilogo e Best Practices
 
 Complimenti! Hai padroneggiato le tecniche avanzate di prompting. 🎓
 
-### 9.1 Recap Tecniche Apprese
+### 10.1 Recap Tecniche Apprese
 
 **1. Precisione Strategica (Capitolo 1)**
 - ✅ Sii preciso per: technical requirements, business logic, integration points, performance
@@ -2448,7 +4137,7 @@ Complimenti! Hai padroneggiato le tecniche avanzate di prompting. 🎓
 - ✅ Per complex debugging, algorithm optimization, security analysis
 - ✅ Ragionamento esteso con multiple ipotesi
 
-### 9.2 Decision Matrix: Quale Tecnica Usare?
+### 10.2 Decision Matrix: Quale Tecnica Usare?
 
 | Scenario | Tecnica Consigliata | Esempio |
 |----------|---------------------|---------|
@@ -2462,7 +4151,7 @@ Complimenti! Hai padroneggiato le tecniche avanzate di prompting. 🎓
 | Migration complessa | Plan Mode + Thinking Mode | Plan Mode per roadmap, Thinking Mode per edge cases |
 | Optimization algoritmo | Thinking Mode | "Think deeply:" + constraints + current complexity |
 
-### 9.3 Checklist Prima di Inviare Prompt
+### 10.3 Checklist Prima di Inviare Prompt
 
 **Prima di premere Enter, verifica:**
 
@@ -2476,7 +4165,7 @@ Complimenti! Hai padroneggiato le tecniche avanzate di prompting. 🎓
 - [ ] **Reference espliciti?** @ notation per file non ovvi?
 - [ ] **Conventions menzionate?** Standard progetto, architectural decisions?
 
-### 9.4 Prossimi Passi
+### 10.4 Prossimi Passi
 
 **Pratica questi pattern nelle prossime milestones:**
 
@@ -2486,7 +4175,7 @@ Complimenti! Hai padroneggiato le tecniche avanzate di prompting. 🎓
 - **Milestone 11**: CI/CD Integration - debugging pattern per pipeline failures
 - **Milestone 12**: Team Workflows - tutti i pattern in contesto team collaboration
 
-### 9.5 Mantra del Prompt Expert
+### 10.5 Mantra del Prompt Expert
 
 > **"Precisione nei dettagli, contesto per coerenza, pattern per efficienza, meta-thinking per decisioni."**
 
@@ -2527,7 +4216,25 @@ Congratulazioni! Sei ora un **Prompt Engineering Expert** per Claude Code. 🎓�
     "Plan major changes first",
     "Budget alerts e monitoring",
     "Query optimization strategies",
-    "Automation script per cost optimization"
+    "Automation script per cost optimization",
+    "Best Practices Claude 4.x (Sonnet 4.5 & Haiku 4.5)",
+    "Principi generali: esplicitezza, contesto, esempi",
+    "Ragionamento a lungo termine e tracciamento stato",
+    "Context awareness e flussi multi-finestra",
+    "Stile comunicativo Claude 4.5",
+    "Pattern utilizzo strumenti (azione vs suggerimento)",
+    "Controllo formato risposte e markdown",
+    "Ricerca agentiva strutturata",
+    "Orchestrazione subagenti nativa",
+    "Autoconoscenza modello e API strings",
+    "Extended Thinking per ragionamento complesso",
+    "Creazione documenti e UI creative",
+    "Ottimizzazione chiamate parallele",
+    "Gestione file temporanei",
+    "Generazione codice frontend distintivo",
+    "Evitare test hard-coding",
+    "Minimizzare allucinazioni nel codice",
+    "Migrazione da Claude 3.x a Claude 4.5"
   ],
   quiz: {
     questions: [
