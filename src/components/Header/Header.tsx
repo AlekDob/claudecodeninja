@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
-import { Moon, Sun } from 'lucide-react';
+import { Moon, Sun, BookOpen } from 'lucide-react';
 import { useTheme } from '../../contexts/ThemeContext';
+import { useNoQuizMode } from '../../contexts/NoQuizModeContext';
 
 interface HeaderProps {
   onLanguageChange?: (lang: 'it' | 'en') => void;
@@ -12,6 +13,8 @@ export const Header = ({
   currentLanguage = 'it',
 }: HeaderProps) => {
   const { theme, toggleTheme } = useTheme();
+  const { noQuizMode } = useNoQuizMode();
+
   return (
     <header className="sticky top-0 z-50 backdrop-blur-md border-b" style={{ borderColor: 'var(--border-color)' }}>
       <div className="container mx-auto px-4 md:px-6 lg:px-8">
@@ -33,6 +36,26 @@ export const Header = ({
 
           {/* Right Controls */}
           <div className="flex items-center gap-3">
+            {/* No Quiz Mode Badge */}
+            {noQuizMode && (
+              <div
+                className="flex items-center gap-2 px-3 py-1.5 rounded-full border"
+                style={{
+                  backgroundColor: 'rgba(0, 217, 255, 0.1)',
+                  borderColor: 'rgba(0, 217, 255, 0.3)',
+                  color: '#00D9FF'
+                }}
+              >
+                <BookOpen className="w-4 h-4" />
+                <span className="text-xs font-medium hidden sm:inline-block">
+                  Modalità Studio Libera
+                </span>
+                <span className="text-xs font-medium sm:hidden">
+                  Studio Libero
+                </span>
+              </div>
+            )}
+
             {/* Language Switcher */}
             <div
               className="flex items-center gap-1 rounded-full p-1 border"

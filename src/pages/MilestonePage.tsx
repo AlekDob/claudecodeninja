@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { milestones } from '../data/milestones';
 import { completeMilestone, getMilestoneStatus, isMilestoneUnlocked } from '../utils/progressTracking';
+import { useNoQuizMode } from '../contexts/NoQuizModeContext';
 import { Header } from '../components/Header/Header';
 import { Footer } from '../components/Footer/Footer';
 import { TableOfContents } from '../components/TableOfContents/TableOfContents';
@@ -20,6 +21,7 @@ export const MilestonePage = () => {
   const navigate = useNavigate();
   const [language, setLanguage] = useState<'it' | 'en'>('it');
   const [isQuizOpen, setIsQuizOpen] = useState(false);
+  const { noQuizMode } = useNoQuizMode();
 
   // Custom components for ReactMarkdown
   const markdownComponents: Components = {
@@ -71,8 +73,8 @@ export const MilestonePage = () => {
 
   const milestoneId = parseInt(id || '1');
   const milestone = milestones.find((m) => m.id === milestoneId);
-  const status = getMilestoneStatus(milestoneId);
-  const isUnlocked = isMilestoneUnlocked(milestoneId);
+  const status = getMilestoneStatus(milestoneId, noQuizMode);
+  const isUnlocked = isMilestoneUnlocked(milestoneId, noQuizMode);
 
   if (!milestone) {
     return <div>Milestone non trovata</div>;
@@ -102,6 +104,13 @@ export const MilestonePage = () => {
   }
 
   const handleComplete = () => {
+    // In no-quiz mode, complete directly without quiz
+    if (noQuizMode) {
+      completeMilestone(milestone.id, milestone.xp);
+      navigate('/milestones');
+      return;
+    }
+
     // If milestone has quiz, open quiz modal
     if (milestone.quiz && milestone.quiz.questions.length > 0) {
       setIsQuizOpen(true);
@@ -219,8 +228,8 @@ export const MilestonePage = () => {
                     </div>
                   </div>
 
-                  {/* Retake Quiz Button - Only show if milestone has quiz */}
-                  {milestone.quiz && milestone.quiz.questions.length > 0 && (
+                  {/* Retake Quiz Button - Only show if milestone has quiz and NOT in no-quiz mode */}
+                  {!noQuizMode && milestone.quiz && milestone.quiz.questions.length > 0 && (
                     <button
                       onClick={handleRetakeQuiz}
                       className="px-4 py-2 bg-white/10 hover:bg-white/15 rounded-lg font-medium text-sm transition-colors flex items-center gap-2 flex-shrink-0"

@@ -72,12 +72,17 @@ export const completeMilestone = (milestoneId: number, xp: number, quizScore?: n
 };
 
 // Get milestone status
-export const getMilestoneStatus = (milestoneId: number): MilestoneStatus => {
+export const getMilestoneStatus = (milestoneId: number, noQuizMode = false): MilestoneStatus => {
   const progress = loadProgress();
 
   // Completed
   if (progress.completedMilestones.includes(milestoneId)) {
     return 'completed';
+  }
+
+  // In no-quiz mode, all milestones are unlocked (in-progress)
+  if (noQuizMode) {
+    return 'in-progress';
   }
 
   // In progress (is current milestone)
@@ -103,7 +108,10 @@ export const getMilestoneStatus = (milestoneId: number): MilestoneStatus => {
 };
 
 // Check if milestone is unlocked
-export const isMilestoneUnlocked = (milestoneId: number): boolean => {
+export const isMilestoneUnlocked = (milestoneId: number, noQuizMode = false): boolean => {
+  // In no-quiz mode, all milestones are unlocked
+  if (noQuizMode) return true;
+
   // Milestone 0 (prefazione) e Milestone 1 sono sempre accessibili
   if (milestoneId === 0 || milestoneId === 1) return true;
 

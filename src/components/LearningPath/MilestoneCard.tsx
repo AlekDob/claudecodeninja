@@ -3,6 +3,7 @@ import { getMilestoneStatus } from '../../utils/progressTracking';
 import { Lock, CheckCircle2, PlayCircle } from 'lucide-react';
 import { motion } from 'motion/react';
 import { useTheme } from '../../contexts/ThemeContext';
+import { useNoQuizMode } from '../../contexts/NoQuizModeContext';
 
 interface MilestoneCardProps {
   milestone: Milestone;
@@ -11,7 +12,8 @@ interface MilestoneCardProps {
 
 export const MilestoneCard = ({ milestone, onClick }: MilestoneCardProps) => {
   const { theme } = useTheme();
-  const status = getMilestoneStatus(milestone.id);
+  const { noQuizMode } = useNoQuizMode();
+  const status = getMilestoneStatus(milestone.id, noQuizMode);
 
   const isLocked = status === 'locked';
   const isCompleted = status === 'completed';
