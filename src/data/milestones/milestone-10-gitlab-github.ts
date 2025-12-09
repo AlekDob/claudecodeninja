@@ -2,17 +2,17 @@ import { Milestone } from '../../types';
 
 export const milestone10: Milestone = {
   id: 12,
-  title: "GitLab & GitHub Enterprise Integration",
-  subtitle: "Workflow automation, CI/CD pipeline e code review per team enterprise con Claude Code",
+  title: "GitLab Enterprise Integration",
+  subtitle: "CI/CD pipeline, code review automation e DevOps workflow per team enterprise con Claude Code",
   description: `
-# Milestone 10: GitLab & GitHub Enterprise Integration
+# Milestone 10: GitLab Enterprise Integration
 
 Benvenuto nella milestone che separa progetti personali da sistemi enterprise production-ready!
 
 Fino ad ora hai usato Claude Code per task individuali: scrivere feature, debuggare, refactoring. Ma nei contesti aziendali? Come integri Claude Code con GitLab CI/CD? Come automatizzi code review su 50+ merge request al giorno? Come garantisci security e compliance?
 
 Questa milestone ti trasforma in un **DevOps Engineer con superpoteri AI**. Imparerai a:
-- Configurare Claude Code con GitLab/GitHub Enterprise
+- Configurare Claude Code con GitLab Enterprise
 - Automatizzare CI/CD pipeline con AI-driven optimization
 - Implementare code review automation che fa risparmiare 20+ ore/settimana al team
 - Gestire branching strategy (GitFlow vs Trunk-based) con Claude Code
@@ -24,10 +24,10 @@ La differenza tra "so usare Git" e "so orchestrare workflow enterprise da €100
 
 ### 1.1 Prerequisiti e Token Setup
 
-Prima di tutto: GitLab vs GitHub? Entrambi validi, ma GitLab domina in contesti enterprise europei per:
+GitLab è la scelta ideale per contesti enterprise europei:
 - **Self-hosted**: Dati on-premise per compliance GDPR
-- **CI/CD integrato**: Non serve GitHub Actions separato
-- **Costo**: GitLab Free/Premium vs GitHub Enterprise (5x più costoso)
+- **CI/CD integrato**: Pipeline native senza configurazioni aggiuntive
+- **Costo competitivo**: GitLab Free/Premium per ogni esigenza
 
 **Setup Token GitLab:**
 
@@ -193,139 +193,9 @@ Ottimizza per ridurre CI minutes usando cache e parallel jobs."
 
 Claude Code genera pipeline production-ready in 30 secondi vs 2 ore manuali! 🎯
 
-## Capitolo 2: GitHub Enterprise Alternative
+## Capitolo 2: Branching Strategies con Claude Code
 
-### 2.1 Setup GitHub Actions con Claude Code
-
-GitHub Actions usa workflow files in \`.github/workflows/\`:
-
-\`\`\`yaml
-# .github/workflows/ci.yml
-
-name: CI/CD Pipeline
-
-on:
-  push:
-    branches: [ main, develop ]
-  pull_request:
-    branches: [ main ]
-
-jobs:
-  lint-and-test:
-    runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        node-version: [18, 20]
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: \${{ matrix.node-version }}
-          cache: 'npm'
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Lint
-        run: npm run lint
-
-      - name: Type check
-        run: npm run typecheck
-
-      - name: Unit tests
-        run: npm run test:unit
-
-      - name: Upload coverage
-        uses: codecov/codecov-action@v4
-        with:
-          token: \${{ secrets.CODECOV_TOKEN }}
-
-  build:
-    needs: lint-and-test
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: 'npm'
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Build
-        run: npm run build
-
-      - name: Upload build artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: dist
-          path: dist/
-          retention-days: 7
-\`\`\`
-
-### 2.2 Claude Code GitHub Action Ufficiale
-
-Anthropic fornisce un'action ufficiale per integrare Claude Code nei workflow:
-
-\`\`\`yaml
-# .github/workflows/claude-code-review.yml
-
-name: Claude Code Review
-
-on:
-  pull_request:
-    types: [opened, synchronize]
-
-jobs:
-  code-review:
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0  # Full history per analisi
-
-      - name: Claude Code Review
-        uses: anthropics/claude-code-action@v1
-        with:
-          anthropic-api-key: \${{ secrets.ANTHROPIC_API_KEY }}
-          review-prompt: |
-            Analizza questo PR e fornisci:
-            1. Code quality assessment
-            2. Potential bugs o security issues
-            3. Suggerimenti performance
-            4. Compliance con coding standards del progetto
-
-          auto-comment: true
-          fail-on-issues: false
-\`\`\`
-
-**Risultato**: Ogni PR riceve automaticamente review AI dettagliata! 🤖
-
-### 2.3 GitLab vs GitHub: Quando Usare Cosa
-
-| Criterio | GitLab | GitHub |
-|----------|---------|---------|
-| **Self-hosted** | ✅ Eccellente | ⚠️ GitHub Enterprise costoso |
-| **CI/CD integrato** | ✅ Nativo | ⚠️ Richiede Actions setup |
-| **Open source** | ✅ GitLab CE gratis | ❌ Solo cloud gratuito limitato |
-| **Enterprise EU** | ✅ GDPR compliance facile | ⚠️ Server US-based |
-| **Community** | ⚠️ Più piccola | ✅ Più grande al mondo |
-| **Marketplace** | ⚠️ Limitato | ✅ GitHub Marketplace enorme |
-
-**Raccomandazione**: GitLab per enterprise EU con compliance, GitHub per startups/open source.
-
-## Capitolo 3: Branching Strategies con Claude Code
-
-### 3.1 GitFlow: Il Classico Enterprise
+### 2.1 GitFlow: Il Classico Enterprise
 
 GitFlow è lo standard per team che rilasciano versioni scheduled (es: ogni 2 settimane):
 
@@ -379,7 +249,7 @@ git push origin feature/new-dashboard
 - Merge conflicts frequenti
 - Non adatto a continuous deployment
 
-### 3.2 Trunk-Based Development: Il Moderno
+### 2.2 Trunk-Based Development: Il Moderno
 
 Trunk-based è lo standard 2025 per team che fanno continuous deployment:
 
@@ -442,7 +312,7 @@ export function Dashboard() {
 - ✅ Buona test coverage (>80%)
 - ✅ CI/CD veloce (<5 min)
 
-### 3.3 Claude Code per Gestire Merge Conflicts
+### 2.3 Claude Code per Gestire Merge Conflicts
 
 I merge conflicts sono il nemico #1 nei team. Claude Code li risolve in secondi:
 
@@ -475,9 +345,9 @@ export function Checkout({ paymentMethod }: Props) {
 
 Tempo risparmiato: 30 minuti → 2 minuti! ⚡
 
-## Capitolo 4: Code Review Automation
+## Capitolo 3: Code Review Automation
 
-### 4.1 Il Problema delle Code Review Manuali
+### 3.1 Il Problema delle Code Review Manuali
 
 Scenario tipico team enterprise:
 - 50 MR/giorno
@@ -486,9 +356,9 @@ Scenario tipico team enterprise:
 
 **Costo annuale**: €150K-300K in tempo developer! 💸
 
-### 4.2 AI-Driven Code Review con Claude Code
+### 3.2 AI-Driven Code Review con Claude Code
 
-GitLab/GitHub possono triggerare Claude Code automaticamente su ogni MR:
+GitLab può triggerare Claude Code automaticamente su ogni MR:
 
 **Setup GitLab CI per Auto-Review:**
 
@@ -530,7 +400,7 @@ code-review:
    - Test coverage <80%
    - Missing documentation
 
-### 4.3 Custom Review Checklist
+### 3.3 Custom Review Checklist
 
 Personalizza review focus per il tuo progetto:
 
@@ -578,9 +448,9 @@ claude /review
 # Claude Code analizza tutti i file modificati e genera report!
 \`\`\`
 
-## Capitolo 5: CI/CD Pipeline Optimization
+## Capitolo 4: CI/CD Pipeline Optimization
 
-### 5.1 Il Problema: Pipeline Lente = Developer Frustrati
+### 4.1 Il Problema: Pipeline Lente = Developer Frustrati
 
 Pipeline lenta = context switching = produttività -50%:
 - Developer pusha codice
@@ -593,7 +463,7 @@ Pipeline lenta = context switching = produttività -50%:
 
 **Goal**: Pipeline <5 minuti per feedback immediato.
 
-### 5.2 Ottimizzazioni Essenziali
+### 4.2 Ottimizzazioni Essenziali
 
 **1. Parallelizzazione Aggressiva:**
 
@@ -658,7 +528,7 @@ test:e2e:
 
 **Risultato**: Pipeline da 20 minuti → 4 minuti! 🚀
 
-### 5.3 Claude Code per Ottimizzare Pipeline
+### 4.3 Claude Code per Ottimizzare Pipeline
 
 Chiedi a Claude Code di analizzare la tua pipeline:
 
@@ -674,9 +544,9 @@ Fornisci benchmark stimato per ogni ottimizzazione."
 
 Claude Code genera report con impact analysis! 📊
 
-## Capitolo 6: Security & Compliance
+## Capitolo 5: Security & Compliance
 
-### 6.1 SAST (Static Application Security Testing)
+### 5.1 SAST (Static Application Security Testing)
 
 Integra security scanning automatico:
 
@@ -701,7 +571,7 @@ sast:
 - Insecure crypto
 - Path traversal
 
-### 6.2 Secrets Management
+### 5.2 Secrets Management
 
 **❌ MAI FARE:**
 \`\`\`typescript
@@ -733,7 +603,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
 npx --no -- secretlint "**/*"
 \`\`\`
 
-### 6.3 Dependency Security Audit
+### 5.3 Dependency Security Audit
 
 \`\`\`yaml
 # Audit dependencies automatico
@@ -756,11 +626,11 @@ claude "Esegui security audit completo:
 Genera report con severity (critical/high/medium/low)."
 \`\`\`
 
-## Capitolo 7: Issue Tracking Integration
+## Capitolo 6: Issue Tracking Integration
 
-### 7.1 Auto-Close Issue da Commit
+### 6.1 Auto-Close Issue da Commit
 
-GitLab/GitHub supportano keyword per auto-close issue:
+GitLab supporta keyword per auto-close issue:
 
 \`\`\`bash
 git commit -m "fix: resolve login timeout issue
@@ -773,7 +643,7 @@ Closes #142"
 
 Al merge su main, issue #142 si chiude automaticamente! ✅
 
-### 7.2 Claude Code per Generare Issue Template
+### 6.2 Claude Code per Generare Issue Template
 
 \`\`\`bash
 claude "Analizza questo bug e genera issue template GitLab:
@@ -785,7 +655,7 @@ claude "Analizza questo bug e genera issue template GitLab:
 - Assignment suggerito basato su codeowner"
 \`\`\`
 
-### 7.3 Automated Issue Triage
+### 6.3 Automated Issue Triage
 
 \`\`\`yaml
 # .gitlab-ci.yml
@@ -809,10 +679,10 @@ Quando inizi un progetto enterprise, questa è la checklist:
 
 ### ✅ Setup Iniziale (2 ore)
 
-1. **Crea repository GitLab/GitHub**
-2. **Setup .gitlab-ci.yml o GitHub Actions** con template da questa milestone
+1. **Crea repository GitLab**
+2. **Setup .gitlab-ci.yml** con template da questa milestone
 3. **Configura branch protection** su main (require MR + CI pass)
-4. **Setup secrets** per API keys
+4. **Setup secrets** in GitLab CI/CD Variables
 5. **Abilita auto-review** Claude Code su MR
 
 ### 📈 Ottimizzazione Continua (ogni sprint)
@@ -840,11 +710,11 @@ Ora sei pronto per orchestrare workflow che fanno sembrare i team 10x più produ
   estimatedTime: "2 ore",
   topics: [
     "GitLab CI/CD Setup",
-    "GitHub Actions Integration",
     "Branching Strategies (GitFlow vs Trunk-Based)",
     "Code Review Automation",
     "Pipeline Optimization",
     "Security & SAST",
+    "Secrets Management",
     "Issue Tracking Integration"
   ],
   quiz: {
@@ -899,7 +769,7 @@ Ora sei pronto per orchestrare workflow che fanno sembrare i team 10x più produ
       },
       {
         id: "m10-q5",
-        question: "Quale keyword nel commit message chiude automaticamente una issue su GitLab/GitHub?",
+        question: "Quale keyword nel commit message chiude automaticamente una issue su GitLab?",
         options: [
           "Fixes #123",
           "Closes #123",
@@ -907,20 +777,20 @@ Ora sei pronto per orchestrare workflow che fanno sembrare i team 10x più produ
           "Tutte le precedenti"
         ],
         correctAnswer: 3,
-        explanation: "GitLab e GitHub riconoscono multiple keyword: Closes, Fixes, Resolves (e varianti come Close, Fix, Resolve). Quando il commit con keyword viene mergiato su branch default (main), la issue viene automaticamente chiusa. Esempio: 'fix: login bug\\n\\nCloses #123'"
+        explanation: "GitLab riconosce multiple keyword: Closes, Fixes, Resolves (e varianti come Close, Fix, Resolve). Quando il commit con keyword viene mergiato su branch default (main), la issue viene automaticamente chiusa. Esempio: 'fix: login bug\\n\\nCloses #123'"
       }
     ]
   },
   challenge: {
     title: "Setup Enterprise CI/CD da Zero",
-    description: "Configura pipeline production-ready con security, automated review e deployment automation",
+    description: "Configura pipeline GitLab production-ready con security, automated review e deployment automation",
     instructions: [
-      "Crea repository GitLab o GitHub per progetto Next.js/React",
-      "Setup .gitlab-ci.yml o GitHub Actions workflow con: lint, typecheck, test, build, deploy",
+      "Crea repository GitLab per progetto Next.js/React",
+      "Setup .gitlab-ci.yml con: lint, typecheck, test, build, deploy",
       "Configura branch protection su main (require MR approval + CI pass)",
       "Implementa automated code review usando Claude Code (custom checklist con security focus)",
-      "Aggiungi SAST scanning (Semgrep o simile) che blocca MR se trova critical issues",
-      "Setup secrets management per API keys (GitLab CI/CD Variables o GitHub Secrets)",
+      "Aggiungi SAST scanning (Semgrep) che blocca MR se trova critical issues",
+      "Setup secrets management in GitLab CI/CD Variables",
       "Ottimizza pipeline per <5 minuti usando: parallel jobs, caching, conditional execution",
       "Configura auto-close issue da commit con keyword (Closes #N)",
       "Test completo: crea feature branch, push codice, verifica automated review, merge su main"

@@ -1285,89 +1285,132 @@ CON PIPELINE:
 🌍 Deploy 24/7
 \`\`\`
 
-**Esempio GitHub Actions generato da Claude Code:**
+**Esempio GitLab CI/CD generato da Claude Code:**
 
 \`\`\`yaml
-# .github/workflows/ci-cd.yml
-name: CI/CD Pipeline
+# .gitlab-ci.yml
+stages:
+  - validate
+  - test
+  - security
+  - build
+  - deploy
 
-on:
-  push:
-    branches: [main, develop]
-  pull_request:
-    branches: [main]
+variables:
+  NODE_VERSION: "20"
 
-jobs:
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      # Checkout codice
-      - uses: actions/checkout@v3
+# Template riutilizzabile per job Node.js
+.node_template: &node_template
+  image: node:\${NODE_VERSION}-alpine
+  cache:
+    key: npm-\$CI_COMMIT_REF_SLUG
+    paths:
+      - node_modules/
+  before_script:
+    - npm ci --prefer-offline
 
-      # Setup Node.js
-      - uses: actions/setup-node@v3
-        with:
-          node-version: '18'
-          cache: 'npm'
+# STAGE 1: Validate (lint + typecheck in parallelo)
+lint:
+  <<: *node_template
+  stage: validate
+  script:
+    - npm run lint
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+    - if: '$CI_COMMIT_BRANCH == "main"'
+    - if: '$CI_COMMIT_BRANCH == "develop"'
 
-      # Install dependencies
-      - name: Install dependencies
-        run: npm ci
+typecheck:
+  <<: *node_template
+  stage: validate
+  script:
+    - npx tsc --noEmit
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+    - if: '$CI_COMMIT_BRANCH == "main"'
+    - if: '$CI_COMMIT_BRANCH == "develop"'
 
-      # Run tests con coverage
-      - name: Run tests
-        run: npm test -- --coverage
+# STAGE 2: Test con coverage
+test:unit:
+  <<: *node_template
+  stage: test
+  script:
+    - npm test -- --coverage
+  coverage: '/All files[^|]*\|[^|]*\s+([\d\.]+)/'
+  artifacts:
+    reports:
+      coverage_report:
+        coverage_format: cobertura
+        path: coverage/cobertura-coverage.xml
+    expire_in: 1 week
 
-      # Upload coverage
-      - name: Upload coverage
-        uses: codecov/codecov-action@v3
-        if: success()
+# STAGE 3: Security
+security:audit:
+  <<: *node_template
+  stage: security
+  script:
+    - npm audit --audit-level=moderate
+  allow_failure: false
 
-      # Linting
-      - name: Lint code
-        run: npm run lint
+security:sast:
+  stage: security
+  image: returntocorp/semgrep
+  script:
+    - semgrep scan --config=auto --json > sast-report.json
+  artifacts:
+    reports:
+      sast: sast-report.json
+  allow_failure: false
 
-      # Type checking
-      - name: Type check
-        run: npx tsc --noEmit
+# STAGE 4: Build
+build:
+  <<: *node_template
+  stage: build
+  script:
+    - npm run build
+  artifacts:
+    paths:
+      - dist/
+    expire_in: 1 week
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
+    - if: '$CI_COMMIT_BRANCH == "develop"'
 
-  security:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
+# STAGE 5: Deploy
+deploy:staging:
+  stage: deploy
+  image: alpine:latest
+  before_script:
+    - apk add --no-cache curl
+  script:
+    - curl -X POST $WEBHOOK_STAGING
+  environment:
+    name: staging
+    url: https://staging.tuodominio.com
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "develop"'
 
-      # Security scan
-      - name: Security audit
-        run: npm audit --audit-level=moderate
-
-      # OWASP dependency check
-      - name: OWASP scan
-        uses: dependency-check/Dependency-Check_Action@main
-
-  build-deploy:
-    needs: [test, security]
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
-
-    steps:
-      - uses: actions/checkout@v3
-
-      # Build production
-      - name: Build for production
-        run: |
-          npm ci
-          npm run build
-        env:
-          NODE_ENV: production
-
-      # Deploy to Vercel
-      - name: Deploy to Vercel
-        uses: vercel/action@v2
-        with:
-          vercel-token: \${{ secrets.VERCEL_TOKEN }}
-          vercel-org-id: \${{ secrets.VERCEL_ORG_ID }}
-          vercel-project-id: \${{ secrets.VERCEL_PROJECT_ID }}
+deploy:production:
+  stage: deploy
+  image: alpine:latest
+  before_script:
+    - apk add --no-cache curl
+  script:
+    - curl -X POST $WEBHOOK_PRODUCTION
+  environment:
+    name: production
+    url: https://tuodominio.com
+  when: manual  # Richiede click manuale per deploy production
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
 \`\`\`
+
+**Vantaggi GitLab CI/CD:**
+- **CI/CD nativo**: Non serve configurare servizi esterni
+- **Pipeline visualizzazione**: Dashboard integrato per monitorare job
+- **Parallelizzazione automatica**: Job nella stessa stage girano in parallelo
+- **Cache intelligente**: Riduce tempo build condividendo \`node_modules/\`
+- **Deploy manuale production**: Evita deploy accidentali con \`when: manual\`
 
 ### 5.2 Template Intelligenti vs Statici
 
