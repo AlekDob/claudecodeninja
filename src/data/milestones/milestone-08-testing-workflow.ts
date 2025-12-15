@@ -2076,5 +2076,15 @@ Sviluppo efficace spesso combina approcci:
       "✅ Codice refactorato pulito e leggibile",
       "✅ Tutti i test passano dopo refactoring"
     ]
-  }
+  },
+  resources: [
+    {
+      id: 'testing-starter-kit',
+      type: 'link',
+      title: 'Testing & Refactoring Starter Kit',
+      description: 'Pacchetto completo con esempi TDD, template di test, e workflow di refactoring pronti all\'uso',
+      url: '/downloads/testing.zip',
+      icon: '📦'
+    }
+  ]
 };
