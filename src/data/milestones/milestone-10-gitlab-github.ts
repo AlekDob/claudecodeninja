@@ -806,5 +806,15 @@ Ora sei pronto per orchestrare workflow che fanno sembrare i team 10x più produ
       "✅ Deploy staging automatico su branch develop",
       "✅ Deploy production manuale su main"
     ]
-  }
+  },
+  resources: [
+    {
+      id: 'gitlab-starter-kit',
+      type: 'link',
+      title: 'GitLab CI/CD Starter Kit',
+      description: 'Template .gitlab-ci.yml, configurazioni SAST, esempi di pipeline enterprise-ready',
+      url: '/downloads/gitlab.zip',
+      icon: '🦊'
+    }
+  ]
 };
